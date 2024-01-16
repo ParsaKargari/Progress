@@ -1,4 +1,4 @@
-#![Progress](./publicAssets/ProgressBanner.png)
+# ![Progress](./publicAssets/ProgressBanner.png)
 
 [![Generic badge](https://img.shields.io/badge/COURSE-SENG_401-blue.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/GROUP-13-blue.svg)](https://shields.io/)
