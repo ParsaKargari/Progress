@@ -1,4 +1,5 @@
-![REACT][(https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB))
+![REACT](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white) ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white) ![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
+
 # ![Progress](./publicAssets/ProgressBanner.png)
 
 [![Generic badge](https://img.shields.io/badge/COURSE-SENG_401-blue.svg)](https://shields.io/)
