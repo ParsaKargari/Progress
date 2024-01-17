@@ -16,13 +16,13 @@
 
 ## 📝 Contributors
 
-- [Parsa](https://github.com/ParsaKargari) L03 - ROLE
-- [Vishnu]() L03 - ROLE
-- [Shivam]() L02 - ROLE
-- [Thomas]() L02 - ROLE
-- [Dannick]() L02 - ROLE
-- [Jasmithaa]() L01 - ROLE
-- [David]() L02 - ROLE
+- [Parsa](https://github.com/ParsaKargari) L03 - Fullstack Developer & Project Lead
+- [Shivam]() L03 - Fullstack Developer
+- [Vishnu]() L02 - QA/UI Specialist & Frontend Developer
+- [Jasmithaa]() L02 - Frontend Developer
+- [Dannick]() L02 - Backend Developer
+- [David]() L01 - Backend Developer
+- [Thomas]() L02 - Backend Developer
 
 ## 👨‍💻 Tech Stack
 
