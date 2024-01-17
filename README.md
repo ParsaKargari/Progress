@@ -1,3 +1,4 @@
+![REACT][(https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB))
 # ![Progress](./publicAssets/ProgressBanner.png)
 
 [![Generic badge](https://img.shields.io/badge/COURSE-SENG_401-blue.svg)](https://shields.io/)
