@@ -1,0 +1,18 @@
+/* Logo.css */
+@keyframes spinOnce {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(720deg);
+    }
+}
+  
+.logo-spin-twice {
+    /* Move down */
+    margin-top: 15px;
+
+    /* Animation */
+    animation: spinOnce 2s ease-out 1;
+}
+  
