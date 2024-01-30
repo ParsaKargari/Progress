@@ -1,8 +1,8 @@
 import React from 'react';
-import logo from './Images/Group 1.svg';
 import { createClient } from '@supabase/supabase-js'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
+
 
 
 // this needs to be put in a env file at the end of the project for security.
@@ -13,7 +13,7 @@ function Login() {
   return (
       <div className='flex justify-center items-center h-screen bg-primary'>
       <div className="flex flex-col justify-center bg-white p-[70px] rounded-[50px]">
-        <img src={logo} className="mb-3" alt="logo"/>
+        <img src={"./images/logo.svg"} className="mb-3" alt="logo"/>
 {/* The Auth component is taken from supabase, it has a option to change styling*/}
         <Auth
           supabaseClient={supabase}
