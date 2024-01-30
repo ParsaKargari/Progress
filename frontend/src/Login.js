@@ -37,7 +37,7 @@ function Login() {
               },
             },
           }}          
-          providers={['google']}
+          providers={['google', 'discord']}
           showLinks={['signOut']}
           onlyThirdPartyProviders={true}
           localization={{
