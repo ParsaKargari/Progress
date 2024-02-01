@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+
+// Importing Components
 import Login from './views/Login';
 import reportWebVitals from './tests/reportWebVitals';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <Login />
-  </React.StrictMode>
+  // <React.StrictMode>
+  //   <Login />
+  // </React.StrictMode>
+  <StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<Login />} ></Route>
+        <Route exact path="/login" element={<Login />} ></Route>
+      </Routes>
+    </BrowserRouter>
+  </StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
