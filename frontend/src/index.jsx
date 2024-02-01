@@ -7,6 +7,7 @@ import './index.css';
 import Login from './views/Login';
 import SignUpSettings from './views/SignUpSettings';
 import reportWebVitals from './tests/reportWebVitals';
+import HomePage from './views/HomePage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -18,7 +19,8 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<Login />} ></Route>
-        <Route exact path="/signup" element={<SignUpSettings />} ></Route>
+        <Route path="/signup" element={<SignUpSettings />} ></Route>
+        <Route path="/home" element={<HomePage />} ></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>

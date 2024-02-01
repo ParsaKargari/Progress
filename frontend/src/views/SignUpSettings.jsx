@@ -1,14 +1,30 @@
 import { React, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 import "../css/Login.css";
 
 export default function SignUpSettings() {
     const [spin, setSpin] = useState(false);
+    const navigation = useNavigate();
 
     useEffect(() => {
         setSpin(true);
     }, []);
+
+    function SignUp() {
+        var userName = document.getElementById("inline-first-name").value;
+        var status = document.getElementById("inline-status").value;
+        if (userName === "" || status === "") {
+            alert("Please fill out all fields!");
+            return;
+        }
+        else {
+            navigation(`/home`, {replace : true})
+        }
+    }
+
+
 
     return (
         <>
@@ -53,7 +69,7 @@ export default function SignUpSettings() {
                         
 
                         <div class="flex flex-1 justify-center">
-                            <button class="border-2 border-TurqouiseBlue min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button">
+                            <button class="border-2 border-TurqouiseBlue min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={SignUp}>
                                 Sign Up
                             </button>
                         </div>
