@@ -5,6 +5,7 @@ import './index.css';
 
 // Importing Components
 import Login from './views/Login';
+import SignUpSettings from './views/SignUpSettings';
 import reportWebVitals from './tests/reportWebVitals';
 
 
@@ -17,7 +18,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<Login />} ></Route>
-        <Route exact path="/login" element={<Login />} ></Route>
+        <Route exact path="/signup" element={<SignUpSettings />} ></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>
