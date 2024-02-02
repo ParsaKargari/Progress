@@ -69,7 +69,7 @@ export default function SignUpSettings() {
                         
 
                         <div class="flex flex-1 justify-center">
-                            <button class="border-2 border-TurqouiseBlue min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={SignUp}>
+                            <button class="border border-[#D3D3D3] min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={SignUp}>
                                 Sign Up
                             </button>
                         </div>
