@@ -56,13 +56,13 @@ export default function SignUpSettings() {
                     <div class="flex flex-col">
                         <div class="md:flex md:items-center mb-4 flex-1">
                             <div class="flex-1">
-                            <input class="hover:transition-colors hover:ease-in-out min-h-12 rounded-full bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 font-standard italic text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-first-name" type="text" placeholder="Enter a username"/>
+                                <input class="hover:transition-colors hover:ease-in-out min-h-12 rounded-full bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 font-standard italic text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-first-name" type="text" placeholder="Enter a username"/>
                             </div>
                         </div>
 
                         <div class="flex md:items-center mb-6 flex-1">
                             <div class="flex-1">
-                            <input class="hover:transition-colors hover:ease-in-out hover:duration-300 min-h-12 rounded-full font-standard italic bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-status" type="text" placeholder="Enter a status" />
+                                <input class="hover:transition-colors hover:ease-in-out hover:duration-300 min-h-12 rounded-full font-standard italic bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-status" type="text" placeholder="Enter a status" />
                             </div>
                         </div>
 

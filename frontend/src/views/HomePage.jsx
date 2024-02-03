@@ -11,12 +11,12 @@ export default function HomePage() {
     const [shouldRenderActivity, setShouldRenderActivity] = useState(true);
 
     useEffect(() => {
-    const handleResizeSmall = () => {
-        if (window.innerWidth < 768) {
-            setShouldRenderTasks(false);
-        } else {
-            setShouldRenderTasks(true);
-        }
+        const handleResizeSmall = () => {
+            if (window.innerWidth < 768) {
+                setShouldRenderTasks(false);
+            } else {
+                setShouldRenderTasks(true);
+            }
         };
 
         handleResizeSmall();
