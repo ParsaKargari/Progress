@@ -1,30 +1,31 @@
 import { React, useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
 import {useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 import "../css/Login.css";
 
 export default function SignUpSettings() {
     const [spin, setSpin] = useState(false);
     const navigation = useNavigate();
+    const { user } = useAuth();
 
     useEffect(() => {
         setSpin(true);
+        // TODO: If user is not first time user, redirect to /home
+        // Retrive username/status from backend to check if user is first time user
     }, []);
 
     function SignUp() {
         var userName = document.getElementById("inline-first-name").value;
         var status = document.getElementById("inline-status").value;
         if (userName === "" || status === "") {
-            alert("Please fill out all fields!");
+            alert("Please fill out all fields!"); // TODO: Replace with a more user-friendly alert (Material-UI Snackbar)
             return;
         }
         else {
             navigation(`/home`, {replace : true})
         }
     }
-
-
 
     return (
         <>
