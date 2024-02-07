@@ -7,7 +7,7 @@ import "../css/Login.css";
 export default function SignUpSettings() {
     const [spin, setSpin] = useState(false);
     const navigation = useNavigate();
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
 
     useEffect(() => {
         setSpin(true);
@@ -69,9 +69,13 @@ export default function SignUpSettings() {
 
                         
 
-                        <div class="flex flex-1 justify-center">
+                        <div class="flex flex-1 justify-center space-x-4">
                             <button class="border-2 border-TurqouiseBlue min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={SignUp}>
                                 Sign Up
+                            </button>
+
+                            <button class="border-2 border-TurqouiseBlue min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={signOut}>
+                                Sign Out
                             </button>
                         </div>
                     </div>

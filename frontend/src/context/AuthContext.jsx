@@ -22,7 +22,6 @@ export const AuthProvider = ({ children }) => {
       if (error) {
         console.error('Error retrieving session:', error.message);
       } else {
-        console.log('data: ', data);
         setUser(data.session?.user || null);
       }
     };
