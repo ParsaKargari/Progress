@@ -8,25 +8,30 @@ import Login from './views/Login';
 import SignUpSettings from './views/SignUpSettings';
 import reportWebVitals from './tests/reportWebVitals';
 import HomePage from './views/HomePage';
-
+import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
+import ProtectedRoute from './components/ProtectedRoute';
+import { useAuth } from './context/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // <React.StrictMode>
-  //   <Login />
-  // </React.StrictMode>
-  <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route exact path="/" element={<Login />} ></Route>
-        <Route path="/signup" element={<SignUpSettings />} ></Route>
-        <Route path="/home" element={<HomePage />} ></Route>
-      </Routes>
-    </BrowserRouter>
-  </StrictMode>
+    <AuthProvider> {/* Wrap your application with AuthProvider */}
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/" element={<Login />} ></Route>
+          <Route path="/signup" element={
+          <ProtectedRoute>
+            <SignUpSettings />
+          </ProtectedRoute>
+          } ></Route>
+          <Route path="/home" element={
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        }></Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
 reportWebVitals();
