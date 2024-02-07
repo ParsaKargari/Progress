@@ -8,6 +8,10 @@ import Login from './views/Login';
 import SignUpSettings from './views/SignUpSettings';
 import reportWebVitals from './tests/reportWebVitals';
 import HomePage from './views/HomePage';
+import ActivityBar from './views/ActivityBar';
+import TasksBar from './views/TasksBar';
+import FriendsBar from './views/FriendsBar';
+import { MediumSize } from './views/MediumSize';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,6 +25,12 @@ root.render(
         <Route exact path="/" element={<Login />} ></Route>
         <Route path="/signup" element={<SignUpSettings />} ></Route>
         <Route path="/home" element={<HomePage />} ></Route>
+
+        {/* <Route path="/med" element={<MediumSize />} >
+          <Route path='' element={<TasksBar />} />
+          <Route path="activitybar" element={<ActivityBar />} />
+        </Route> */}
+
       </Routes>
     </BrowserRouter>
   </StrictMode>

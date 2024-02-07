@@ -1,65 +1,60 @@
 import {React, useState, useEffect} from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
-
-/**Impoerting Components */
-import { FriendsBar } from './FriendsBar.jsx';
-import { ActivityBar } from './ActivityBar.jsx';
-import { TasksBar } from './TasksBar.jsx';
+/**Importing Components */
+import { SmallSize } from './SmallSize.jsx'
+import { MediumSize } from './MediumSize.jsx'
+import { LargeSize } from './LargeSize.jsx'
 
 export default function HomePage() {
-    const [shouldRenderTasks, setShouldRenderTasks] = useState(true);
-    const [shouldRenderActivity, setShouldRenderActivity] = useState(true);
+    const [shouldRenderSmall, setShouldRenderSmall] = useState(true);
+    const [shouldRenderMedium, setShouldRenderMedium] = useState(true);
+    const [shouldRenderLarge, setShouldRenderLarge] = useState(true);
 
     useEffect(() => {
-        const handleResizeSmall = () => {
-            if (window.innerWidth < 768) {
-                setShouldRenderTasks(false);
-            } else {
-                setShouldRenderTasks(true);
+
+        const handleWindowResize = () => {
+            console.log(window.innerWidth);
+            if(window.innerWidth > 1280) {
+                console.log("large");
+                setShouldRenderLarge(true);
+                setShouldRenderSmall(false);
+                setShouldRenderMedium(false);
             }
-        };
-
-        handleResizeSmall();
-
-        window.addEventListener('resize', handleResizeSmall);
-
-        return () => {
-            window.removeEventListener('resize', handleResizeSmall);
-        };
-    }, []); 
-
-    useEffect(() => {
-        const handleResizeMedium = () => {
-            if(window.innerWidth < 1280) {
-                setShouldRenderActivity(false);
+            else if(window.innerWidth < 768) {
+                console.log("small");
+                setShouldRenderSmall(true);
+                setShouldRenderMedium(false);
+                setShouldRenderLarge(false);
             }
-            else {
-                setShouldRenderActivity(true);
+            else if (768 < window.innerWidth < 1280) {
+                console.log("medium");
+                setShouldRenderMedium(true);
+                setShouldRenderSmall(false);
+                setShouldRenderLarge(false);
             }
         }
 
-        handleResizeMedium();
+        handleWindowResize();
 
-        window.addEventListener('resize', handleResizeMedium);
+        window.addEventListener('resize', handleWindowResize);
 
         return () => {
-            window.removeEventListener('resize', handleResizeMedium);
-        };
+            window.removeEventListener('resize', handleWindowResize);
+        }
 
     }, []);
         
 
     return (
         <>
-            <div className="grid sm:grid-cols-1 md:grid-cols-6 xl:grid-cols-11 xl:visible flex-cols h-screen bg-primary max-h-screen overflow-clip">
-                <FriendsBar 
+            <div>
+                {shouldRenderSmall ? <SmallSize /> : null}
 
-                />
+                {shouldRenderMedium ? <MediumSize /> : null}
 
-                {shouldRenderTasks ? <TasksBar /> : null}
+                {shouldRenderLarge ? <LargeSize /> : null}
 
-
-                {shouldRenderActivity ? <ActivityBar /> : null}
             </div>
         </>
     )
