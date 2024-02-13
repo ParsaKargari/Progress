@@ -8,6 +8,7 @@ import { FriendsBar } from './FriendsBar.jsx'
 
 export function SmallSize() {
     
+    
     return (
         <>
             <div className="grid grid-cols-12 flex-cols h-screen bg-primary max-h-screen overflow-clip">
