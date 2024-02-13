@@ -1,6 +1,4 @@
 import {React, useState, useEffect, Fragment} from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -25,7 +23,7 @@ export function MediumSize() {
 
     const activitytrigger = (anchor) => (
         <Box
-        sx={{ width: '75%' }}
+        sx={{ width: '75vw' }}
         role="presentation"
         onClick={toggleDrawer(anchor, false)}
         onKeyDown={toggleDrawer(anchor, false)}
@@ -36,6 +34,8 @@ export function MediumSize() {
         </Box>
     );
 
+
+
     return (
         <>
 
@@ -43,7 +43,7 @@ export function MediumSize() {
                 <FriendsBar />
                 
                 <TasksBar />
-                {/* id="ActivityMenuButton" className="m-3 btn btn-circle bg-InputBox w-12 h-12 rounded-full" */}
+
                 <div className="col-span-1 bg-green-900 flex flex-1 justify-end align-middle" id='activityTrigger'>
 
                     {['right'].map((anchor) => (
@@ -51,7 +51,7 @@ export function MediumSize() {
 
                             <Button onClick={toggleDrawer(anchor, true)} className="m-3 btn btn-circle bg-InputBox w-12 h-12 rounded-full">
                                 
-                                <p>Friends</p>
+                                <p>Activity</p>
                                                             
                             </Button>
                             

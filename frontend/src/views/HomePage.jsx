@@ -14,21 +14,17 @@ export default function HomePage() {
     useEffect(() => {
 
         const handleWindowResize = () => {
-            console.log(window.innerWidth);
             if(window.innerWidth > 1280) {
-                console.log("large");
                 setShouldRenderLarge(true);
                 setShouldRenderSmall(false);
                 setShouldRenderMedium(false);
             }
             else if(window.innerWidth < 768) {
-                console.log("small");
                 setShouldRenderSmall(true);
                 setShouldRenderMedium(false);
                 setShouldRenderLarge(false);
             }
             else if (768 < window.innerWidth < 1280) {
-                console.log("medium");
                 setShouldRenderMedium(true);
                 setShouldRenderSmall(false);
                 setShouldRenderLarge(false);
