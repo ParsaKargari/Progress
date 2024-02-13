@@ -1,31 +1,30 @@
 import { React, useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import {useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 import "../css/Login.css";
 
 export default function SignUpSettings() {
     const [spin, setSpin] = useState(false);
     const navigation = useNavigate();
-    const { user, signOut } = useAuth();
 
     useEffect(() => {
         setSpin(true);
-        // TODO: If user is not first time user, redirect to /home
-        // Retrive username/status from backend to check if user is first time user
     }, []);
 
     function SignUp() {
         var userName = document.getElementById("inline-first-name").value;
         var status = document.getElementById("inline-status").value;
         if (userName === "" || status === "") {
-            alert("Please fill out all fields!"); // TODO: Replace with a more user-friendly alert (Material-UI Snackbar)
+            alert("Please fill out all fields!");
             return;
         }
         else {
             navigation(`/home`, {replace : true})
         }
     }
+
+
 
     return (
         <>
@@ -57,25 +56,21 @@ export default function SignUpSettings() {
                     <div class="flex flex-col">
                         <div class="md:flex md:items-center mb-4 flex-1">
                             <div class="flex-1">
-                            <input class="hover:transition-colors hover:ease-in-out min-h-12 rounded-full bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 font-standard italic text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-first-name" type="text" placeholder="Enter a username"/>
+                                <input class="hover:transition-colors hover:ease-in-out min-h-12 rounded-full bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 font-standard italic text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-first-name" type="text" placeholder="Enter a username"/>
                             </div>
                         </div>
 
                         <div class="flex md:items-center mb-6 flex-1">
                             <div class="flex-1">
-                            <input class="hover:transition-colors hover:ease-in-out hover:duration-300 min-h-12 rounded-full font-standard italic bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-status" type="text" placeholder="Enter a status" />
+                                <input class="hover:transition-colors hover:ease-in-out hover:duration-300 min-h-12 rounded-full font-standard italic bg-InputBox appearance-none hover:border-2 focus:border-2 w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white hover:border-Selected focus:border-Selected" id="inline-status" type="text" placeholder="Enter a status" />
                             </div>
                         </div>
 
                         
 
-                        <div class="flex flex-1 justify-center space-x-4">
-                            <button class="border-2 border-TurqouiseBlue min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={SignUp}>
+                        <div class="flex flex-1 justify-center">
+                            <button class="border border-[#D3D3D3] min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={SignUp}>
                                 Sign Up
-                            </button>
-
-                            <button class="border-2 border-TurqouiseBlue min-h-12 min-w-20 rounded-full bg-white focus:shadow-outline focus:outline-none font-standard text-gray-800 font-bold py-2 px-4 " type="button" onClick={signOut}>
-                                Sign Out
                             </button>
                         </div>
                     </div>
