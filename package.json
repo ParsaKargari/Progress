@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "tailwind-scrollbar": "^3.0.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.4"
   }
 }
