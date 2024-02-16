@@ -14,36 +14,33 @@ const supabase = createClient(
   );
 
 
+  let searchedText = "Stark"
+/**
+ * 
+ */
+async function searchUserName(){
+    searchedText = searchedText.split(" ")
+    let { data, error } = await supabase
+    .rpc('fullname', {
+    }).select()
+    .textSearch('fullname', searchedText[0] + " or " + searchedText[1], {
+        type: 'websearch',
+        config: 'english',
+    })
+    if (error) console.error(error)
+    else console.log(data)
 
-let first_name = 'Tony'
-let last_name = 'Stark'
-
-async function searchUser(){
-//     if (last_name === "") last_name = " "
-    let { user, error } = await supabase
-    .rpc('fullname', {first_name, last_name})
-    console.log(user)
 }
 
 let tableName = "Users"
-let columnName = "FirstName"
-let columnValue = "Tony"
-let searchedText = "Tony"
 
+let columnName = "FirstName"
+let columnValue = "Tony Stark".split(" ")
 async function searchCell(){
     let { data, error } = await supabase
     .from(tableName)
-    .select(columnName)
-    .match({ [columnName]: columnValue });
-    console.log(data)
-}
-
-
-async function searchRow() {
-    let {data, error} = await supabase
-    .from(tableName)
-    .select()
-    .textSearch(columnName, searchedText)
+    .select("*")
+    .match({ [columnName]: [columnValue[0]] });
     console.log(data)
 }
 
@@ -89,9 +86,8 @@ export default function HomePage() {
         <>
         
             <div>
-            <button onClick={searchRow} >search row </button>
             <button onClick={searchCell} >search cell </button>
-            <button onClick={searchUser} >search User</button>
+            <button onClick={searchUserName} >search User</button>
                 {shouldRenderSmall ? <SmallSize /> : null}
 
                 {shouldRenderMedium ? <MediumSize /> : null}
