@@ -16,7 +16,7 @@ const supabase = createClient(
 
   let searchedText = "Stark"
 /**
- * 
+ * maybe concatenate more columns?
  */
 async function searchUserName(){
     searchedText = searchedText.split(" ")
@@ -37,11 +37,15 @@ let tableName = "Users"
 let columnName = "FirstName"
 let columnValue = "Tony Stark".split(" ")
 async function searchCell(){
+    searchedText = searchedText.split(" ")
     let { data, error } = await supabase
-    .from(tableName)
-    .select("*")
-    .match({ [columnName]: [columnValue[0]] });
-    console.log(data)
+    .from("Users")
+    .select("*").textSearch("Users", searchedText[0] + " or " + searchedText[1], {
+        type: 'websearch',
+        config: 'english',
+    })
+    // .match({ [columnName]: [columnValue[0]] });
+    // console.log(data)
 }
 
 
@@ -86,6 +90,7 @@ export default function HomePage() {
         <>
         
             <div>
+            
             <button onClick={searchCell} >search cell </button>
             <button onClick={searchUserName} >search User</button>
                 {shouldRenderSmall ? <SmallSize /> : null}
