@@ -3,9 +3,11 @@ import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
 const supabase = createClient(
-  process.env.REACT_APP_SUPABASE_URL,
-  process.env.REACT_APP_SUPABASE_ANON_KEY
+  "https://opibjtddqpdpnytgulvm.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9waWJqdGRkcXBkcG55dGd1bHZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY1MDU1MzUsImV4cCI6MjAyMjA4MTUzNX0.bzwZbig3eS8EiUof8ium4yDVIm607IlGL0xq6vaYiEU"
 );
+
+
 
 const AuthContext = createContext();
 
@@ -14,6 +16,8 @@ export function useAuth() {
 }
 
 export const AuthProvider = ({ children }) => {
+
+
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -39,6 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     // Cleanup on unmount
     return () => {
+      
       if (authListener?.subscription) authListener.subscription.unsubscribe();
     };
   }, []);
@@ -49,5 +54,5 @@ export const AuthProvider = ({ children }) => {
     signOut: () => supabase.auth.signOut(),
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children} </AuthContext.Provider>;
 };
