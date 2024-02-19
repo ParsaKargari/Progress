@@ -1,10 +1,11 @@
 const { createClient } = require('@supabase/supabase-js');
+
 class SupabaseConnector {
     constructor() {
         if (!SupabaseConnector.instance) {
             this.client = createClient(
-                process.env.REACT_APP_SUPABASE_URL,
-                process.env.REACT_APP_SUPABASE_ANON_KEY
+                "https://opibjtddqpdpnytgulvm.supabase.co",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9waWJqdGRkcXBkcG55dGd1bHZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY1MDU1MzUsImV4cCI6MjAyMjA4MTUzNX0.bzwZbig3eS8EiUof8ium4yDVIm607IlGL0xq6vaYiEU"
             );
             SupabaseConnector.instance = this;
         }
@@ -12,20 +13,15 @@ class SupabaseConnector {
     }
 
     static getInstance() {
-        if (!this.instance) {
-            this.instance = new SupabaseConnector();
+        if (!SupabaseConnector.instance) {
+            SupabaseConnector.instance = new SupabaseConnector();
         }
-        return this.instance;
+        return SupabaseConnector.instance;
     }
 
     getClient() {
         return this.client;
     }
 }
-// User Guide
 
-
-
-// const supabaseSingleton = SupabaseConnector.getInstance();
-// let a = supabaseSingleton.getClient();
-// a.from('Users').select('*').then(console.log).catch(console.error);
+module.exports = SupabaseConnector;
