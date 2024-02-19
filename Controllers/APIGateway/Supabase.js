@@ -22,7 +22,10 @@ class SupabaseConnector {
         return this.client;
     }
 }
+// User Guide
 
-const supabaseSingleton = SupabaseConnector.getInstance();
-let a = supabaseSingleton.getClient();
-a.from('Users').select('*').then(console.log).catch(console.error);
+
+
+// const supabaseSingleton = SupabaseConnector.getInstance();
+// let a = supabaseSingleton.getClient();
+// a.from('Users').select('*').then(console.log).catch(console.error);
