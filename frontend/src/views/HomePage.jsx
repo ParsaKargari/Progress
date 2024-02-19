@@ -32,6 +32,32 @@ async function searchUserName(){
 
 }
 
+
+let tableNameUpdates = 'Users';
+let columnNameUpdates = 'Status';
+
+function listenForStatusUpdates() {
+  const subscription = supabase
+    .channel(tableNameUpdates)
+    .on('UPDATE', (payload) => {
+      if (payload.columns.includes(columnNameUpdates)) {
+        const newValue = payload.new[columnNameUpdates];
+        
+        console.log(`Status updated to: ${newValue}`);
+        
+        returnStatusUpdate(newValue);
+      }
+    })
+    .subscribe();
+}
+
+
+function returnStatusUpdate(newValue) { console.log(newValue) 
+    return newValue }
+
+// Call the function to start listening for updates
+listenForStatusUpdates();
+
 let tableName = "Users"
 
 let columnName = "FirstName"
