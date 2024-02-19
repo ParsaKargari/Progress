@@ -3,40 +3,30 @@ import { createClient } from "@supabase/supabase-js";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Outlet, useNavigate } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext";
 import "../css/Login.css";
 
 // this needs to be put in a env file at the end of the project for security.
 const supabase = createClient(
-  "https://opibjtddqpdpnytgulvm.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9waWJqdGRkcXBkcG55dGd1bHZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY1MDU1MzUsImV4cCI6MjAyMjA4MTUzNX0.bzwZbig3eS8EiUof8ium4yDVIm607IlGL0xq6vaYiEU"
+  process.env.REACT_APP_SUPABASE_URL,
+  process.env.REACT_APP_SUPABASE_ANON_KEY
 );
 
 
+
 function Login() {
-  localStorage.clear();
   const [spin, setSpin] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
-    setSpin(true);
-  }, []);
-
-  const navigation = useNavigate();
-
-  useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN") {
-        navigation(`/signup`, {replace : true})
-      }
-    });
-  }, []);
-
-  {/** Keep this can use to access user info */}
-  // supabase.auth.onAuthStateChange((event, session) => {
-  //   if (event === 'SIGNED_IN') console.log('SIGNED_IN', session)
-  // })
-  
-  
+    if (user) {
+      navigate(`/signup`);
+    } else {
+      setSpin(true);
+    }
+  }, [user, navigate]);
+    
   
   return (
     <div className="flex justify-center items-center h-screen bg-primary">
