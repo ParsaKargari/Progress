@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {useNavigate } from "react-router-dom";
+import { insertUsername, insertStatus } from '../Controllers/ApplicationAPIs/Tasks.js';
 
 import "../css/Login.css";
 
@@ -22,6 +23,9 @@ export default function SignUpSettings() {
         else {
             navigation(`/home`, {replace : true})
         }
+
+        insertUsername(userName);
+        insertStatus(status)
     }
 
 
