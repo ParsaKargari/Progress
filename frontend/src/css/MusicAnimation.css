@@ -1,4 +1,4 @@
 .slide-left {
-    transition: transform 0.5s ease;
-    transform: translateX(1.5%);
+    transition: transform 2s ease;
+    transform: translateX(1.3%);
 }
