@@ -5,8 +5,7 @@ import MyUser from '../components/MyUser';
 export function FriendsBar () {
 
     return (
-
-        <div className="col-span-10 md:col-span-3 xl:col-span-3 bg-primary flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar px-8 flex flex-col justify-between">
+        <div className="col-span-10 md:col-span-3 xl:col-span-2 bg-primary flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar px-8 flex flex-col justify-between">
             
             <div>
             <div className='flex flex-row justify-between mt-8 mb-6 align-middle border-solid border-2 rounded-lg p-0.5 border-[#E2E8F0] bg-friendsBackground'>
@@ -41,7 +40,6 @@ export function FriendsBar () {
             </div>
             <MyUser/>
         </div>
-
     
     )
 }
