@@ -11,7 +11,7 @@ import { createTheme } from '@mui/material/styles';
 
 import { ActivityBar } from './ActivityBar';
 import { FriendsBar } from './FriendsBar';
-import { MyTasks } from './MyTasks';
+import { MyTasks } from '../components/MyTasks';
 
 function CustomTabPanel(props) {
 
