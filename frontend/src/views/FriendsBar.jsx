@@ -20,8 +20,8 @@ export function FriendsBar () {
                         Friends
                     </div>
                 </div>
-
-                <img className='mx-2'
+                {/* add friends go here */}
+                <img className='mx-2 cursor-pointer'
                         src={"/images/Plusicon.svg"}
                     />
             </div>

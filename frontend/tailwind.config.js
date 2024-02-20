@@ -15,6 +15,7 @@ module.exports = {
         friendsBackground: '#F1F5F9',
         friendsBracketAccent: '#6B7B90',
         betterWithFriends: '#E2E8F0',
+        
         TurqouiseBlue: '#00789E', // Turqouise Blue - Also Secondary Text Color for popout effect
         DarkGrey: '#334155', // Dark Grey - Also Main Text Color
         LightBlue: '#EDFFFF', // Light Blue
