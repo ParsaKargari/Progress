@@ -4,6 +4,9 @@ import Tooltip from '@mui/material/Tooltip';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import Chip from '@mui/material/Chip';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
 
 
 export function ActivityBar() {
@@ -52,8 +55,27 @@ export function ActivityBar() {
     const [hoveredActivityId, setHoveredActivityId] = useState(null);
     const [activities, setActivities] = useState(initialActivities);
     const [showEmojiPicker, setShowEmojiPicker] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [currentActivityIdForReaction, setCurrentActivityIdForReaction] = useState(null);
 
     const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
+
+    const handleEmojiIconClick = (event, activityId) => {
+        setAnchorEl(event.currentTarget);
+        setCurrentActivityIdForReaction(activityId);
+    };
+
+    // Function to close emoji picker
+    const handleClose = () => {
+        setAnchorEl(null);
+        setCurrentActivityIdForReaction(null);
+    };
+
+    // Function to handle emoji selection
+    const handleEmojiSelect = (emoji) => {
+        handleReactionClick(currentActivityIdForReaction, emoji);
+        handleClose();
+    };  
 
     // Function to add or remove reaction
     const handleReactionClick = (activityId, emoji) => {
@@ -93,7 +115,7 @@ export function ActivityBar() {
                                             <IconButton size="small">
                                                 <ChatBubbleOutlineIcon />
                                             </IconButton>
-                                            <IconButton size="small" onClick={() => setShowEmojiPicker(activity.id)}>
+                                            <IconButton size="small" onClick={(e) => handleEmojiIconClick(e, activity.id)}>
                                                 <EmojiEmotionsIcon />
                                             </IconButton>
                                         </>
@@ -125,6 +147,20 @@ export function ActivityBar() {
                     </div>
                 ))}
             </div>
+            <Menu
+                id="emoji-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                MenuListProps={{
+                'aria-labelledby': 'emoji-button',
+                }}
+            >
+                {availableEmojis.map((emoji) => (
+                    <MenuItem key={emoji} onClick={() => handleEmojiSelect(emoji)}>{emoji}</MenuItem>
+                ))}
+            </Menu>
         </div>
+        
     );
 }
