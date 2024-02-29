@@ -25,6 +25,7 @@ function Login() {
     }
     else {
       localStorage.setItem("User_ID", user.id)
+      localStorage.setItem("User_Email", user.email)
     }
     
     if (user) {
