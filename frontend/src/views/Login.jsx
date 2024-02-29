@@ -20,6 +20,14 @@ function Login() {
   const { user } = useAuth();
 
   useEffect(() => {
+    if (user === null) {
+      console.log("user is null")
+    }
+    else {
+      localStorage.setItem("User_ID", user.id)
+      localStorage.setItem("User_Email", user.email)
+    }
+    
     if (user) {
       navigate(`/signup`);
     } else {
@@ -27,6 +35,7 @@ function Login() {
     }
   }, [user, navigate]);
     
+
   
   return (
     <div className="flex justify-center items-center h-screen bg-primary">
