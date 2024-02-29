@@ -67,17 +67,21 @@ export function TasksBar () {
 
     return (
         <>
-        <div className="col-span-10 md:col-span-8 xl:col-span-5 bg-red-300 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar flex flex-rows">
-            <div className="flex flex-col flex-1">
+        <div className="col-span-10 md:col-span-8 xl:col-span-5 bg-red-300 overflow-y-hidden overflow-x-hidden h-full max-h-screen no-scrollbar flex flex-rows">
+            <div className="flex flex-col flex-1 over">
 
                 {/**Create Task Bar ------------------------------------------------------------------------------------------ */}
-                <div className="flex flex-cols h-28 bg-primary justify-center items-center">
+                <div className="flex flex-cols h-28 pt-3 bg-primary justify-center items-center">
                     
-                    <input class="flex-1 m-3 hover:transition-colors hover:ease-in-out hover:duration-300 min-h-12 rounded-lg font-standard italic bg-AddTaskBg appearance-none py-2 px-4 text-gray-700 leading-tight focus:outline-none " id="inline-status" type="text" placeholder="New Task Title" />
-                    
-                    <button className="m-3 btn btn-circle bg-AddTaskBg w-12 h-12 rounded-full flex justify-center items-center">
-                        <img src="/images/+.svg" alt="add task sign" />
-                    </button>
+                    <div className="w-11/12 p-3">
+                        <input class="flex-1 w-full hover:transition-colors hover:ease-in-out hover:duration-300 rounded-lg font-standard italic bg-AddTaskBg appearance-none py-2 px-4 text-gray-700 leading-tight focus:outline-none min-h-12" id="inline-status" type="text" placeholder="New Task Title" />
+                    </div>
+
+                    <div className="w-1/12">
+                        <button className=" btn btn-circle bg-AddTaskBg w-12 h-12 rounded-full flex justify-center items-center">
+                            <img src="/images/+.svg" alt="add task sign" />
+                        </button>
+                    </div>
 
                 </div>
 
@@ -96,7 +100,20 @@ export function TasksBar () {
                             }}>
 
                             <Tabs
-                            value={value} onChange={handleChange} aria-label="tasks tab">
+                                value={value} 
+                                onChange={handleChange} 
+                                aria-label="tasks tab" 
+                                TabIndicatorProps={{
+                                    style: {
+                                    backgroundColor: "#334155"
+                                    }
+                                }}
+                                sx={{
+                                    "& .Mui-selected": {
+                                        color: "#334155"
+                                    },
+                                }}
+                            >
                                 
                                 <Tab
                                 sx={{
@@ -104,7 +121,6 @@ export function TasksBar () {
                                     fontFamily: 'Inter, sans-serif',
                                     fontSize: '18px',
                                     fontWeight: 'bold',
-                                    
                                 }}
                                 label="My Tasks" {...a11yProps(0)} />
 
