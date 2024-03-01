@@ -20,14 +20,6 @@ function Login() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // useEffect(() => {
-  //   getUserValue("", "")
-  //     .then(users => {
-  //       setUser(users[0]) // your response is an array, extract the first value
-  //     })
-  //     .catch(console.error)
-  // }, []);
-
   useEffect(() => {
     if (user === null) {
       console.log("user is null");
