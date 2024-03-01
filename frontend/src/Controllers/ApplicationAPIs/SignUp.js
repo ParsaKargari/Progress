@@ -4,7 +4,14 @@ const supabase = createClient(
     process.env.REACT_APP_SUPABASE_ANON_KEY
   );
 
+export async function getUsername(user_id) {
 
+    const { data, error } = await supabase
+        .from('Users')
+        .select('Username')
+        .eq('UserID', user_id);
+    return data
+}
 
 export async function addUsername(userName, user_id) {
     try {
