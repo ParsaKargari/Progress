@@ -32,6 +32,24 @@ class Spotify {
         }
     }
 
+    async  getNewAccessToken(refreshToken) {
+        var request = require('request');
+        var options = {
+          'method': 'GET',
+          'url': 'http://localhost:8888/refresh_token?refresh_token=' + refreshToken,
+          'headers': {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': ''
+          }
+        };
+        request(options, function (error, response) {
+          if (error) throw new Error(error);
+          console.log(response.body);
+        });
+        return response.body;
+      
+      }
+
 
     // Call this method to get the login page for spotify
     async LoginUser() {
