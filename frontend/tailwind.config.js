@@ -9,6 +9,10 @@ module.exports = {
         accent: "#ff9900", // Example accent color
         background: "#f8f9fa", // Example background color
         text1: "#727374", // Example text color
+        stroke: '#d3d3d3',
+        friendsBackground: '#F1F5F9',
+        friendsBracketAccent: '#6B7B90',
+        betterWithFriends: '#E2E8F0',
         text2: "#6B7B90", // Example text color
         text3: "#E2E8F0", // Example text color
 
@@ -19,6 +23,8 @@ module.exports = {
         White: "#FFFFFF", // White
         InputBox: "#F8F8F8", // Input Box background
         Selected: "#EDFFFF", // Use this for focus element if something is clicked
+        AddTaskBg: '#E2E8F0', // Add Task Input Background
+        textcolour: '#6B7B90', // Text Colour
       },
       fontFamily: {
         standard: ["Inter", "sans-serif"], // CustomFont1 with fallback to sans-serif
@@ -27,7 +33,10 @@ module.exports = {
         27: "27px",
         16: "16px",
         14: "14px",
-      },
+      },      fontSize: {
+        base: ['14px'],
+      }
+
     },
   },
   plugins: [
@@ -43,6 +52,6 @@ module.exports = {
       };
 
       addUtilities(newUtilities);
-    },
+    },,
   ],
 };
