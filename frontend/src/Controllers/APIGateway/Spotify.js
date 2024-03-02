@@ -1,5 +1,6 @@
 const SupabaseConnector = require('../APIGateway/Supabase.js');
 
+
 class Spotify {
     constructor() {
         this.supabase = new SupabaseConnector();
@@ -44,9 +45,9 @@ class Spotify {
         res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
           response_type: 'code',
-          client_id: client_id,
+          client_id: process.env.SPOTIFY_CLIENT_ID,
           scope: scope,
-          redirect_uri: redirect_uri,
+          redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
           state: state
         }));
 
