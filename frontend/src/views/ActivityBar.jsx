@@ -8,7 +8,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 
-
 export function ActivityBar() {
     const initialActivities = [
         {
@@ -54,22 +53,18 @@ export function ActivityBar() {
 
     const [hoveredActivityId, setHoveredActivityId] = useState(null);
     const [activities, setActivities] = useState(initialActivities);
-    const [showEmojiPicker, setShowEmojiPicker] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentActivityIdForReaction, setCurrentActivityIdForReaction] = useState(null);
 
     const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
 
-    const handleEmojiIconClick = (event, activityId) => {
+    const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        setCurrentActivityIdForReaction(activityId);
-    };
-
-    // Function to close emoji picker
-    const handleClose = () => {
+      };
+    
+      const handleClose = () => {
         setAnchorEl(null);
-        setCurrentActivityIdForReaction(null);
-    };
+      };
 
     // Function to handle emoji selection
     const handleEmojiSelect = (emoji) => {
@@ -96,7 +91,7 @@ export function ActivityBar() {
     };
     
     return (
-        <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-y-auto overflow-x-hidden h-screen max-h-screen">
+        <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-y-auto overflow-x-hidden h-screen max-h-screen" >
             <p className="text-27 font-bold py-14 px-6 text-DarkGrey font-standard">Activity</p>
             <div className="px-1">
                 {activities.map((activity) => (
@@ -115,9 +110,28 @@ export function ActivityBar() {
                                             <IconButton size="small">
                                                 <ChatBubbleOutlineIcon />
                                             </IconButton>
-                                            <IconButton size="small" onClick={(e) => handleEmojiIconClick(e, activity.id)}>
+                                            <IconButton size="small" onClick={handleClick}>
                                                 <EmojiEmotionsIcon />
                                             </IconButton>
+                                            <Menu
+                                                anchorEl={anchorEl}
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'center',
+                                                }}
+                                                transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'center',
+                                                }}
+                                            >
+                                                {availableEmojis.map((emoji) => (
+                                                <MenuItem key={emoji} onClick={() => handleEmojiSelect(emoji)}>
+                                                    {emoji}
+                                                </MenuItem>
+                                                ))}
+                                            </Menu>
                                         </>
                                     )}
                                 </div>
@@ -147,19 +161,6 @@ export function ActivityBar() {
                     </div>
                 ))}
             </div>
-            <Menu
-                id="emoji-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                MenuListProps={{
-                'aria-labelledby': 'emoji-button',
-                }}
-            >
-                {availableEmojis.map((emoji) => (
-                    <MenuItem key={emoji} onClick={() => handleEmojiSelect(emoji)}>{emoji}</MenuItem>
-                ))}
-            </Menu>
         </div>
         
     );
