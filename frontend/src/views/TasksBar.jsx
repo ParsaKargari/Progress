@@ -113,7 +113,7 @@ export function TasksBar () {
                                         color: "#334155"
                                     },
                                     "& .MuiTabs-indicator": {
-                                        backgroundColor: "#334155"
+                                        color: "#334155"
                                     }
                                 }}
                             >
