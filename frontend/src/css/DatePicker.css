@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto&display=swap');
+.dateInput {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    font-variation-settings: "slnt" 0;
+    background: transparent;
+    font-size: 14px;
+    color: #6B7B90 !important;
+    display: flex;
+    outline: none;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+.dateInput {
+  display: flex;
+  /* width: 150px; */
+  border: 0px;
+  outline: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}

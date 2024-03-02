@@ -1,12 +1,6 @@
-import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import Chip from '@mui/material/Chip';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import { React } from 'react';
 
+export function ActivityBar () {
 
 export function ActivityBar() {
     const initialActivities = [
@@ -162,6 +156,5 @@ export function ActivityBar() {
                 ))}
             </div>
         </div>
-        
-    );
+    )
 }
