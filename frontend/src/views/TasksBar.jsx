@@ -4,7 +4,7 @@ export function TasksBar () {
 
     return (
         <>
-        <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-red-300 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar flex flex-rows">
+        <div className="col-span-10 md:col-span-8 xl:col-span-5 bg-red-300 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar flex flex-rows">
             <div className="flex flex-col flex-1 bg-slate-600">
                 {/**Create Task Bar */}
                 <div className="flex flex-cols h-1/6 bg-cyan-300 justify-center items-center">
