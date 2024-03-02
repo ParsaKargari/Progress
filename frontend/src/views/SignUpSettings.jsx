@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {useNavigate } from "react-router-dom";
-import { addUsername, addStatus, addEmail } from '../Controllers/ApplicationAPIs/SignUp.js';
+// import { addUsername, addStatus, addEmail } from '../Controllers/ApplicationAPIs/SignUp.js';
 import { createClient } from "@supabase/supabase-js";
 
 import "../css/Login.css";
@@ -26,9 +26,9 @@ export default function SignUpSettings() {
         }
         var user_id = localStorage.getItem("User_ID");
         var user_email = localStorage.getItem("User_Email");
-        addUsername(userName, user_id);
-        addStatus(status, user_id);
-        addEmail(user_email, user_id);
+        // addUsername(userName, user_id);
+        // addStatus(status, user_id);
+        // addEmail(user_email, user_id);
 
     }
 
