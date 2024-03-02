@@ -15,6 +15,8 @@ module.exports = {
         friendsBackground: '#F1F5F9',
         friendsBracketAccent: '#6B7B90',
         betterWithFriends: '#E2E8F0',
+        text2: "#6B7B90", // Example text color
+        text3: "#E2E8F0", // Example text color
         
         TurqouiseBlue: '#00789E', // Turqouise Blue - Also Secondary Text Color for popout effect
         DarkGrey: '#334155', // Dark Grey - Also Main Text Color
@@ -31,6 +33,9 @@ module.exports = {
       },
       fontSize: {
         base: ['14px'],
+        27: "27px",
+        16: "16px",
+        14: "14px",
       }
 
     },

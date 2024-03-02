@@ -1,4 +1,4 @@
-import { React, useState, useLayoutEffect, useRef, useEffect  } from 'react';
+import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
@@ -6,6 +6,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import Chip from '@mui/material/Chip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
 
 export function ActivityBar() {
     const initialActivities = [
@@ -57,13 +58,15 @@ export function ActivityBar() {
 
     const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
 
-    const handleClick = (event) => {
+    const handleClick = (event, activityId) => {
         setAnchorEl(event.currentTarget);
-      };
+        setCurrentActivityIdForReaction(activityId); // Set the activity ID when the emoji button is clicked
+    };
     
-      const handleClose = () => {
+    
+    const handleClose = () => {
         setAnchorEl(null);
-      };
+    };
 
     // Function to handle emoji selection
     const handleEmojiSelect = (emoji) => {
@@ -75,12 +78,12 @@ export function ActivityBar() {
     const handleReactionClick = (activityId, emoji) => {
         const updatedActivities = activities.map(activity => {
             if (activity.id === activityId) {
-                const reactionIndex = activity.reactions.findIndex(reaction => reaction.emoji === emoji && reaction.by === 'Current User');
-                if (reactionIndex > -1) {
-                    // Remove reaction
-                    activity.reactions.splice(reactionIndex, 1);
+                const existingReactionIndex = activity.reactions.findIndex(reaction => reaction.emoji === emoji && reaction.by === 'Current User');
+                if (existingReactionIndex > -1) {
+                    // Remove the reaction if it exists
+                    activity.reactions.splice(existingReactionIndex, 1);
                 } else {
-                    // Add reaction
+                    // Add the reaction if it does not exist
                     activity.reactions.push({ emoji, by: 'Current User' });
                 }
             }
@@ -91,7 +94,7 @@ export function ActivityBar() {
     
     return (
         <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-y-auto overflow-x-hidden h-screen max-h-screen" >
-            <p className="text-27 font-bold py-14 px-6 text-DarkGrey font-standard">Activity</p>
+            <p className="text-27 font-bold py-7 px-6 text-DarkGrey font-standard">Activity</p>
             <div className="px-1">
                 {activities.map((activity) => (
                     <div key={activity.id} onMouseEnter={() => setHoveredActivityId(activity.id)}
@@ -109,20 +112,21 @@ export function ActivityBar() {
                                             <IconButton size="small">
                                                 <ChatBubbleOutlineIcon />
                                             </IconButton>
-                                            <IconButton size="small" onClick={handleClick}>
+                                            <IconButton size="small" onClick={(e) => handleClick(e, activity.id)}>
                                                 <EmojiEmotionsIcon />
                                             </IconButton>
+
                                             <Menu
                                                 anchorEl={anchorEl}
                                                 open={Boolean(anchorEl)}
                                                 onClose={handleClose}
                                                 anchorOrigin={{
-                                                vertical: 'bottom',
-                                                horizontal: 'center',
+                                                    vertical: 'bottom',
+                                                    horizontal: 'center',
                                                 }}
                                                 transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'center',
+                                                    vertical: 'top',
+                                                    horizontal: 'center',
                                                 }}
                                             >
                                                 {availableEmojis.map((emoji) => (
@@ -136,20 +140,24 @@ export function ActivityBar() {
                                 </div>
                             </div>
                             <div className='ml-2 mb-2'>
-                                {Object.entries(activity.reactions.reduce((acc, { emoji, by }) => {
-                                    if (!acc[emoji]) acc[emoji] = [];
-                                    acc[emoji].push(by);
-                                    return acc;
-                                }, {})).map(([emoji, byArray]) => (
-                                    <Tooltip key={emoji} title={byArray.join(', ')}>
-                                        <Chip
-                                            style={{ marginRight: '5px' }}
-                                            icon={<span>{emoji}</span>}
-                                            onClick={() => handleReactionClick(activity.id, emoji)}
-                                            label={byArray.length}
-                                        />
-                                    </Tooltip>
-                                ))}
+                            {Object.entries(activity.reactions.reduce((acc, { emoji, by }) => {
+                                if (!acc[emoji]) acc[emoji] = [];
+                                acc[emoji].push(by);
+                                return acc;
+                            }, {})).map(([emoji, byArray]) => (
+                                <Tooltip key={emoji} title={byArray.join(', ')}>
+                                    <Chip
+                                        style={{
+                                            marginRight: '5px',
+                                            backgroundColor: byArray.includes('Current User') ? '#ADD8E6' : undefined, // Light blue color for current user's reactions
+                                        }}
+                                        icon={<span>{emoji}</span>}
+                                        onClick={() => handleReactionClick(activity.id, emoji)}
+                                        label={byArray.length}
+                                    />
+                                </Tooltip>
+                            ))}
+
                             </div>
                             {activity.comments.map((comment, index) => (
                                 <div key={index} className="flex items-center mb-2 ml-6 pr-16">
@@ -161,5 +169,6 @@ export function ActivityBar() {
                 ))}
             </div>
         </div>
-    )
+        
+    );
 }
