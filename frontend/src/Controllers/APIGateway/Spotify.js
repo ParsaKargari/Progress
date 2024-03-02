@@ -6,7 +6,7 @@ class Spotify {
         this.supabase = new SupabaseConnector();
         this.client = this.supabase.getClient();
     }
-
+    //Table Getters    
     async getAccessToken(userID) {
         try {
             const result = await this.client
@@ -31,6 +31,67 @@ class Spotify {
             throw error;
         }
     }
+
+    async getLastPlayedSong(userID) {
+        try {
+            const result = await this.client
+                .from('Users')
+                .select('Currently_Playing_Song')
+                .eq('UserID', userID);
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    //Table Setters
+
+    async setAccessToken(userID, accessToken) {
+        try {
+            const result = await this.client
+                .from('Users')
+                .update({ Spotify_Authorization_Token: accessToken })
+                .eq('UserID', userID);
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+
+    }
+
+    async setRefreshToken(userID, refreshToken) {
+        try {
+            const result = await this.client
+                .from('Users')
+                .update({ Spotify_Refresh_Token: refreshToken })
+                .eq('UserID', userID);
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async setLastPlayedSong(userID, songInfo) {
+        try {
+            const result = await this.client
+                .from('Users')
+                .update({ Currently_Playing_Song: songInfo })
+                .eq('UserID', userID);
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+
+    }
+
+    
+
+
+    // Methods involving the Spotify API
 
     async  getNewAccessToken(refreshToken) {
         var request = require('request');
