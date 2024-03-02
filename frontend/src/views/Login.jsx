@@ -5,6 +5,7 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../css/Login.css";
+import { addUsername, addStatus, addEmail, getUsername} from '../Controllers/ApplicationAPIs/SignUp.js';
 
 // this needs to be put in a env file at the end of the project for security.
 const supabase = createClient(
@@ -20,6 +21,24 @@ function Login() {
   const { user } = useAuth();
 
   useEffect(() => {
+    if (user === null) {
+      console.log("user is null");
+    }
+    else {
+      var isSignedIn = false;
+      getUsername(user.id)
+      .then(result => {
+        if (result[0].Username != null) {
+          isSignedIn = true;
+        }
+        if (isSignedIn === true) {
+          navigate(`/home`);
+        }
+        });
+      localStorage.setItem("User_ID", user.id);
+      localStorage.setItem("User_Email", user.email);
+    }
+    
     if (user) {
       navigate(`/signup`);
     } else {
@@ -27,6 +46,7 @@ function Login() {
     }
   }, [user, navigate]);
     
+
   
   return (
     <div className="flex justify-center items-center h-screen bg-primary">

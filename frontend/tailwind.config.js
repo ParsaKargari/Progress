@@ -23,6 +23,7 @@ module.exports = {
         White: '#FFFFFF', // White
         InputBox: '#F8F8F8', // Input Box background
         Selected: '#EDFFFF', // Use this for focus element if something is clicked
+        AddTaskBg: '#E2E8F0', // Add Task Input Background
       },
       fontFamily: {
         'standard': ['Inter', 'sans-serif'], // CustomFont1 with fallback to sans-serif

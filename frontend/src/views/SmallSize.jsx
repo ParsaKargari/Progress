@@ -26,8 +26,6 @@ export function SmallSize() {
         <Box
         sx={{ width: '85vw' }}
         role="presentation"
-        onClick={toggleActDrawer(anchor, false)}
-        onKeyDown={toggleActDrawer(anchor, false)}
         >
             
             <ActivityBar />
@@ -53,8 +51,6 @@ export function SmallSize() {
         <Box
         sx={{ width: '85vw' }}
         role="presentation"
-        onClick={toggleFriDrawer(anchor, false)}
-        onKeyDown={toggleFriDrawer(anchor, false)}
         >
             
             <FriendsBar />
