@@ -1,7 +1,5 @@
 import { React } from 'react';
 
-export function ActivityBar () {
-
 export function ActivityBar() {
     const initialActivities = [
         {
