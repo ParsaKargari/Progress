@@ -55,6 +55,13 @@ export function TaskComponent (props) {
         return formattedDate;
     }
 
+    useEffect(() => {
+        if (checked === true){
+            var task = document.getElementById(`TaskDescr-${taskDescription}`);
+            task.classList.add("line-through");
+        }
+    }, []);
+
     return (
         <>
             <div className="mb-2 flex flex-row">
