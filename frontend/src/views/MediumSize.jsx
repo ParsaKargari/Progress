@@ -25,8 +25,6 @@ export function MediumSize() {
         <Box
         sx={{ width: '75vw' }}
         role="presentation"
-        onClick={toggleDrawer(anchor, false)}
-        onKeyDown={toggleDrawer(anchor, false)}
         >
             
             <ActivityBar />
