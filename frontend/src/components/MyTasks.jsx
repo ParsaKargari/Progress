@@ -5,45 +5,82 @@ import { TaskComponent } from './TaskComponent';
 export function MyTasks () {
     const[taskList, setTaskList] = useState([]);
 
-    const Addtask = () => {
-        const newtask = generatetaskContents()
-        const temp = [...taskList, newtask]
+    const Addtask = (taskDescription, dueDate, status, visibilityDB, plannedDate, uuid) => {
+        const newKey = "task" + (Object.keys(taskList).length + 1);
+        
+        const newTask = {
+            "key": "randomKey" + (Object.keys(taskList).length + 1), // Generating a random key
+            "taskDescription": taskDescription,
+            "status": status,
+            "visibilityDB": visibilityDB,
+            "dueDate": dueDate,
+            "plannedDate": plannedDate
+        };
+
+        const temp = [...taskList, newTask];
         setTaskList(temp)
     }
+    
 
-    const generatetaskContents = () => {
-        let  now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        let date = now.toISOString().slice(0,16);
-        const defaulttask = {
-            title: "Untitled",
-            date: date,
-            content: ""
+    // const generatetaskContents = () => {
+    //     let  now = new Date();
+    //     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    //     let date = now.toISOString().slice(0,16);
+    //     const defaulttask = {
+    //         title: "Untitled",
+    //         date: date,
+    //         content: ""
+    //     }
+    //     return defaulttask;
+    // }
+
+    const test = {
+        "task1": {
+            "uuid": "randomKey1",
+            "taskDescription": "Clean Apartment",
+            "status": true,
+            "visibilityDB": true,
+            "dueDate": "2026-06-04",
+            "plannedDate": "2024-02-04"
+        },
+        "task2": {
+            "uuid": "randomKey2",
+            "taskDescription": "Complete ENSF401 Research Assignment",
+            "status": false,
+            "visibilityDB": true,
+            "dueDate": "2024-02-13",
+            "plannedDate": "2024-02-04"
+        },
+        "task3": {
+            "uuid": "randomKey3",
+            "taskDescription": "Laundry",
+            "status": false,
+            "visibilityDB": false,
+            "dueDate": "2024-02-04",
+            "plannedDate": "2024-02-04"
         }
-        return defaulttask;
     }
 
-    
+    useEffect(() => {
+        setTaskList(test)
+    }, []);
 
     return (
         <>
             <div className="flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar">
-            {/* taskDescription, dueDate, status, visibilityDB */}
-                < TaskComponent taskDescription="Clean Apartment" status={true} visibilityDB={true} dueDate={"2026-06-04"} plannedDate={"2024-02-04"}/>
-                < TaskComponent taskDescription="Complete ENSF401 Research Assignment" status={false} visibilityDB={true} dueDate={"2024-02-13"} plannedDate={"2024-02-04"}/>
-                < TaskComponent taskDescription="Laundry" status={false} visibilityDB={false} dueDate={"2024-02-04"} plannedDate={"2024-02-04"}/>
 
-
-                {/* {
-                    taskList.map((task, index) => {
-                        return (
-                            <>
-                                <TaskComponent taskDescription="Clean Apartment" status={true} visibilityDB={true} dueDate={"2026-06-04"} plannedDate={"2024-02-04"} />
-                            </>
-                            
-                        )
-                    })
-                } */}
+                {
+                    Object.keys(taskList).map(taskKey => (
+                        <TaskComponent
+                            uuid = {taskKey}
+                            taskDescription = {taskList[taskKey].taskDescription}
+                            status = {taskList[taskKey].status}
+                            visibilityDB =  {taskList[taskKey].visibilityDB}
+                            dueDate = {taskList[taskKey].dueDate}
+                            plannedDate = {taskList[taskKey].plannedDate}
+                        />
+                    ))
+                }
 
             </div>
         </>

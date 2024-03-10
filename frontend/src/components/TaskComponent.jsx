@@ -5,11 +5,12 @@ import "../css/DatePicker.css";
 
 export function TaskComponent (props) {
 
-    const { taskDescription, dueDate, status, visibilityDB, plannedDate } = props;
+    const { taskDescription, dueDate, status, visibilityDB, plannedDate, uuid } = props;
     // console.log(taskDescription);
     // console.log(dueDate);
     // console.log(status);
     // console.log(visibilityDB);
+    // console.log(uuid);
 
     const [date, setDate] = useState(props.dueDate);
     const [planneddate, setPlanneddate] = useState(props.plannedDate);
@@ -17,22 +18,16 @@ export function TaskComponent (props) {
     const [editing, SetEditing] = useState(false);
 
     const [checked, setChecked] = useState(props.status);
-    
-    // useEffect(() => {
-    //     if (checked === true){
-    //         var task = document.getElementById(`TaskDescr-${taskDescription}`);
-    //         task.classList.add("line-through");
-    //     }
-    // }, [props.status]);
+
 
     const handleChange = (event) => {
         setChecked(event.target.checked);
         if(event.target.checked === true){
-            var task = document.getElementById(`TaskDescr-${taskDescription}`);
+            var task = document.getElementById(`${uuid}`);
             task.classList.add("line-through");
         }
         else{
-            var task = document.getElementById(`TaskDescr-${taskDescription}`);
+            var task = document.getElementById(`${uuid}`);
             task.classList.remove("line-through");
         }
     };
@@ -45,10 +40,6 @@ export function TaskComponent (props) {
     function formatDate(formatDate) {
         const date = new Date(formatDate);
         
-        // const options = { weekday: 'long', day: 'numeric' };
-        // const formattedDate = date.toLocaleDateString('en-US', options);
-
-        // only day
         date.setDate(date.getDate() + 1);
         const formattedDate = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
         
@@ -57,7 +48,7 @@ export function TaskComponent (props) {
 
     useEffect(() => {
         if (checked === true){
-            var task = document.getElementById(`TaskDescr-${taskDescription}`);
+            var task = document.getElementById(`${uuid}`);
             task.classList.add("line-through");
         }
     }, []);
@@ -81,7 +72,7 @@ export function TaskComponent (props) {
                 <div className="flex flex-col">
                     <div className="font-standard text-DarkGrey flex flex-row items-center flex-wrap">
                         <h1 
-                            id={`TaskDescr-${taskDescription}`}
+                            id={`${uuid}`}
                             className="font-standard text-DarkGrey decoration-DarkGrey decoration-2 truncate font-bold	text-base transition duration-500"
                         >
 
