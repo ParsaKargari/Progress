@@ -44,18 +44,66 @@ class Tasks {
             throw error;
         }
     }
+    // async updateTaskById(taskId, columnName, newData) {
+    //     try {
+    //         const updateObject = {};
+    //         updateObject[columnName] = newData;
+
+    //         const result = await this.client
+    //             .from('Tasks')
+    //             .update(updateObject)
+    //             .eq('TaskID', taskId)
+    //             .single();
+
+    //         return result;
+    //     } catch (error) {
+    //         console.error(error);
+    //         throw error;
+    //     }
+    // }
+
     async updateTaskById(taskId, columnName, newData) {
         try {
-            const updateObject = {};
-            updateObject[columnName] = newData;
-
             const result = await this.client
                 .from('Tasks')
-                .update(updateObject)
+                .update({ [columnName]: newData })
                 .eq('TaskID', taskId)
-                .single();
-
+                .select()
             return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async addComment(task_id, username, new_comment) {
+        try {
+            let { data, error } = await this.client
+                .rpc('append_to_comments', {
+                    new_comment,
+                    task_id,
+                    username
+                })
+            if (error) console.error(error)
+            else console.log(data)
+            return data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async addReaction(task_id, username, new_reaction) {
+        try {
+            let { data, error } = await this.client
+                .rpc('append_to_reactions', {
+                    new_reaction,
+                    task_id,
+                    username
+                })
+            if (error) console.error(error)
+            else console.log(data)
+            return data;
         } catch (error) {
             console.error(error);
             throw error;
