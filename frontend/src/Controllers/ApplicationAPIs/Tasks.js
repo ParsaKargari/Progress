@@ -110,6 +110,33 @@ class Tasks {
         }
     }
 
+    async getHeatMapData(userID, startDate, endDate) {
+        try {
+            const tasks = await this.client
+                .from('Tasks')
+                .select('AddedDate')
+                .eq('UserID', userID)
+                .gte('DueDate', startDate)
+                .lte('DueDate', endDate);
+            console.log(tasks.data)
+            let map = {};
+            tasks.data.forEach(task => {
+                const key = task.AddedDate;
+                if (!map[key]) {
+                    map[key] = 1;
+                } else {
+                    map[key]++;
+                }
+            });
+            // console.log(map);
+            return map;
+
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
 }
 
 module.exports = Tasks;
