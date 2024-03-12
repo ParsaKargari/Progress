@@ -26,6 +26,7 @@ export default function SignUpSettings() {
         }
         var user_id = localStorage.getItem("User_ID");
         var user_email = localStorage.getItem("User_Email");
+        fetch(`http://localhost:9000/signUp/${user_id}/${userName}/${status}/${user_email}`)
         // addUsername(userName, user_id);
         // addStatus(status, user_id);
         // addEmail(user_email, user_id);

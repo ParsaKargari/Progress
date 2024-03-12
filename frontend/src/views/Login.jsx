@@ -20,21 +20,32 @@ function Login() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+
   useEffect(() => {
     if (user === null) {
       console.log("user is null");
     }
     else {
-      // var isSignedIn = false;
-      // getUsername(user.id)
-      // .then(result => {
-      //   if (result[0].Username != null) {
-      //     isSignedIn = true;
-      //   }
-      //   if (isSignedIn === true) {
-      //     navigate(`/home`);
-      //   }
-      //   });
+      var isSignedIn = false;
+      console.log("user:", user.id)
+      fetch(`http://localhost:9000/signUp/${user.id}`)
+
+      .then(res => res.json())
+      .then(res => {
+        try {
+          if (res[0].Username != null) {
+            isSignedIn = true;
+            console.log(res[0].Username)
+          }
+        }
+        catch {
+          
+        }
+          
+          if (isSignedIn === true) {
+            navigate(`/home`);
+          }
+          });
       localStorage.setItem("User_ID", user.id);
       localStorage.setItem("User_Email", user.email);
     }
