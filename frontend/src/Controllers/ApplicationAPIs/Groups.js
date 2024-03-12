@@ -66,6 +66,19 @@ class Groups {
         else console.log(data)
 
     }
+
+    async updateGroupById(groupId, columnName, newData) {
+        try {
+            const result = await this.client
+                .from('Groups')
+                .update({ [columnName]: newData })
+                .eq('GroupID', groupId)
+                .select()
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }
 
 module.exports = Groups;
