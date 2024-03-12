@@ -6,6 +6,8 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import Chip from '@mui/material/Chip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ActivityHeatMap from '../components/ActivityHeatMap';
+
 
 
 export function ActivityBar() {
@@ -95,6 +97,9 @@ export function ActivityBar() {
     return (
         <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-y-auto overflow-x-hidden h-screen max-h-screen" >
             <p className="text-27 font-bold py-7 px-6 text-DarkGrey font-standard">Activity</p>
+            <div className="ml-6 mt-12">
+                <ActivityHeatMap />
+            </div>
             <div className="px-1">
                 {activities.map((activity) => (
                     <div key={activity.id} onMouseEnter={() => setHoveredActivityId(activity.id)}
