@@ -7,7 +7,7 @@ import Chip from '@mui/material/Chip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ActivityHeatMap from '../components/ActivityHeatMap';
-
+import TextField from '@mui/material/TextField';
 
 
 export function ActivityBar() {
@@ -57,8 +57,34 @@ export function ActivityBar() {
     const [activities, setActivities] = useState(initialActivities);
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentActivityIdForReaction, setCurrentActivityIdForReaction] = useState(null);
+    const [commentInputActivityId, setCommentInputActivityId] = useState(null);
 
     const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
+
+    const [newComments, setNewComments] = useState(initialActivities.reduce((acc, activity) => {
+        acc[activity.id] = '';
+        return acc;
+      }, {}));
+
+    const handleCommentInputChange = (activityId, text) => {
+        setNewComments({
+          ...newComments,
+          [activityId]: text,
+        });
+    };
+
+    const handleCommentSubmit = (activityId) => {
+        const comment = newComments[activityId];
+        console.log(`Comment on activity ${activityId}:`, comment);
+        setNewComments({
+          ...newComments,
+          [activityId]: '',
+        });
+      };
+
+    const handleCommentClick = (activityId) => {
+        setCommentInputActivityId(prevId => prevId === activityId ? null : activityId); // Toggle the input for the specific activity
+    };
 
     const handleClick = (event, activityId) => {
         setAnchorEl(event.currentTarget);
@@ -114,7 +140,7 @@ export function ActivityBar() {
                                 <div style={{ display: 'flex', gap: '10px', height: '34px' }}>
                                     {hoveredActivityId === activity.id && (
                                         <>
-                                            <IconButton size="small">
+                                            <IconButton size="small" onClick={() => handleCommentClick(activity.id)}>
                                                 <ChatBubbleOutlineIcon />
                                             </IconButton>
                                             <IconButton size="small" onClick={(e) => handleClick(e, activity.id)}>
@@ -169,6 +195,42 @@ export function ActivityBar() {
                                     <div className="ml-2 text-text2 font-regular"><span className='font-semibold'>{comment[0]}</span> {comment[1]}</div>
                                 </div>
                             ))}
+                            {commentInputActivityId === activity.id && (
+                            <div className="ml-6" in={commentInputActivityId === activity.id}>
+                                <TextField
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                placeholder="Add a comment..."
+                                value={newComments[activity.id]}
+                                onChange={(e) => handleCommentInputChange(activity.id, e.target.value)}
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter' && newComments[activity.id].trim()) {
+                                    handleCommentSubmit(activity.id);
+                                  }
+                                }}
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                    borderRadius: '20px', // Rounded corners
+                                    backgroundColor: '#E2E8F0', // Light gray background color
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: 'transparent', // Transparent border when focused
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: 'transparent', // Transparent border on hover
+                                    },
+                                    '& fieldset': {
+                                        borderColor: 'transparent', // Transparent border by default
+                                    }
+                                    },
+                                    '& .MuiOutlinedInput-input': {
+                                    padding: '10px 14px', // Custom padding for the input
+                                    }
+                                }}
+                                />
+                            </div>
+                            )}
+
                         </div>
                     </div>
                 ))}
