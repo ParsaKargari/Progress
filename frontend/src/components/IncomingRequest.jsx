@@ -5,10 +5,10 @@ export default function IncomingRequest() {
                 Grinder1
             </div>
             <div className="flex flex-row">
-            <div className="px-5 text-textcolour font-standard text-16 decoration-2 truncate">
+            <div className="cursor-pointer px-5 text-textcolour font-standard text-16 decoration-2 truncate">
                 Accept
             </div>
-            <div className=" text-textcolour font-standard text-16 decoration-2 truncate">
+            <div className="cursor-pointer text-textcolour font-standard text-16 decoration-2 truncate">
                 Decline
             </div>
             </div>
