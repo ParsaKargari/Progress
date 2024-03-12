@@ -97,7 +97,7 @@ export function ActivityBar() {
     return (
         <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-y-auto overflow-x-hidden h-screen max-h-screen" >
             <p className="text-27 font-bold py-7 px-6 text-DarkGrey font-standard">Activity</p>
-            <div className="ml-6 mt-12">
+            <div className="ml-6">
                 <ActivityHeatMap />
             </div>
             <div className="px-1">
