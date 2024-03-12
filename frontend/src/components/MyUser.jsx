@@ -3,6 +3,7 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import '../css/MusicAnimation.css';
 import { BlockPicker } from 'react-color';
 import Dialog from '@mui/material/Dialog';
+import { useAuth } from '../context/AuthContext';
 
 
 export default function FriendProfile() {
@@ -11,6 +12,8 @@ export default function FriendProfile() {
     const [username, setUsername] = useState('');
     const [status, setStatus] = useState('');
     const [ringColor, setRingColor] = useState('#697689'); // Default yellow color
+
+    const { signOut } = useAuth();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -26,6 +29,15 @@ export default function FriendProfile() {
 
     const handleSave = () => {
         // Implement save functionality
+    };
+
+    const handleLogout = async () => {
+        try {
+            await signOut(); // Call the signOut function from AuthContext
+            // You can handle post-logout logic here, e.g., redirect to a login page
+        } catch (error) {
+            console.error('Logout failed:', error.message);
+        }
     };
 
 
@@ -121,7 +133,11 @@ export default function FriendProfile() {
 
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-0.5 mr-1'>Logout</p>
 
-                    <button className="flex items-center justify-items-center content-center border border-[#ff635d]  rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard " type="button " >
+                    <button
+                        className="flex items-center justify-items-center content-center border border-[#ff635d] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard "
+                        type="button"
+                        onClick={handleLogout} // Attach the logout handler here
+                    >
                         <p className=' text-[#ff635d] font-bold py-1.5 px-4'>Logout</p>
                     </button>
 
