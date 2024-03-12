@@ -93,10 +93,10 @@ class Tasks {
         }
     }
 
-    async addReaction(task_id, username, new_reaction) {
+    async addReaction(task_id, new_reaction, username) {
         try {
             let { data, error } = await this.client
-                .rpc('append_to_reactions', {
+                .rpc('add_to_reactions', {
                     new_reaction,
                     task_id,
                     username
@@ -109,6 +109,8 @@ class Tasks {
             throw error;
         }
     }
+
+
 
     async getHeatMapData(userID, startDate, endDate) {
         try {
