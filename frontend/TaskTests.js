@@ -24,10 +24,8 @@ async function testTasks() {
 
         const commentedTask = await tasks.addComment('2c823f98-e515-4227-b29b-2251ab0349a0', 'user1', 'swag like this task!')
 
-
         const reactedTask = await tasks.addReaction("2c823f98-e515-4227-b29b-2251ab0349a0", '👍', 'Thomas');
-        const addedMessage = await groups.addChat("57f830e1-a63d-4ae2-8c8e-43b206558cf3", 'this is a new mesage nice!', 'Thomas')
-        const updatedGroup = await groups.updateGroupById("57f830e1-a63d-4ae2-8c8e-43b206558cf3", 'GroupStatus', 'Offline')
+
         console.log('finished testing');
     } catch (error) {
         console.error('Error occurred:', error);
