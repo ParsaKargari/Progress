@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 
 
 export function ActivityBar() {
+    // Initial activities
     const initialActivities = [
         {
             id: 1,
