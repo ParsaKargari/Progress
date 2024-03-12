@@ -1,8 +1,24 @@
-{/**Example Way to create a function that another file can import */}
-export function sayHello() {
-    console.log("Hello, world!");
+const { createClient } = require('@supabase/supabase-js');
+
+class SupabaseConnector {
+    constructor() {
+        if (!SupabaseConnector.instance) {
+            this.client = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_ANON_KEY);
+            SupabaseConnector.instance = this;
+        }
+        return SupabaseConnector.instance;
+    }
+
+    static getInstance() {
+        if (!SupabaseConnector.instance) {
+            SupabaseConnector.instance = new SupabaseConnector();
+        }
+        return SupabaseConnector.instance;
+    }
+
+    getClient() {
+        return this.client;
+    }
 }
 
-export function sayGoodbye() {
-    console.log("Goodbye, world!");
-}
+module.exports = SupabaseConnector;

@@ -3,6 +3,10 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import '../css/MusicAnimation.css';
 import { BlockPicker } from 'react-color';
 import Dialog from '@mui/material/Dialog';
+// import dotenv from 'dotenv';
+
+import Spotify from './Spotify'; // Assuming Spotify.js contains your Spotify class
+
 
 
 export default function FriendProfile() {
@@ -12,6 +16,7 @@ export default function FriendProfile() {
     const [status, setStatus] = useState('');
     const [ringColor, setRingColor] = useState('#697689'); // Default yellow color
 
+    
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -29,6 +34,12 @@ export default function FriendProfile() {
     };
 
 
+    let SpotifyObject = new Spotify();
+    // SPOTIFY
+    const handleLoginWithSpotify = () => {
+        // Call your Spotify login method here
+        SpotifyObject.printConsoleTest();
+    };
 
     return (
         <div className='flex flex-row justify-start items-center py-1.5 pb-3 border-t-2 border-betterWithFriends'>
@@ -113,8 +124,8 @@ export default function FriendProfile() {
                         </div>
             
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-2 mr-1'>Connect Spotify</p>
-
-                    <button className="flex items-center justify-items-center content-center border border-[#1ED760] min-h-12 min-w-20 rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard " type="button">
+{/*  MY BUTTON */}
+                    <button className="flex items-center justify-items-center content-center border border-[#1ED760] min-h-12 min-w-20 rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard " type="button" onClick={handleLoginWithSpotify}>
                         <img className='ml-1.5' src='/images/spotify.svg' alt="Spotify Logo" />
                         <p className=' text-[#1ED760] font-bold py-0.5 px-4'>Login with Spotify</p>
                     </button>
