@@ -8,17 +8,21 @@ import WhatshotIcon from '@mui/icons-material/Whatshot';
 
 export default function ActivityHeatMap() {
 
+    // eslint-disable-next-line no-unused-vars
     const [selected, setSelected] = useState('')
-
-    // Tasks completed today
-    const tasksCompleted = 5;
 
     // TODO: Replace this with actual data
     const data = [
         { date: '2024/01/11', count: 2 },
         { date: '2024/02/12', count: 5 },
-        { date: '2024/03/13', count: 10 },
+        { date: '2024/03/12', count: 5 },
     ];
+
+    const today = new Date();
+    // Today formatted. Put a 0 in front of month and day if they are less than 10
+    const todayFormatted = `${today.getFullYear()}/${today.getMonth() + 1 < 10 ? '0' : ''}${today.getMonth() + 1}/${today.getDate() < 10 ? '0' : ''}${today.getDate()}`;
+    const tasksCompleted = data.find((d) => d.date === todayFormatted)?.count || 0;
+    console.log(tasksCompleted);
 
     const handleCellClick = (date) => {
         setSelected(date);
