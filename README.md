@@ -20,9 +20,9 @@
 - [Parsa](https://github.com/ParsaKargari) L03 - Fullstack Developer & Project Lead
 - [Shivam](https://github.com/shivamdesai04) L03 - Fullstack Developer
 - [Vishnu](https://github.com/Vishnu-Dhanda) L02 - QA/UI Specialist & Frontend Developer
-- Gurnoor L02 - Backend Developer
+- [Gurnoor]() L02 - Backend Developer
 - [Dannick](https://github.com/dannicklucas) L02 - Backend Developer
-- David L01 - Backend Developer
+- [David]() L01 - Backend Developer
 - [Thomas](https://github.com/thomasbhavnani) L02 - Backend Developer
 
 ## 👨‍💻 Tech Stack
