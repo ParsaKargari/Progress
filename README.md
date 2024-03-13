@@ -4,6 +4,8 @@
 [![Generic badge](https://img.shields.io/badge/GROUP-13-blue.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/SECTIONS-L01/L02/L03-blue.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/SEMESTER-WINTER_2024-red.svg)](https://shields.io/)
+![Deployment Status](https://github.com/ParsaKargari/Progress/actions/workflows/npm-publish-github-packages.yml/badge.svg)
+
 
 ## 📖 Table of Contents
 
