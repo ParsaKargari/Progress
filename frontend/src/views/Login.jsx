@@ -6,6 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../css/Login.css";
 import { addUsername, addStatus, addEmail, getUsername} from '../Controllers/ApplicationAPIs/SignUp.js';
+import { LoadingProvider, useLoading } from '../context/LoadingContext';
 
 // this needs to be put in a env file at the end of the project for security.
 const supabase = createClient(
@@ -13,42 +14,46 @@ const supabase = createClient(
   process.env.REACT_APP_SUPABASE_ANON_KEY
 );
 
-
-
 function Login() {
   const [spin, setSpin] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { setIsLoading } = useLoading();
 
   useEffect(() => {
-    if (user === null) {
-      console.log("user is null");
-    }
-    else {
-      var isSignedIn = false;
-      getUsername(user.id)
-      .then(result => {
-        if (result[0].Username != null) {
-          isSignedIn = true;
-        }
-        if (isSignedIn === true) {
-          navigate(`/home`);
-        }
-        });
-      localStorage.setItem("User_ID", user.id);
-      localStorage.setItem("User_Email", user.email);
-    }
-    
+    // Only proceed if there is a user
+    setIsLoading(true);
     if (user) {
-      navigate(`/signup`);
+        getUsername(user.id)
+            .then(result => {
+                if (result[0]?.Username != null) {
+                    // If username exists, navigate to home
+                    navigate(`/home`);
+                } else {
+                    // If no username, navigate to signup (assuming you need to complete the signup process)
+                    navigate(`/signup`);
+                }
+            })
+            .catch(error => {
+                console.error("Failed to fetch username:", error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+
+        localStorage.setItem("User_ID", user.id);
+        localStorage.setItem("User_Email", user.email);
     } else {
-      setSpin(true);
+        console.log("No user detected.");
+        setIsLoading(false);
     }
-  }, [user, navigate]);
+}, [user, navigate, setIsLoading]);
+
     
 
   
   return (
+    <>
     <div className="flex justify-center items-center h-screen bg-primary">
       <div className="flex flex-col justify-center bg-white p-[70px] rounded-[50px]">
         {/* Container for the SVGs */}
@@ -105,6 +110,7 @@ function Login() {
         />
       </div>
     </div>
+    </>
   );
 }
 
