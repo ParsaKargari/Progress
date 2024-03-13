@@ -19,6 +19,13 @@ export function FriendsBar() {
         setOpen(false);
     };
 
+    // Sample array of suggestions
+    const suggestions = [
+        { label: 'Friend 1' },
+        { label: 'Friend 2' },
+        { label: 'Friend 3' },
+    ];
+
     return (
         <div className="col-span-10 md:col-span-3 xl:col-span-2 bg-primary flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar px-8 flex flex-col justify-between">
             <div>
@@ -64,16 +71,28 @@ export function FriendsBar() {
             >
                 <div className='flex-row px-2'>
                     <p className='font-bold text-DarkGrey font-standard text-[20px] mr-1'>{'Friends'}</p>
-                    <div className='flex flex-row my-3'>
-                        <input
-                            style={{ width: '85%' }} // Adjust width as needed
-                            className='bg-[#F8F8F8] border rounded py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                            type="text"
-                            placeholder="Search for Progress users..."
-                        />
+                    <div className='flex flex-row jusify-content align-items'>
 
-                        <div className='flexit ems-center justify-center content-center pl-5'>
-                            <button className="flex items-center justify-center content-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-4 py-1.5" type="button">
+                        <Autocomplete
+                           size='small'
+                            freeSolo
+                            options={suggestions.map((option) => option.label)}
+                            style={{
+                                width: 300,
+                                
+                              }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search for Progress users..."
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            )}
+                        />
+                        
+                        <div className='flex justify-center content-center pl-5 items-center'>
+                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button">
                                 <p className='text-[#559EB5] font-bold'>Send</p>
                             </button>
                         </div>
