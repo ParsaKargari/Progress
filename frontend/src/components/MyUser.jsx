@@ -5,7 +5,6 @@ import { BlockPicker } from 'react-color';
 import Dialog from '@mui/material/Dialog';
 // import dotenv from 'dotenv';
 
-import Spotify from './Spotify'; // Assuming Spotify.js contains your Spotify class
 
 
 
@@ -34,12 +33,13 @@ export default function FriendProfile() {
     };
 
 
-    let SpotifyObject = new Spotify();
+    // let SpotifyObject = new Spotify();
     // SPOTIFY
     const handleLoginWithSpotify = () => {
-        // Call your Spotify login method here
-        SpotifyObject.printConsoleTest();
+        // Redirect to your backend route for Spotify login
+        window.location.href = 'http://localhost:3001/login';
     };
+    
 
     return (
         <div className='flex flex-row justify-start items-center py-1.5 pb-3 border-t-2 border-betterWithFriends'>
