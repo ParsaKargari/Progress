@@ -1,53 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import Login from './views/Login';
 import SignUpSettings from './views/SignUpSettings';
 import HomePage from './views/HomePage';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import LoadingComponent from './components/LoadingComponent';
+import LoadingScreen from './components/LoadingComponent'; // Import LoadingScreen
+import { LoadingProvider, useLoading } from './context/LoadingContext'; // Import LoadingProvider and useLoading hook
+import reportWebVitals from './tests/reportWebVitals';
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <LoadingComponent />; // Show loading screen while app is initializing
-  }
+  const { isLoading } = useLoading(); // Use the loading state
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route exact path="/" element={<Login />} />
-        <Route path="/signup" element={
-          <ProtectedRoute>
-            <SignUpSettings />
-          </ProtectedRoute>
-        } />
-        <Route path="/home" element={
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        } />
-      </Routes>
-    </BrowserRouter>
+    <>
+      {isLoading && <LoadingScreen />}
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/" element={<Login />} />
+          <Route path="/signup" element={
+            <ProtectedRoute>
+              <SignUpSettings />
+            </ProtectedRoute>
+          } />
+          <Route path="/home" element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }/>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-  </React.StrictMode>
+    <LoadingProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </LoadingProvider>
 );
+
+reportWebVitals();

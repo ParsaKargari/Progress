@@ -6,7 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../css/Login.css";
 import { addUsername, addStatus, addEmail, getUsername} from '../Controllers/ApplicationAPIs/SignUp.js';
-import LoadingComponent from "../components/LoadingComponent.jsx";
+import { LoadingProvider, useLoading } from '../context/LoadingContext';
 
 // this needs to be put in a env file at the end of the project for security.
 const supabase = createClient(
@@ -14,18 +14,16 @@ const supabase = createClient(
   process.env.REACT_APP_SUPABASE_ANON_KEY
 );
 
-
-
 function Login() {
   const [spin, setSpin] = useState(false);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { setIsLoading } = useLoading();
 
   useEffect(() => {
     // Only proceed if there is a user
+    setIsLoading(true);
     if (user) {
-        setLoading(true); // Start loading
         getUsername(user.id)
             .then(result => {
                 if (result[0]?.Username != null) {
@@ -40,25 +38,22 @@ function Login() {
                 console.error("Failed to fetch username:", error);
             })
             .finally(() => {
-              setTimeout(() => {
-                setLoading(false);
-            }, 1000);
+                setIsLoading(false);
             });
 
         localStorage.setItem("User_ID", user.id);
         localStorage.setItem("User_Email", user.email);
     } else {
-        setLoading(false);
         console.log("No user detected.");
+        setIsLoading(false);
     }
-}, [user, navigate]);
+}, [user, navigate, setIsLoading]);
 
     
 
   
   return (
     <>
-    {loading && <LoadingComponent />}
     <div className="flex justify-center items-center h-screen bg-primary">
       <div className="flex flex-col justify-center bg-white p-[70px] rounded-[50px]">
         {/* Container for the SVGs */}
