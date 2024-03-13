@@ -43,14 +43,16 @@ async function testUsers() {
     //     console.error('Error in addEmail:', error);
     // }
 
-    const fromID = "0a377c79-4e19-40dc-9cab-228a81891969";
-    const fromUsername = 'thomas';
-    const toUsername = 'dannick'
-    const toID = "e3202c34-b4af-412a-a079-d23ac47ace22";
+    const fromID = "bc56dab0-40f4-4237-8b87-85f4dd3cd789";
+    const toID = "0a377c79-4e19-40dc-9cab-228a81891969";
     try {
-
-        const result = await signup.sendFriendRequest(fromID, fromUsername, toID, toUsername);
-        console.log('sendFriendRequest Result:', result);
+        const resultSend = await signup.sendFriendRequest(fromID, toID);
+        console.log('sendFriendRequest Result:', resultSend);
+        const resultReceive = await signup.receiveFriendRequest(fromID, toID);
+        console.log('receiveFriendRequest Result:', resultReceive);
+        const resultRemove = await signup.removeFriendRequest(fromID, toID);
+        console.log('removeFriendRequest Result:', resultRemove);
+        console.log("finished testing")
     } catch (error) {
         console.error('Error in addEmail:', error);
     }

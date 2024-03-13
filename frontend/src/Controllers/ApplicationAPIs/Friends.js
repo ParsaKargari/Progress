@@ -30,6 +30,10 @@ class Friends {
             throw error;
         }
     }
+
+    async acceptOrDeclineFriendRequest() {
+
+    }
 }
 
 module.exports = Friends;

@@ -54,41 +54,49 @@ class SignUp {
         }
     }
 
-    async sendFriendRequest(from_id, from_username, to_id, to_username) {
+    async sendFriendRequest(from_id, to_id) {
         let { data, error } = await this.client
             .rpc('send_friend_request', {
                 from_id,
-                from_username,
-                to_id,
-                to_username
+                to_id
             })
+        console.log("Brrrrrrrrrrrrrrrrrrrrrrrrrr")
         if (error) console.error(error)
         else console.log(data)
-        let { data2, error2 } = await this.client
-            .rpc('set_friend_request', {
-                from_id,
-                from_username,
-                to_id,
-                to_username
-            })
+        // let { data2, error2 } = await this.client
+        //     .rpc('set_friend_request', {
+        //         from_id,
+        //         from_username,
+        //         to_id,
+        //         to_username
+        //     })
 
-        // this.setFriendRequestSent(from_id, from_username, to_id, to_username)
-        if (error2) console.error(error2)
-        else console.log(data2)
+        // // this.setFriendRequestSent(from_id, from_username, to_id, to_username)
+        // if (error2) console.error(error2)
+        // else console.log(data2)
 
     }
 
-    async setFriendRequestSent(from_id, from_username, to_id, to_username) {
+    async receiveFriendRequest(from_id, to_id) {
         let { data, error } = await this.client
-            .rpc('set_friend_request', {
+            .rpc('receive_friend_request', {
                 from_id,
-                from_username,
-                to_id,
-                to_username
+                to_id
             })
         if (error) console.error(error)
         else console.log(data)
     }
+    async removeFriendRequest(from_id, to_id) {
+        let { data, error } = await this.client
+            .rpc('remove_friend_request', {
+                from_id,
+                to_id,
+            })
+        if (error) console.error(error)
+        else console.log(data)
+    }
+
+
 
 }
 

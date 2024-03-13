@@ -79,6 +79,16 @@ class Groups {
             throw error;
         }
     }
+
+    async addGroupMember(group_id, new_member) {
+        let { data, error } = await this.client
+            .rpc('add_member_to_group', {
+                group_id,
+                new_member
+            })
+        if (error) console.error(error)
+        else console.log(data)
+    }
 }
 
 module.exports = Groups;
