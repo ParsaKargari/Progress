@@ -44,18 +44,95 @@ class Tasks {
             throw error;
         }
     }
+    // async updateTaskById(taskId, columnName, newData) {
+    //     try {
+    //         const updateObject = {};
+    //         updateObject[columnName] = newData;
+
+    //         const result = await this.client
+    //             .from('Tasks')
+    //             .update(updateObject)
+    //             .eq('TaskID', taskId)
+    //             .single();
+
+    //         return result;
+    //     } catch (error) {
+    //         console.error(error);
+    //         throw error;
+    //     }
+    // }
+
     async updateTaskById(taskId, columnName, newData) {
         try {
-            const updateObject = {};
-            updateObject[columnName] = newData;
-
             const result = await this.client
                 .from('Tasks')
-                .update(updateObject)
+                .update({ [columnName]: newData })
                 .eq('TaskID', taskId)
-                .single();
-
+                .select()
             return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async addComment(task_id, username, new_comment) {
+        try {
+            let { data, error } = await this.client
+                .rpc('append_to_comments', {
+                    new_comment,
+                    task_id,
+                    username
+                })
+            if (error) console.error(error)
+            else console.log(data)
+            return data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async addReaction(task_id, new_reaction, username) {
+        try {
+            let { data, error } = await this.client
+                .rpc('add_to_reactions', {
+                    new_reaction,
+                    task_id,
+                    username
+                })
+            if (error) console.error(error)
+            else console.log(data)
+            return data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+
+
+    async getHeatMapData(userID, startDate, endDate) {
+        try {
+            const tasks = await this.client
+                .from('Tasks')
+                .select('AddedDate')
+                .eq('UserID', userID)
+                .gte('DueDate', startDate)
+                .lte('DueDate', endDate);
+            console.log(tasks.data)
+            let map = {};
+            tasks.data.forEach(task => {
+                const key = task.AddedDate;
+                if (!map[key]) {
+                    map[key] = 1;
+                } else {
+                    map[key]++;
+                }
+            });
+            // console.log(map);
+            return map;
+
         } catch (error) {
             console.error(error);
             throw error;
