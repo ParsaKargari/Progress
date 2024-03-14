@@ -40,6 +40,14 @@ export default function FriendProfile() {
         }
     };
 
+    const handleSpotifyLogin = async() => {
+        // redirect to the backend route /Spotify
+
+        // fetch('/Spotify')
+        console.log("SPOTIFY LOGIN CALLED")
+        window.location.href = 'http://localhost:9000/spotify/login';
+    }
+
 
 
     return (
@@ -128,7 +136,7 @@ export default function FriendProfile() {
 
                     <button className="flex items-center justify-items-center content-center border border-[#1ED760] min-h-12 min-w-20 rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard " type="button">
                         <img className='ml-1.5' src='/images/spotify.svg' alt="Spotify Logo" />
-                        <p className=' text-[#1ED760] font-bold py-0.5 px-4'>Login with Spotify</p>
+                        <p className=' text-[#1ED760] font-bold py-0.5 px-4' onClick={handleSpotifyLogin}>Login with Spotify</p>
                     </button>
 
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-0.5 mr-1'>Logout</p>

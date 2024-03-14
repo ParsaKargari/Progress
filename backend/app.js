@@ -19,8 +19,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+app.use('/spotify', SpotifyLoginRouter)
+app.use('/Spotify', SpotifyLoginRouter)
+
 app.use('/signUp', signUpRouter)
-// app.use('/Spotify', SpotifyLoginRouter)
+// app.use('/Spotify/login', SpotifyLoginRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
