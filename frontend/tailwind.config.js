@@ -15,6 +15,8 @@ module.exports = {
         friendsBackground: '#F1F5F9',
         friendsBracketAccent: '#6B7B90',
         betterWithFriends: '#E2E8F0',
+        text2: "#6B7B90", // Example text color
+        text3: "#E2E8F0", // Example text color
         
         TurqouiseBlue: '#00789E', // Turqouise Blue - Also Secondary Text Color for popout effect
         DarkGrey: '#334155', // Dark Grey - Also Main Text Color
@@ -24,10 +26,17 @@ module.exports = {
         InputBox: '#F8F8F8', // Input Box background
         Selected: '#EDFFFF', // Use this for focus element if something is clicked
         AddTaskBg: '#E2E8F0', // Add Task Input Background
+        textcolour: '#6B7B90', // Text Colour
       },
       fontFamily: {
         'standard': ['Inter', 'sans-serif'], // CustomFont1 with fallback to sans-serif
       },
+      fontSize: {
+        base: ['14px'],
+        27: "27px",
+        16: "16px",
+        14: "14px",
+      }
 
     },
   },
@@ -44,6 +53,6 @@ module.exports = {
       };
 
       addUtilities(newUtilities);
-    }
+    },
   ],
 };
