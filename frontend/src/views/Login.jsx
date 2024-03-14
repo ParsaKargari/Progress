@@ -26,11 +26,53 @@ function Login() {
     // Only proceed if there is a user
     setIsLoading(true);
 
-    if (user === null) {
-      console.log("user is null");
-    }
-    else {
-      var isSignedIn = false;
+    // if (user === null) {
+    //   console.log("user is null");
+    // }
+    // else {
+    //   var isSignedIn = false;
+    //   console.log("user:", user.id)
+    //   fetch(`http://localhost:9000/signUp/${user.id}`)
+
+    //   .then(res => res.json())
+    //   .then(res => {
+    //     try {
+    //       if (res[0].Username != null) {
+    //         isSignedIn = true;
+    //         console.log(res[0].Username)
+    //       }
+    //     }
+    //     catch {
+          
+    //     }
+          
+    //       if (isSignedIn === true) {
+    //         navigate(`/home`);
+    //       }
+    //       })
+    //       .catch(error => {
+    //         console.error("Failed to fetch username:", error);
+    //     })
+    //     .finally(() => {
+    //         setIsLoading(false);
+    //     });
+          
+    //   localStorage.setItem("User_ID", user.id);
+    //   localStorage.setItem("User_Email", user.email);
+    // }
+    
+    if (user) {
+        // getUsername(user.id)
+        //     .then(result => {
+        //         if (result[0]?.Username != null) {
+        //             // If username exists, navigate to home
+        //             navigate(`/home`);
+        //         } else {
+        //             // If no username, navigate to signup (assuming you need to complete the signup process)
+        //             navigate(`/signup`);
+        //         }
+        //     })
+        var isSignedIn = false;
       console.log("user:", user.id)
       fetch(`http://localhost:9000/signUp/${user.id}`)
 
@@ -49,22 +91,10 @@ function Login() {
           if (isSignedIn === true) {
             navigate(`/home`);
           }
-          });
-      localStorage.setItem("User_ID", user.id);
-      localStorage.setItem("User_Email", user.email);
-    }
-    
-    if (user) {
-        getUsername(user.id)
-            .then(result => {
-                if (result[0]?.Username != null) {
-                    // If username exists, navigate to home
-                    navigate(`/home`);
-                } else {
-                    // If no username, navigate to signup (assuming you need to complete the signup process)
-                    navigate(`/signup`);
-                }
-            })
+          else {
+            navigate(`/signup`)
+          }
+          })
             .catch(error => {
                 console.error("Failed to fetch username:", error);
             })
