@@ -1,16 +1,25 @@
-import { React } from 'react';
-import CircularProgress from '@mui/joy/CircularProgress';
+import React, { useState } from 'react';
 import Friend from '../components/Friend';
 import MyUser from '../components/MyUser';
 import Dialog from '@mui/material/Dialog';
-import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import RequestSent from '../components/RequestSent';
-import IncomingRequest from '../components/IncomingRequest';
+import { Button, List, ListItem, ListItemText, ListItemSecondaryAction, Tab, Tabs, Autocomplete, TextField } from '@mui/material';
+
 
 export function FriendsBar() {
     const [open, setOpen] = useState(false);
+    const [tabValue, setTabValue] = useState(0);
+    const [searchValue, setSearchValue] = useState('');
+
+    const requestsSent = ['Grinder1', 'Grinder2', 'Grinder3']; // TODO: Replace with actual data
+    const requestsReceived = ['Grinder4', 'Grinder5', 'Grinder6', 'Grinder7']; //TODO: Replace with actual data
+    const friendSuggestions = ['Friend 1', 'Friend 2', 'Friend 3'];
+ 
+    const handleChangeTab = (event, newValue) => {
+        setTabValue(newValue);
+    }
+
+
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -66,42 +75,57 @@ export function FriendsBar() {
                         height: 'auto',
                         padding: '15px',
                         borderRadius: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
                     },
                 }}
-            >
-                <div className='flex-row px-2'>
-                    <p className='font-bold text-DarkGrey font-standard text-[20px] mr-1'>{'Friends'}</p>
-                    <div className='flex flex-row jusify-content align-items'>
+            >   
+                <div className='flex flex-row items-center'>
+                    <Autocomplete
+                        value={searchValue}
+                        onChange={(event, newValue) => {
+                            setSearchValue(newValue);
+                        }}
+                        freeSolo
+                        options={friendSuggestions}
+                        renderInput={(params) => <TextField {...params} label="Search for friends..." margin="normal" />}
+                        style={{ width: 300, marginBottom: 20 }}
+                    />
+                    <Button variant="contained" style={{ marginLeft: 20, marginBottom: 10, height: 45 }}>Search</Button>
 
-                        <Autocomplete
-                           size='small'
-                            freeSolo
-                            options={suggestions.map((option) => option.label)}
-                            style={{
-                                width: 300,
-                                
-                              }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Search for Progress users..."
-                                    margin="normal"
-                                    variant="outlined"
-                                />
-                            )}
-                        />
-                        
-                        <div className='flex justify-center content-center pl-5 items-center'>
-                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button">
-                                <p className='text-[#559EB5] font-bold'>Send</p>
-                            </button>
-                        </div>
-                    </div>
-                    <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
-                    <RequestSent/>
-                  
-                    <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
-                    <IncomingRequest/>
+                </div>
+
+                <div>
+                    <Tabs value={tabValue} onChange={handleChangeTab} aria-label="Request tabs" centered>
+                        <Tab label="Requests Sent" />
+                        <Tab label="Requests Received" />
+                    </Tabs>
+                    {tabValue === 0 && (
+                        <List>
+                            {requestsSent.map((request, index) => (
+                                <ListItem key={index}>
+                                    <ListItemText primary={request} />
+                                    <ListItemSecondaryAction>
+                                        <Button size="small">Cancel</Button>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
+                        </List>
+                    )}
+                    {tabValue === 1 && (
+                        <List>
+                            {requestsReceived.map((request, index) => (
+                                <ListItem key={index}>
+                                    <ListItemText primary={request} />
+                                    <ListItemSecondaryAction>
+                                        <Button size="small">Accept</Button>
+                                        <Button size="small">Decline</Button>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
+                        </List>
+                    )}
                 </div>
             </Dialog>
         </div>
