@@ -60,20 +60,8 @@ class SignUp {
                 from_id,
                 to_id
             })
-        console.log("Brrrrrrrrrrrrrrrrrrrrrrrrrr")
         if (error) console.error(error)
         else console.log(data)
-        // let { data2, error2 } = await this.client
-        //     .rpc('set_friend_request', {
-        //         from_id,
-        //         from_username,
-        //         to_id,
-        //         to_username
-        //     })
-
-        // // this.setFriendRequestSent(from_id, from_username, to_id, to_username)
-        // if (error2) console.error(error2)
-        // else console.log(data2)
 
     }
 
@@ -86,9 +74,19 @@ class SignUp {
         if (error) console.error(error)
         else console.log(data)
     }
-    async removeFriendRequest(from_id, to_id) {
+    async removeFriendRequestReceived(from_id, to_id) {
         let { data, error } = await this.client
             .rpc('remove_friend_request', {
+                from_id,
+                to_id,
+            })
+        if (error) console.error(error)
+        else console.log(data)
+    }
+
+    async removeFriendRequestSent(from_id, to_id) {
+        let { data, error } = await this.client
+            .rpc('remove_friend_request_sent', {
                 from_id,
                 to_id,
             })

@@ -1,4 +1,6 @@
 const SupabaseConnector = require('../APIGateway/Supabase.js');
+const SignUp = require('./SignUp.js');
+const signup = new SignUp();
 
 class Friends {
     constructor() {
@@ -31,8 +33,20 @@ class Friends {
         }
     }
 
-    async acceptOrDeclineFriendRequest() {
+    async sendAndReceiveFriendRequest(fromID, toID) {
+        const resultSend = await signup.sendFriendRequest(fromID, toID);
+        const resultReceive = await signup.receiveFriendRequest(fromID, toID);
+    }
 
+    async acceptFriendRequest(fromID, toID) {
+        const resultRemoveReceive = await signup.removeFriendRequestReceived(fromID, toID);
+        const resultRemoveSend = await signup.removeFriendRequestSent(fromID, toID);
+        const addedFriend = this.addFriend(fromID, toID);
+    }
+
+    async declineFriendRequest(fromID, toID) {
+        const resultRemoveReceive = await signup.removeFriendRequestReceived(fromID, toID);
+        const resultRemoveSend = await signup.removeFriendRequestSent(fromID, toID);
     }
 }
 
