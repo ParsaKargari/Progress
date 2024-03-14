@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var signUpRouter = require('./routes/SignUp')
+var SpotifyLoginRouter = require('./routes/Spotify')
 var app = express();
 
 // view engine setup
@@ -19,10 +20,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/signUp', signUpRouter)
+app.use('/Spotify', SpotifyLoginRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
