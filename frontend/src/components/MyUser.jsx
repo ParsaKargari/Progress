@@ -6,6 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import { useAuth } from '../context/AuthContext';
 
 
+
 export default function FriendProfile() {
     const [open, setOpen] = useState(false);
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
@@ -14,6 +15,8 @@ export default function FriendProfile() {
     const [ringColor, setRingColor] = useState('#697689'); // Default yellow color
 
     const { signOut } = useAuth();
+    const { user } = useAuth();
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -40,15 +43,21 @@ export default function FriendProfile() {
         }
     };
 
-    const handleSpotifyLogin = async() => {
-        // redirect to the backend route /Spotify
+    // const handleSpotifyLogin = async() => {
+    //     // redirect to the backend route /Spotify
 
-        // fetch('/Spotify')
-        console.log("SPOTIFY LOGIN CALLED")
-        window.location.href = 'http://localhost:9000/spotify/login';
-    }
+    //     // fetch('/Spotify')
+    //     console.log("SPOTIFY LOGIN CALLED")
+    //     window.location.href = 'http://localhost:9000/spotify/login';
+    // }
 
-
+    
+    const handleSpotifyLogin = async () => {
+        // Assuming you have access to the user ID
+        // Redirect to the backend route /Spotify/login along with the user ID
+        window.location.href = `http://localhost:9000/spotify/login?user_id=${user.id}`;
+      }
+      
 
     return (
         <div className='flex flex-row justify-start items-center py-1.5 pb-3 border-t-2 border-betterWithFriends'>

@@ -3,6 +3,10 @@ var express = require('express');
 var router = express.Router();
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
+const request = require('request');
+const querystring = require('querystring');
+const { add } = require('nodemon/lib/rules/index.js');
+
 
 // import { DotenvConfigOptions } from 'dotenv';
 
@@ -44,21 +48,25 @@ router.get("/", function(req, res) {
   res.send("BASIC SPOTIFY ROUTE");
 });
 
-router.get("/login", function(req, res) {
-  console.log("redirect uri is", redirect_uri);
-  console.log("client id is", client_id);
-  console.log("client secret is", client_secret);
-  console.log('login'); 
+// router.get("/login", function(req, res) {
+//   console.log("redirect uri is", redirect_uri);
+//   console.log("client id is", client_id);
+//   console.log("client secret is", client_secret);
+//   console.log('login'); 
 
-  var state = generateRandomString(16);
-  // Assuming stateKey is defined elsewhere
-  res.cookie(stateKey, state);
+//   var state = generateRandomString(16);
+//   // Assuming stateKey is defined elsewhere
+//   res.cookie(stateKey, state);
 
-  var scope = 'user-read-private user-read-email user-read-currently-playing';
-  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${state}`);
-});
+//   var scope = 'user-read-private user-read-email user-read-currently-playing';
+//   res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${state}`);
+// });
+
+// // Callback Router:
 
 // router.get('/callback', function(req, res) {
+
+
 
 //   var code = req.query.code || null;
 //   var state = req.query.state || null;
@@ -69,11 +77,9 @@ router.get("/login", function(req, res) {
 //       querystring.stringify({
 //         error: 'state_mismatch'
 //       }));
-//     res.redirect(`/#error=state_mismatch`);
-
 //   } else {
 //     res.clearCookie(stateKey);
-//     var authOptions = 
+//     var authOptions = {
 //       url: 'https://accounts.spotify.com/api/token',
 //       form: {
 //         code: code,
@@ -110,21 +116,145 @@ router.get("/login", function(req, res) {
 //             access_token: access_token,
 //             refresh_token: refresh_token
 //           }));
-//         res.redirect(`/#access_token=${access_token}&refresh_token=${refresh_token}`);
-
 //       } else {
-//         res.redirect(`/#error=invalid_token`);
-
+//         res.redirect('/#' +
+//           querystring.stringify({
+//             error: 'invalid_token'
+//           }));
 //       }
 //     });
 //   }
 // });
+var user_id = null;
+
+router.get("/login", function(req, res) {
+  var state = generateRandomString(16);
+  var userId = req.query.user_id; // Assuming you have the user ID in the request object
+  user_id = userId;
+  if(!userId) {
+    return res.status(400).send("User ID is missing in the URL query parameters.");
+  }
+  res.cookie(stateKey, state);
+
+  var scope = 'user-read-private user-read-email user-read-currently-playing';
+  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${state}&user_id=${userId}`);
+});
+
+// Callback Router:
+router.get("/callback", function(req, res) {
+  var code = req.query.code || null;
+  var state = req.query.state || null;
+  var storedState = req.cookies ? req.cookies[stateKey] : null;
+  // var userId = req.query.user_id || null; // Retrieve the user ID passed in the query
+console.log("user id is", user_id);
+console.log("code is", code);
+console.log("state is", state);
+console.log("stored state is", storedState);
+
+  if (state === null || state !== storedState) {
+    res.redirect('/#' +
+      querystring.stringify({
+        error: 'state_mismatch'
+      }));
+  } else {
+    res.clearCookie(stateKey);
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirect_uri,
+        grant_type: 'authorization_code'
+      },
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        Authorization: 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+      },
+      json: true
+    };
+
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        var access_token = body.access_token,
+            refresh_token = body.refresh_token;
+
+        var options = {
+          url: 'https://api.spotify.com/v1/me',
+          headers: { 'Authorization': 'Bearer ' + access_token },
+          json: true
+        };
+
+        request.get(options, function(error, response, body) {
+          if (!error && response.statusCode === 200) {
+            var spotifyUserId = body.id;
+            // Now you have both userId and spotifyUserId, you can associate them in your database
+            // Assuming you have a function to associate them like saveAssociation(userId, spotifyUserId)
+            // saveAssociation(userId, spotifyUserId);
+
+          }
+        });
+        console.log("user id is", user_id);
+        console.log("access token is", access_token);
+        console.log("refresh token is", refresh_token);
+
+        addSpotifyLoginInformation(user_id, access_token, refresh_token);
+        // res.redirect('/#' +
+        //   querystring.stringify({
+        //     access_token: access_token,
+        //     refresh_token: refresh_token,
+        //     user_id: userId
+        //   }));
+        res.redirect('http://localhost:3000/home');
+      } else {
+        res.redirect('/#' +
+          querystring.stringify({
+            error: 'invalid_token'
+          }));
+      }
+    });
+  }
+});
+
+
+
+
 
 module.exports = router;
 
 
+async function addSpotifyLoginInformation(user_id, accessToken, refreshToken ) {
+  var supabase = new SupabaseConnector();
+  var client = supabase.getClient();
+  try {
+      const result = await client
+          .from('Users')
+          .update([{ Spotify_Refresh_Token: refreshToken, Spotify_Authorization_Token: accessToken }])
+          .eq('UserID', user_id);
+      return result;
+  } catch (error) {
+      console.error(error);
+      throw error;
+  }
+}
 
+app.get('/currently_playing', function(req, res) {
 
+    var access_token = req.query.access_token;
+    var options = {
+      url: 'https://api.spotify.com/v1/me/player/currently-playing',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+
+    request.get(options, function(error, response, body) {
+      console.log(body);
+
+      if(!error && response.statusCode === 200) {
+        res.send(body);
+      }
+      else{
+        res.status(response.statusCode).send(error);
+      }
+    });});
 
 // app.use(express.static(__dirname + '/public'))
 //    .use(cors())

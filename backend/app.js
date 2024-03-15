@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var signUpRouter = require('./routes/SignUp')
-// var SpotifyLoginRouter = require('./routes/Spotify')
+var SpotifyLoginRouter = require('./routes/Spotify')
 var app = express();
 
 // view engine setup
