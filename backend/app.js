@@ -6,6 +6,9 @@ var logger = require('morgan');
 
 var signUpRouter = require('./routes/SignUp')
 var app = express();
+var cors = require('cors');
+
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,3 +39,8 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+const port = 9000; // Use either the environment's port or 3000 if none is specified
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
