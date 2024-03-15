@@ -26,7 +26,7 @@ function Login() {
   
     if (user) {
       // Use axios to fetch the username using the user ID from the backend
-      axios.get(`http://localhost:9000/signUp/${user.id}`)
+      axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/signUp/${user.id}`)
         .then(response => {
           const data = response.data;
           if (data.length > 0 && data[0].Username) {

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -40,7 +42,7 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-const port = 9000; // Use either the environment's port or 3000 if none is specified
+const port = process.env.PORT_NUMBER
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

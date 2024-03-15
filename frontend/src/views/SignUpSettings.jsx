@@ -3,8 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import {useNavigate } from "react-router-dom";
 // import { addUsername, addStatus, addEmail } from '../Controllers/ApplicationAPIs/SignUp.js';
 import { createClient } from "@supabase/supabase-js";
-
 import "../css/Login.css";
+
 
 export default function SignUpSettings() {
     const [spin, setSpin] = useState(false);
@@ -26,7 +26,7 @@ export default function SignUpSettings() {
         }
         var user_id = localStorage.getItem("User_ID");
         var user_email = localStorage.getItem("User_Email");
-        fetch(`http://localhost:9000/signUp/${user_id}/${userName}/${status}/${user_email}`)
+        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/signUp/${user_id}/${userName}/${status}/${user_email}`)
         // addUsername(userName, user_id);
         // addStatus(status, user_id);
         // addEmail(user_email, user_id);
