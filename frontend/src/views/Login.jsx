@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import "../css/Login.css";
 import { LoadingProvider, useLoading } from '../context/LoadingContext';
 import axios from "axios";
+import { Snackbar } from "@mui/material";
 
 
 // this needs to be put in a env file at the end of the project for security.
@@ -20,6 +21,9 @@ function Login() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { setIsLoading } = useLoading();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  
 
   useEffect(() => {
     setIsLoading(true);
@@ -39,6 +43,8 @@ function Login() {
         })
         .catch(error => {
           console.error("Failed to fetch username:", error);
+          setSnackbarMessage("Failed to fetch username. Please try again."); // Set the snackbar message
+          setSnackbarOpen(true); // Open the snackbar
         })
         .finally(() => {
           setIsLoading(false);
@@ -48,12 +54,18 @@ function Login() {
       localStorage.setItem("User_ID", user.id);
       localStorage.setItem("User_Email", user.email);
     } else {
+      setSpin(true);
       console.log("No user detected.");
       setIsLoading(false);
     }
   }, [user, navigate, setIsLoading]);
 
-    
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
 
   
   return (
@@ -114,6 +126,13 @@ function Login() {
         />
       </div>
     </div>
+    <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
     </>
   );
 }
