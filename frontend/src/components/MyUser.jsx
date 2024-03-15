@@ -55,8 +55,23 @@ export default function FriendProfile() {
     const handleSpotifyLogin = async () => {
         // Assuming you have access to the user ID
         // Redirect to the backend route /Spotify/login along with the user ID
-        window.location.href = `http://localhost:9000/spotify/login?user_id=${user.id}`;
+        // window.location.href = `http://localhost:9000/spotify/login?user_id=${user.id}`;
+        window.location.href = `http://localhost:9000/spotify/currently_playing?user_id=${user.id}`
+
       }
+
+    // async function myAsyncFunction() {
+    //     window.location.href = `http://localhost:9000/spotify/currently-playing?user_id=${user.id}`;
+    // }
+    
+    // // Call the async function initially
+    // myAsyncFunction();
+    
+    // // Set interval to call the async function every 1 minute (60 seconds)
+    // setInterval(async () => {
+    //     await myAsyncFunction();
+    // }, 60000);
+    
       
 
     return (

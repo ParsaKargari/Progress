@@ -47,85 +47,8 @@ router.get("/", function(req, res) {
 
   res.send("BASIC SPOTIFY ROUTE");
 });
-
-// router.get("/login", function(req, res) {
-//   console.log("redirect uri is", redirect_uri);
-//   console.log("client id is", client_id);
-//   console.log("client secret is", client_secret);
-//   console.log('login'); 
-
-//   var state = generateRandomString(16);
-//   // Assuming stateKey is defined elsewhere
-//   res.cookie(stateKey, state);
-
-//   var scope = 'user-read-private user-read-email user-read-currently-playing';
-//   res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${state}`);
-// });
-
-// // Callback Router:
-
-// router.get('/callback', function(req, res) {
-
-
-
-//   var code = req.query.code || null;
-//   var state = req.query.state || null;
-//   var storedState = req.cookies ? req.cookies[stateKey] : null;
-
-//   if (state === null || state !== storedState) {
-//     res.redirect('/#' +
-//       querystring.stringify({
-//         error: 'state_mismatch'
-//       }));
-//   } else {
-//     res.clearCookie(stateKey);
-//     var authOptions = {
-//       url: 'https://accounts.spotify.com/api/token',
-//       form: {
-//         code: code,
-//         redirect_uri: redirect_uri,
-//         grant_type: 'authorization_code'
-//       },
-//       headers: {
-//         'content-type': 'application/x-www-form-urlencoded',
-//         Authorization: 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
-//       },
-//       json: true
-//     };
-
-//     request.post(authOptions, function(error, response, body) {
-//       if (!error && response.statusCode === 200) {
-
-//         var access_token = body.access_token,
-//             refresh_token = body.refresh_token;
-
-//         var options = {
-//           url: 'https://api.spotify.com/v1/me',
-//           headers: { 'Authorization': 'Bearer ' + access_token },
-//           json: true
-//         };
-
-//         // use the access token to access the Spotify Web API
-//         request.get(options, function(error, response, body) {
-//           console.log(body);
-//         });
-
-//         // we can also pass the token to the browser to make requests from there
-//         res.redirect('/#' +
-//           querystring.stringify({
-//             access_token: access_token,
-//             refresh_token: refresh_token
-//           }));
-//       } else {
-//         res.redirect('/#' +
-//           querystring.stringify({
-//             error: 'invalid_token'
-//           }));
-//       }
-//     });
-//   }
-// });
 var user_id = null;
+
 
 router.get("/login", function(req, res) {
   var state = generateRandomString(16);
@@ -213,6 +136,146 @@ console.log("stored state is", storedState);
     });
   }
 });
+router.get('/currently_playing', async function(req, res) {
+  try {
+    var user_id = req.query.user_id;
+    var spotifyInformation = await getSpotifyInformation(user_id);
+    // console.log("user id is", user_id);
+    console.log("spotify information is", spotifyInformation);
+
+    await refreshAccessToken(spotifyInformation.Spotify_Refresh_Token);
+    // console.log("refreshaccesstoken function called");
+
+    // console.log("user id is", user_id, "SpotifyAUthriization token is", spotifyInformation[0].Spotify_Authorization_Token, "SpotifyRefreshToken is", spotifyInformation[0].Spotify_Refresh_Token);
+    await callCurrentlyPlayingEndpoint(user_id, spotifyInformation[0].Spotify_Authorization_Token, spotifyInformation[0].Spotify_Refresh_Token);
+    console.log("callcurrentlyplayingfunction called");
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+
+  async function refreshAccessToken(refresh_token) {
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: { 
+        'content-type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+      },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token
+      },
+      json: true
+    };
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        var access_token_api = body.access_token;
+        var refresh_token_api = body.refresh_token;
+        console.log("access token is", access_token_api);
+        console.log("refresh token is", refresh_token_api);
+        callCurrentlyPlayingEndpoint(user_id, access_token_api, refresh_token_api);
+      } else {
+        console.log("error is", error);
+      }
+    });
+  }
+
+  async function callCurrentlyPlayingEndpoint(user_id, access_token, refresh_token_api) {
+    var options = {
+      url: 'https://api.spotify.com/v1/me/player/currently-playing',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+    console.log("INSIDE CALLCURRENTLYPLAYING....");
+    console.log("user id is", user_id, "access token is", access_token, "refresh token is", refresh_token_api);
+    request.get(options, async function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        console.log("body is", body);
+        console.log("user id is", user_id);
+        console.log("access token is", access_token);
+        console.log("refresh token is", refresh_token_api);
+
+        await sendSpotifyInformationAndSongs(user_id, access_token, refresh_token_api, body);
+        // res.redirect('http://localhost:3000/home');
+        // res.send(body);
+      } else {
+        res.status(response.statusCode).send(error);
+      }
+    });
+    res.redirect('http://localhost:3000/home');
+  }
+});
+
+
+// router.get('/currently_playing', function(req, res) {
+//   var user_id = req.query.user_id;
+//   var spotifyInformation = await getSpotifyInformation(user_id);
+//   console.log("user id is", user_id);
+//   console.log("spotify information is", spotifyInformation);
+//   // console.log("spotify information is", spotifyInformation);
+//   refreshAccessToken(spotifyInformation.Spotify_Refresh_Token);
+//   console.log("refreshaccesstoken function caleld")
+//   var spotifyInformation = getSpotifyInformation(user_id);
+
+//   callCurrentlyPlayingEndpoint(user_id, spotifyInformation.Spotify_Authorization_Token, spotifyInformation.Spotify_Refresh_Token);
+//   console.log("callcurertlyplayignnfunctioncalled");
+
+
+
+//   async function refreshAccessToken(refresh_token) {
+    
+//     var authOptions = {
+//       url: 'https://accounts.spotify.com/api/token',
+//       headers: { 
+//         'content-type': 'application/x-www-form-urlencoded',
+//         'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+//       },
+//       form: {
+//         grant_type: 'refresh_token',
+//         refresh_token: refresh_token
+//       },
+//       json: true
+//     };
+//     request.post(authOptions, function(error, response, body) {
+//       if (!error && response.statusCode === 200) {
+//         var access_token_api = body.access_token;
+//         var refresh_token_api = body.refresh_token;;
+//         // res.send({
+//         //   'access_token': access_token,
+//         //   'refresh_token': refresh_token
+//         // });
+//         console.log("access token is", access_token_api);
+//         console.log("refresh token is", refresh_token_api);
+//         console.log("callcurertlyplayignnfunctioncalled");
+//         callCurrentlyPlayingEndpoint(user_id,access_token_api, refresh_token_api);
+//       }
+//       else {
+//         console.log("error is", error);
+//         }
+//       });
+//     }
+    
+
+//     async function callCurrentlyPlayingEndpoint(user_id,access_token, refresh_token_api){
+//       var options = {
+//         url: 'https://api.spotify.com/v1/me/player/currently-playing',
+//         headers: { 'Authorization': 'Bearer ' + access_token },
+//         json: true
+//       };
+//       console.log("INSIDE CALLCURRENTLYPLAYING....");
+//       console.log("user id is", user_id, "access token is", access_token, "refresh token is", refresh_token_api);
+//       request.get(options, function(error, response, body) {
+//         if(!error && response.statusCode === 200) {
+//           sendSpotifyInformationAndSongs(user_id, access_token, refresh_token_api, body);
+//           res.send(body);
+
+//         }
+//         else{
+//           res.status(response.statusCode).send(error);
+//         }
+//       });
+//       res.redirect('http://localhost:3000/home');    
+//     }});
 
 
 
@@ -236,25 +299,92 @@ async function addSpotifyLoginInformation(user_id, accessToken, refreshToken ) {
   }
 }
 
-app.get('/currently_playing', function(req, res) {
+async function sendSpotifyInformationAndSongs(user_id, accessToken, refreshToken, currently_playing) {
+  console.log("inside sendSpotifyInformationAndSongs");
+  console.log("user id is", user_id);
+  console.log("access token is", accessToken);
+  console.log("refresh token is", refreshToken);
+  console.log("currently playing is", currently_playing);
 
-    var access_token = req.query.access_token;
-    var options = {
-      url: 'https://api.spotify.com/v1/me/player/currently-playing',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
+  var supabase = new SupabaseConnector();
+  var client = supabase.getClient();
+  try {
+      const result = await client
+          .from('Users')
+          .update([{ Spotify_Refresh_Token: refreshToken, Spotify_Authorization_Token: accessToken, Currently_Playing_Song: currently_playing }])
+          .eq('UserID',user_id);}
+  catch (error) {
+      console.error(error);
+      throw error;
+  };
+}
+async function getSpotifyInformation(user_id) {
+  var supabase = new SupabaseConnector();
+  var client = supabase.getClient();
+  const { data, error } = await client
+      .from('Users')
+      .select('Spotify_Refresh_Token, Spotify_Authorization_Token')
+      .eq('UserID', user_id);
+  return data;}
 
-    request.get(options, function(error, response, body) {
-      console.log(body);
 
-      if(!error && response.statusCode === 200) {
-        res.send(body);
-      }
-      else{
-        res.status(response.statusCode).send(error);
-      }
-    });});
+// EXTRA STUFF
+
+// app.get('/currently_playing', function(req, res) {
+
+//     // var access_token = req.query.access_token;
+//     var user_id = req.query.user_id;
+//     var spotifyInformation = getSpotifyInformation(user_id);
+
+
+//     var options = {
+//       url: 'https://api.spotify.com/v1/me/player/currently-playing',
+//       headers: { 'Authorization': 'Bearer ' + access_token },
+//       json: true
+//     };
+
+//     request.get(options, function(error, response, body) {
+//       console.log(body);
+
+//       if(!error && response.statusCode === 200) {
+//         res.send(body);
+//       }
+//       else{
+//         res.status(response.statusCode).send(error);
+//       }
+//     });});
+
+//     app.get('/refresh_token', function(req, res) {
+
+//       var refresh_token = req.query.refresh_token;
+//       var authOptions = {
+//         url: 'https://accounts.spotify.com/api/token',
+//         headers: { 
+//           'content-type': 'application/x-www-form-urlencoded',
+//           'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) 
+//         },
+//         form: {
+//           grant_type: 'refresh_token',
+//           refresh_token: refresh_token
+//         },
+//         json: true
+//       };
+    
+//       request.post(authOptions, function(error, response, body) {
+//         if (!error && response.statusCode === 200) {
+//           var access_token = body.access_token,
+//               refresh_token = body.refresh_token;
+//           res.send({
+//             'access_token': access_token,
+//             'refresh_token': refresh_token
+//           });
+//         }
+//       });
+//       addSpotifyLoginInformation(user_id, authOptions.headers.Authorization, refresh_token);
+      
+//     });
+
+
 
 // app.use(express.static(__dirname + '/public'))
 //    .use(cors())
@@ -352,35 +482,7 @@ app.get('/currently_playing', function(req, res) {
 //   }
 // });
 
-// app.get('/refresh_token', function(req, res) {
 
-//   var refresh_token = req.query.refresh_token;
-//   var authOptions = {
-//     url: 'https://accounts.spotify.com/api/token',
-//     headers: { 
-//       'content-type': 'application/x-www-form-urlencoded',
-//       'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) 
-//     },
-//     form: {
-//       grant_type: 'refresh_token',
-//       refresh_token: refresh_token
-//     },
-//     json: true
-//   };
-
-//   request.post(authOptions, function(error, response, body) {
-//     if (!error && response.statusCode === 200) {
-//       var access_token = body.access_token,
-//           refresh_token = body.refresh_token;
-//       res.send({
-//         'access_token': access_token,
-//         'refresh_token': refresh_token
-//       });
-//     }
-//   });
-//   console.log('refresh token', refresh_token);
-//   console.log('authorization token', authOptions.headers.Authorization);
-// });
 
 
 // app.get('/currently_playing', function(req, res) {
