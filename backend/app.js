@@ -4,7 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var signUpRouter = require('./routes/SignUp')
+var signUpRouter = require('./routes/SignUp');
+var tasksRouter = require('./routes/Tasks');
 // var SpotifyLoginRouter = require('./routes/Spotify')
 var app = express();
 
@@ -20,11 +21,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/signUp', signUpRouter)
+app.use('/tasks', tasksRouter)
 // app.use('/Spotify', SpotifyLoginRouter)
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
 
 // error handler

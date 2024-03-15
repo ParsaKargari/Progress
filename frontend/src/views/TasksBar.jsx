@@ -7,15 +7,18 @@ import Box from '@mui/material/Box';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
+import { useAuth } from "../context/AuthContext";
 
 
 import { ActivityBar } from './ActivityBar';
 import { FriendsBar } from './FriendsBar';
 import { MyTasks } from '../components/MyTasks';
 
-function CustomTabPanel(props) {
 
+function CustomTabPanel(props) {
+    
     const { children, value, index, ...other } = props;
+    
   
     return (
       <div
@@ -52,9 +55,12 @@ function a11yProps(index) {
 
 }
 
+
 export function TasksBar () {
+    const { user } = useAuth();
     const theme = useTheme();
     const [value, setValue] = useState(0);
+    const [tasks, setTasks] = useState([]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -63,6 +69,24 @@ export function TasksBar () {
     const handleChangeIndex = (index) => {
         setValue(index);
       };    
+    
+    const handleAddTask = () => {
+        const taskName = document.getElementById("inline-status").value
+        console.log(taskName)
+        
+        fetch(`http://localhost:9000/tasks/${user.id}/${taskName}`)
+        .then(res => res.json())
+        .then(res => {
+            try {
+                
+                setTasks(res);
+                return res;
+            }
+            catch {
+
+            }
+         } );
+    }
 
 
     return (
@@ -78,7 +102,7 @@ export function TasksBar () {
                     </div>
 
                     <div className="w-1/12">
-                        <button className=" btn btn-circle bg-AddTaskBg w-12 h-12 rounded-full flex justify-center items-center">
+                        <button onClick={handleAddTask} className=" btn btn-circle bg-AddTaskBg w-12 h-12 rounded-full flex justify-center items-center">
                             <img src="/images/+.svg" alt="add task sign" />
                         </button>
                     </div>
@@ -147,7 +171,7 @@ export function TasksBar () {
                         >
 
                             <CustomTabPanel value={value} index={0} aria-label="personal-tasks-tab">
-                                <MyTasks />
+                                <MyTasks data={tasks}/>
                             </CustomTabPanel>
 
                             <CustomTabPanel value={value} index={1}>
