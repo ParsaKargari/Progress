@@ -21,8 +21,8 @@ router.get("/:id/:taskName", async function(req, res, next) {
             + (today_date.getMonth() + 1) + "-"
             + today_date.getDate();
     await createTask(req.params.id, req.params.taskName, time_added, time_added, false);
-    var tasks = await getTaskById(req.params.id);
-    res.send(tasks);
+    // var tasks = await getTaskById(req.params.id);
+    // res.send(tasks);
 
 });
 
