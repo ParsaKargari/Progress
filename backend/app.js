@@ -4,8 +4,7 @@
 // var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
 
-// var signUpRouter = require('./routes/SignUp')
-// var SpotifyLoginRouter = require('./routes/Spotify')
+
 // var app = express();
 
 // // view engine setup
@@ -23,22 +22,22 @@
 // app.use('/Spotify', SpotifyLoginRouter)
 
 // app.use('/signUp', signUpRouter)
-// // app.use('/Spotify/login', SpotifyLoginRouter);
-// // catch 404 and forward to error handler
+//     // app.use('/Spotify/login', SpotifyLoginRouter);
+//     // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
-//   next(createError(404));
+//     next(createError(404));
 // });
 
 
 // // error handler
 // app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//     // set locals, only providing error in development
+//     res.locals.message = err.message;
+//     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
+//     // render the error page
+//     res.status(err.status || 500);
+//     res.render('error');
 // });
 
 // module.exports = app;
@@ -50,9 +49,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-// const indexRouter = require('./routes/index');
-// const usersRouter = require('./routes/users');
-// const testAPIRouter = require('./routes/testAPI');
+var signUpRouter = require('./routes/SignUp')
+var SpotifyLoginRouter = require('./routes/Spotify')
 const friendsRouter = require('../backend/routes/FriendsRouter.js');
 const groupsRouter = require('../backend/routes/GroupsRouter.js');
 const tasksRouter = require('../backend/routes/TasksRouter.js');
@@ -74,6 +72,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/friends', friendsRouter);
 app.use('/groups', groupsRouter);
 app.use('/tasks', tasksRouter);
+app.use('/spotify', SpotifyLoginRouter)
+app.use('/Spotify', SpotifyLoginRouter)
+app.use('/signUp', signUpRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -86,10 +87,10 @@ app.use(function(err, req, res, next) {
     res.status(500).json({ error: 'Internal Server Error' });
 });
 
-const PORT = 9000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// const PORT = 9000;
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
 
 
 module.exports = app;
