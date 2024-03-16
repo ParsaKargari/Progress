@@ -46,7 +46,7 @@ export default function FriendProfile() {
 
     
     const handleSpotifyLogin = async () => {
-        // Assuming you have access to the user ID
+        // Assuming you     have access to the user ID
         // Redirect to the backend route /Spotify/login along with the user ID
         // so that users can login from spotify and validate
         window.location.href = `http://localhost:9000/spotify/login?user_id=${user.id}`;
@@ -55,35 +55,37 @@ export default function FriendProfile() {
       }
 // Function to check if interval fetching is allowed for Spotify
 async function checkSpotifyIntervalAllowed() {
-    return fetch(`http://localhost:9000/spotify/isUserSignedIn?user_id=${user.id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            return data; // Assuming the API returns true or false directly
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-            return false; // Return false in case of an error
-        });
+    try {
+        const response = await fetch(`http://localhost:9000/spotify/isUserSignedIn?user_id=${user.id}`);
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json(); // Await the JSON parsing
+        
+        console.log('Response:', data); // Log the actual data
+        
+        return data;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        return false; // Return false in case of an error
+    }
 }
 
 // Function to fetch currently playing song from Spotify
-function updateSongPlaying() {
-    fetch(`http://localhost:9000/spotify/currently-playing?user_id=${user.id}`)
+async function updateSongPlaying() {
+    fetch(`http://localhost:9000/spotify/currently_playing?user_id=${user.id}`)
         .catch(error => {
             console.error('There was a problem updating the currently playing song:', error);
         });
 }
 
 // Check if interval fetching is allowed, then start the interval
-checkSpotifyIntervalAllowed().then(allowed => {
+checkSpotifyIntervalAllowed().then(async allowed => {
     if (allowed) {
         // Call the updateSongPlaying function initially when the page loads
-        updateSongPlaying();
+        await updateSongPlaying();
 
         // Set interval to call the updateSongPlaying function repeatedly
         const interval_To_Update_Spotify = 150000; // Interval in milliseconds (e.g., 150000 ms = 2.5 minutes)
@@ -93,22 +95,6 @@ checkSpotifyIntervalAllowed().then(allowed => {
     }
 });
 
-
-    
-
-    
-
-    // async function myAsyncFunction() {
-    //     window.location.href = `http://localhost:9000/spotify/currently-playing?user_id=${user.id}`;
-    // }
-    
-    // // Call the async function initially
-    // myAsyncFunction();
-    
-    // // Set interval to call the async function every 1 minute (60 seconds)
-    // setInterval(async () => {
-    //     await myAsyncFunction();
-    // }, 60000);
     
       
 
