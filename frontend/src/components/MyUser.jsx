@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
+
+
 import CircularProgress from '@mui/joy/CircularProgress';
 import '../css/MusicAnimation.css';
 import { BlockPicker } from 'react-color';
@@ -53,6 +56,8 @@ export default function FriendProfile() {
         // window.location.href = `http://localhost:9000/spotify/currently_playing?user_id=${user.id}`
         // upon completion or not, it will 
       }
+
+
 // Function to check if interval fetching is allowed for Spotify
 async function checkSpotifyIntervalAllowed() {
     try {
@@ -81,6 +86,7 @@ async function updateSongPlaying() {
         });
 }
 
+
 // Check if interval fetching is allowed, then start the interval
 checkSpotifyIntervalAllowed().then(async allowed => {
     if (allowed) {
@@ -95,6 +101,23 @@ checkSpotifyIntervalAllowed().then(async allowed => {
     }
 });
 
+
+useEffect(() => {
+    async function LoadPersonalSettings() {
+        try {
+            const response = await fetch(`http://localhost:9000/settings/getSettings?user_id=${user.id}`);
+            const data = await response.json();
+            console.log('Settings Response:', data);
+            setUsername(data[0].Username || "vishnudhanda(notfound)");
+            setStatus(data[0].Status || "Database!");
+            setRingColor(data[0].color || '#697689');
+        } catch (error) {
+            console.error('Error loading personal settings:', error.message);
+        }
+    }
+
+    LoadPersonalSettings(); // Load personal settings when component mounts
+}, [user.id]); // Load personal settings whenever user ID changes
     
       
 
@@ -113,13 +136,13 @@ checkSpotifyIntervalAllowed().then(async allowed => {
             <div className='flex flex-col align-items-center'>
                 <div className='flex flex-row'>
                     <div className='flex'>
-                        <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'>vishnudhanda</p>
+                        <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'> {username || "vishnudhanda(notfound)"}</p>
                         <p className='font-bold text-friendsBracketAccent font-standard text-[16px]'>(6)</p>
                     </div>
                 </div>
                 <div className='flex flex-row mx-3 align-items-center'>
                     <div className='flex flex-row'>
-                        <p className='text-DarkGrey font-standard text-[16px]'>Database!</p>
+                        <p className='text-DarkGrey font-standard text-[16px]'>{status || "Database!"} </p>
                     </div>
                 </div>
             </div>
