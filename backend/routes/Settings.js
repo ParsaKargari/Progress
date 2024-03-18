@@ -37,18 +37,21 @@ router.post('/updateSettings', async (req, res) => {
     var user_id = req.query.user_id;
     var supabase = new SupabaseConnector();
     var client = supabase.getClient();
-    const { username, color, status } = req.body;
+    const { username, status, color } = req.body;
     console.log("user_id is, ", username);
     console.log("color is, ", color);
     console.log("status is, ", status);
     try {
+
         const result = await client
             .from('Users')
-            .update([{ username:username, color: color, Status: status }])
+            .update([{ Username:username, color: color, Status: status }])
             .eq('UserID', user_id);
+            console.log("result is, ", result);
         res.json(result);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.log(error);
+        res.status(500).json({ error: error});
     }
 });
 

@@ -33,8 +33,32 @@ export default function FriendProfile() {
         setRingColor(color.hex);
     };
 
-    const handleSave = () => {
-        // Implement save functionality
+    const handleSave = async () => {
+        // get the username from the input field
+        const username = document.getElementById('username').value;
+        const status = document.getElementById('status').value;
+        const color = ringColor;
+        console.log('Username:', username);
+        console.log('Status:', status);
+        console.log('Color:', color);
+
+        // Send the data to the backend
+        await fetch(`http://localhost:9000/settings/updateSettings?user_id=${user.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, status, color }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                setOpen(false); // Close the dialog after saving
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
     };
 
     const handleLogout = async () => {
