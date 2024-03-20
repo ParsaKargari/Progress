@@ -30,6 +30,22 @@ class Friends {
             throw error;
         }
     }
+
+    async sendAndReceiveFriendRequest(fromID, toID) {
+        const resultSend = await signup.sendFriendRequest(fromID, toID);
+        const resultReceive = await signup.receiveFriendRequest(fromID, toID);
+    }
+
+    async acceptFriendRequest(fromID, toID) {
+        const resultRemoveReceive = await signup.removeFriendRequestReceived(fromID, toID);
+        const resultRemoveSend = await signup.removeFriendRequestSent(fromID, toID);
+        const addedFriend = this.addFriend(fromID, toID);
+    }
+
+    async declineFriendRequest(fromID, toID) {
+        const resultRemoveReceive = await signup.removeFriendRequestReceived(fromID, toID);
+        const resultRemoveSend = await signup.removeFriendRequestSent(fromID, toID);
+    }
 }
 
 module.exports = Friends;
