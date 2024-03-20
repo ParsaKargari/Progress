@@ -1,7 +1,7 @@
 const { v1: uuidv1 } = require('uuid');
 uuidv1();
 
-const Groups = require('./src/Controllers/ApplicationAPIs/Groups.js');
+const Groups = require('../ApplicationAPIs/Groups.js');
 
 async function testGroups() {
     try {

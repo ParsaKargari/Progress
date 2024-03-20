@@ -2,7 +2,7 @@
 const { v1: uuidv1 } = require('uuid');
 uuidv1();
 
-const Friends = require('./src/Controllers/ApplicationAPIs/Friends.js');
+const Friends = require('../ApplicationAPIs/Friends.js');
 async function testFriends() {
     try {
         const friends = new Friends();

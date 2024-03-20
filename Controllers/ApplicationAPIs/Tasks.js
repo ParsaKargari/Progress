@@ -1,6 +1,6 @@
 const SupabaseConnector = require('../APIGateway/Supabase.js');
 
-// const { v1: uuidv1 } = require('uuid');
+const { v1: uuidv1 } = require('uuid');
 
 class Tasks {
     constructor() {

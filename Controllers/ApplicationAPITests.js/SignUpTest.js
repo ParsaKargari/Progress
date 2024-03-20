@@ -1,4 +1,4 @@
-const SignUp = require('./src/Controllers/ApplicationAPIs/SignUp.js');
+const SignUp = require('../ApplicationAPIs/SignUp.js');
 
 async function testUsers() {
     const userId = "0a377c79-4e19-40dc-9cab-228a81891969";
