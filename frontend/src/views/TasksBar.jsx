@@ -12,6 +12,7 @@ import { createTheme } from '@mui/material/styles';
 import { ActivityBar } from './ActivityBar';
 import { FriendsBar } from './FriendsBar';
 import { MyTasks } from '../components/MyTasks';
+import { Groups } from '../components/Groups';
 
 function CustomTabPanel(props) {
 
@@ -62,8 +63,9 @@ export function TasksBar () {
 
     const handleChangeIndex = (index) => {
         setValue(index);
-      };    
+    };    
 
+    
 
     return (
         <>
@@ -87,7 +89,7 @@ export function TasksBar () {
 
 
                 {/**Main Show Tasks Section ---------------------------------------------------------------------------------- */}
-                <div className="h-full bg-primary ">
+                <div className="h-full bg-primary " id="TaskSwipeBar">
 
                     <Box sx={{
                             width: '100%' ,
@@ -135,9 +137,28 @@ export function TasksBar () {
                                     fontWeight: 'bold',
                                 }}
                                 label="Group Tasks" {...a11yProps(1)} />
-                            </Tabs>
 
+                                {value === 1 && (
+                                    <div className=" w-full flex flex-row justify-end">
+
+                                        <div className='flex items-center justify-center font-regular font-bold text-TurqouiseBlue text-[18px] mx-4 h-full'>
+                                            <p className='text-center'>Create</p>
+                                        </div>
+
+                                        <div className='flex items-center justify-center font-regular font-bold text-TurqouiseBlue text-[18px] mx-4 h-full'>
+                                            <p className='text-center'>Join</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                            </Tabs>
+                            
+                            
+                            
                         </Box>
+                        
+                        
+                        
                         
 
                         <SwipeableViews
@@ -151,12 +172,16 @@ export function TasksBar () {
                             </CustomTabPanel>
 
                             <CustomTabPanel value={value} index={1}>
-                                <FriendsBar />
+                                <Groups />
                             </CustomTabPanel>
+
+                            <div className='flex flex-1 h-full w-full' value={value} index={2}>
+                                <ActivityBar/>
+                            </div>
 
                         </SwipeableViews>
 
-
+                        
                     </Box>
 
                 </div>

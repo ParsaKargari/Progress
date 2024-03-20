@@ -107,7 +107,7 @@ export function TaskComponent (props) {
                                     Planned for :
                                 </h5>
                                 
-                                <input type="date" value={planneddate} onChange={e => {setPlanneddate(e.target.value)}} class="dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
+                                <input type="date" value={planneddate} onChange={e => {setPlanneddate(e.target.value)}} class="cursor-pointer dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
                             </>
                             :
                             <h5 
@@ -127,7 +127,7 @@ export function TaskComponent (props) {
                                     Due : 
                                 </h5>
 
-                                <input type="date" value={date} onChange={e => {setDate(e.target.value)}} className="dateInput" class="dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
+                                <input type="date" value={date} onChange={e => {setDate(e.target.value)}} className="dateInput" class="cursor-pointer dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
                             </>
                             
                             
@@ -143,7 +143,7 @@ export function TaskComponent (props) {
                             editing ?
                             <>
                                 <h5 
-                                    className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate"
+                                    className="cursor-pointer ml-2 text-textcolour font-standard text-base decoration-2 truncate"
                                     onClick={handleEditClick}
                                 >
                                     Save
@@ -152,7 +152,7 @@ export function TaskComponent (props) {
                             :
                             <>
                                 <h5 
-                                    className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate"
+                                    className="cursor-pointer ml-2 text-textcolour font-standard text-base decoration-2 truncate"
                                     onClick={handleEditClick}
                                 >
                                     Edit
@@ -162,7 +162,7 @@ export function TaskComponent (props) {
 
                         
                         <h5 
-                            className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate"
+                            className="cursor-pointer ml-2 text-textcolour font-standard text-base decoration-2 truncate"
                         >
                             Delete
                         </h5>

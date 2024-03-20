@@ -20,19 +20,6 @@ export function MyTasks () {
         const temp = [...taskList, newTask];
         setTaskList(temp)
     }
-    
-
-    // const generatetaskContents = () => {
-    //     let  now = new Date();
-    //     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    //     let date = now.toISOString().slice(0,16);
-    //     const defaulttask = {
-    //         title: "Untitled",
-    //         date: date,
-    //         content: ""
-    //     }
-    //     return defaulttask;
-    // }
 
     const test = {
         "task1": {
