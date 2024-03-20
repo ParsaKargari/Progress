@@ -1,35 +1,39 @@
-import {React, useState, useEffect} from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { SmallSize } from './SmallSize.jsx';
+import { MediumSize } from './MediumSize.jsx';
+import { LargeSize } from './LargeSize.jsx';
 
-/**Importing Components */
-import { SmallSize } from './SmallSize.jsx'
-import { MediumSize } from './MediumSize.jsx'
-import { LargeSize } from './LargeSize.jsx'
+// Utility function for debouncing
+function debounce(func, timeout = 300){
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
 
 export default function HomePage() {
-    const [shouldRenderSmall, setShouldRenderSmall] = useState(true);
-    const [shouldRenderMedium, setShouldRenderMedium] = useState(true);
-    const [shouldRenderLarge, setShouldRenderLarge] = useState(true);
+    const [shouldRenderSmall, setShouldRenderSmall] = useState(false);
+    const [shouldRenderMedium, setShouldRenderMedium] = useState(false);
+    const [shouldRenderLarge, setShouldRenderLarge] = useState(false);
 
     useEffect(() => {
-
-        const handleWindowResize = () => {
-            if(window.innerWidth > 1280) {
+        const handleWindowResize = debounce(() => {
+            if (window.innerWidth >= 1280) {
                 setShouldRenderLarge(true);
                 setShouldRenderSmall(false);
                 setShouldRenderMedium(false);
-            }
-            else if(window.innerWidth < 768) {
+            } else if (window.innerWidth < 768) {
                 setShouldRenderSmall(true);
                 setShouldRenderMedium(false);
                 setShouldRenderLarge(false);
-            }
-            else if (768 < window.innerWidth < 1280) {
+            } else {
                 setShouldRenderMedium(true);
                 setShouldRenderSmall(false);
                 setShouldRenderLarge(false);
             }
-        }
+        });
 
         handleWindowResize();
 
@@ -37,21 +41,17 @@ export default function HomePage() {
 
         return () => {
             window.removeEventListener('resize', handleWindowResize);
-        }
+        };
 
     }, []);
-        
 
     return (
         <>
             <div>
-                {shouldRenderSmall ? <SmallSize /> : null}
-
-                {shouldRenderMedium ? <MediumSize /> : null}
-
-                {shouldRenderLarge ? <LargeSize /> : null}
-
+                {shouldRenderSmall && <SmallSize />}
+                {shouldRenderMedium && <MediumSize />}
+                {shouldRenderLarge && <LargeSize />}
             </div>
         </>
-    )
+    );
 }

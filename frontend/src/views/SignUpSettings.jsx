@@ -1,24 +1,40 @@
 import { React, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {useNavigate } from "react-router-dom";
-import { addUsername, addStatus, addEmail } from '../Controllers/ApplicationAPIs/SignUp.js';
+// import { addUsername, addStatus, addEmail } from '../Controllers/ApplicationAPIs/SignUp.js';
 import { createClient } from "@supabase/supabase-js";
-
+import { Snackbar } from '@mui/material';
 import "../css/Login.css";
+
 
 export default function SignUpSettings() {
     const [spin, setSpin] = useState(false);
     const navigation = useNavigate();
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     useEffect(() => {
         setSpin(true);
     }, []);
 
+    const handleOpenSnackbar = (message) => {
+        setSnackbarMessage(message);
+        setSnackbarOpen(true);
+    };
+      
+    const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setSnackbarOpen(false);
+    };
+      
+
     function SignUp() {
         var userName = document.getElementById("inline-first-name").value;
         var status = document.getElementById("inline-status").value;
         if (userName === "" || status === "") {
-            alert("Please fill out all fields!");
+            handleOpenSnackbar("Please fill out all fields!");
             return;
         }
         else {
@@ -26,9 +42,10 @@ export default function SignUpSettings() {
         }
         var user_id = localStorage.getItem("User_ID");
         var user_email = localStorage.getItem("User_Email");
-        addUsername(userName, user_id);
-        addStatus(status, user_id);
-        addEmail(user_email, user_id);
+        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/signUp/${user_id}/${userName}/${status}/${user_email}`)
+        // addUsername(userName, user_id);
+        // addStatus(status, user_id);
+        // addEmail(user_email, user_id);
 
     }
 
@@ -84,6 +101,13 @@ export default function SignUpSettings() {
                 </form>
             </div>
         </div>
+        <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+            message={snackbarMessage}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        />
         </>
     )
 }
