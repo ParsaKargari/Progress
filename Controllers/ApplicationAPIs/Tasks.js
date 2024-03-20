@@ -8,11 +8,11 @@ class Tasks {
         this.client = this.supabase.getClient();
     }
 
-    async createTask(taskDescription, addedDate, dueDate, publicVisibility) {
+    async createTask(userId, taskDescription, addedDate, dueDate, publicVisibility) {
         try {
             const result = await this.client
                 .from('Tasks')
-                .insert([{ UserID: uuidv1(), TaskDescription: taskDescription, AddedDate: addedDate, DueDate: dueDate, PublicVisibility: publicVisibility }])
+                .insert([{ UserID: userId, TaskDescription: taskDescription, AddedDate: addedDate, DueDate: dueDate, PublicVisibility: publicVisibility }])
                 .select();
             return result;
         } catch (error) {
@@ -21,17 +21,20 @@ class Tasks {
         }
     }
 
-    async getTasks() {
+
+    async getTasks(userId) {
         try {
             const result = await this.client
                 .from('Tasks')
-                .select('*');
+                .select('*')
+                .eq('UserID', userId);
             return result;
         } catch (error) {
             console.error(error);
             throw error;
         }
     }
+
 
     async getTaskById(taskId) {
         try {
@@ -106,5 +109,6 @@ class Tasks {
 
 
 }
+
 
 module.exports = Tasks;

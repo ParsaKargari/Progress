@@ -1,88 +1,38 @@
-import { React, useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { TaskComponent } from './TaskComponent';
+import { useAuth } from '../context/AuthContext';
 
-export function MyTasks () {
-    const[taskList, setTaskList] = useState([]);
-
-    const Addtask = (taskDescription, dueDate, status, visibilityDB, plannedDate, uuid) => {
-        const newKey = "task" + (Object.keys(taskList).length + 1);
-        
-        const newTask = {
-            "key": "randomKey" + (Object.keys(taskList).length + 1), // Generating a random key
-            "taskDescription": taskDescription,
-            "status": status,
-            "visibilityDB": visibilityDB,
-            "dueDate": dueDate,
-            "plannedDate": plannedDate
-        };
-
-        const temp = [...taskList, newTask];
-        setTaskList(temp)
-    }
-    
-
-    // const generatetaskContents = () => {
-    //     let  now = new Date();
-    //     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    //     let date = now.toISOString().slice(0,16);
-    //     const defaulttask = {
-    //         title: "Untitled",
-    //         date: date,
-    //         content: ""
-    //     }
-    //     return defaulttask;
-    // }
-
-    const test = {
-        "task1": {
-            "uuid": "randomKey1",
-            "taskDescription": "Clean Apartment",
-            "status": true,
-            "visibilityDB": true,
-            "dueDate": "2026-06-04",
-            "plannedDate": "2024-02-04"
-        },
-        "task2": {
-            "uuid": "randomKey2",
-            "taskDescription": "Complete ENSF401 Research Assignment",
-            "status": false,
-            "visibilityDB": true,
-            "dueDate": "2024-02-13",
-            "plannedDate": "2024-02-04"
-        },
-        "task3": {
-            "uuid": "randomKey3",
-            "taskDescription": "Laundry",
-            "status": false,
-            "visibilityDB": false,
-            "dueDate": "2024-02-04",
-            "plannedDate": "2024-02-04"
-        }
-    }
+export function MyTasks() {
+    const [taskList, setTaskList] = useState([]);
+    const { user } = useAuth();
 
     useEffect(() => {
-        setTaskList(test)
+        const fetchTasks = async () => {
+            try {
+                const response = await fetch(`http://localhost:9000/Tasks/getTasks/${user.id}`);
+                const json = await response.json();
+                const tasks = json.data || []; 
+                setTaskList(tasks);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        };
+
+        fetchTasks();
     }, []);
 
     return (
-        <>
-            <div className="flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar">
-
-                {
-                    Object.keys(taskList).map(taskKey => (
-                        <TaskComponent
-                            uuid = {taskKey}
-                            taskDescription = {taskList[taskKey].taskDescription}
-                            status = {taskList[taskKey].status}
-                            visibilityDB =  {taskList[taskKey].visibilityDB}
-                            dueDate = {taskList[taskKey].dueDate}
-                            plannedDate = {taskList[taskKey].plannedDate}
-                        />
-                    ))
-                }
-
-            </div>
-        </>
-    )
+        <div className="flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar">
+            {taskList.map(task => (
+                <TaskComponent
+                    key={task.TaskID}
+                    taskDescription={task.TaskDescription}
+                    status={task.CompletionStatus}
+                    visibilityDB={task.PublicVisibility}
+                    dueDate={task.DueDate}
+                    plannedDate={task.AddedDate}
+                />
+            ))}
+        </div>
+    );
 }
