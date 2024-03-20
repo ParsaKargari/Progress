@@ -8,11 +8,11 @@ async function testTasks() {
         const tasks = new Tasks();
         const groups = new Groups();
         console.log("bruh")
-        const createdTask = await tasks.createTask('separation friends', '2024-03-01', '2024-03-05', true);
-        console.log('Created Task:', createdTask);
+        // const createdTask = await tasks.createTask('', '2024-03-01', '2024-03-05', true);
+        // console.log('Created Task:', createdTask);
 
-        const allTasks = await tasks.getTasks();
-        console.log('All Tasks:', allTasks);
+        // const allTasks = await tasks.getTasks();
+        // console.log('All Tasks:', allTasks);
 
         const taskById = await tasks.getTaskById('f912795e-fe34-4d17-9183-e8974e676038');
         console.log('Task by ID:', taskById);
