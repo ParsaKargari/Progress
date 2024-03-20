@@ -174,10 +174,10 @@ export function TasksBar () {
                             <CustomTabPanel value={value} index={1}>
                                 <Groups />
                             </CustomTabPanel>
-
+{/* 
                             <div className='flex flex-1 h-full w-full' value={value} index={2}>
                                 <ActivityBar/>
-                            </div>
+                            </div> */}
 
                         </SwipeableViews>
 
