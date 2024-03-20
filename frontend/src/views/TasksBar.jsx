@@ -65,6 +65,33 @@ export function TasksBar () {
         setValue(index);
     };    
 
+    const test = {
+        "task1": {
+            "uuid": "randomKey1",
+            "taskDescription": "Clean Apartment",
+            "status": true,
+            "visibilityDB": true,
+            "dueDate": "2026-06-04",
+            "plannedDate": "2024-02-04"
+        },
+        "task2": {
+            "uuid": "randomKey2",
+            "taskDescription": "Complete ENSF401 Research Assignment",
+            "status": false,
+            "visibilityDB": true,
+            "dueDate": "2024-02-13",
+            "plannedDate": "2024-02-04"
+        },
+        "task3": {
+            "uuid": "randomKey3",
+            "taskDescription": "Laundry",
+            "status": false,
+            "visibilityDB": false,
+            "dueDate": "2024-02-04",
+            "plannedDate": "2024-02-04"
+        }
+    }
+
     
 
     return (
@@ -168,13 +195,14 @@ export function TasksBar () {
                         >
 
                             <CustomTabPanel value={value} index={0} aria-label="personal-tasks-tab">
-                                <MyTasks />
+                                <MyTasks tasksList={test}/>
                             </CustomTabPanel>
 
                             <CustomTabPanel value={value} index={1}>
                                 <Groups />
                             </CustomTabPanel>
-{/* 
+
+                            {/* 
                             <div className='flex flex-1 h-full w-full' value={value} index={2}>
                                 <ActivityBar/>
                             </div> */}

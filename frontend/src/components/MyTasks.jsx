@@ -2,8 +2,10 @@ import { React, useState, useEffect } from 'react';
 
 import { TaskComponent } from './TaskComponent';
 
-export function MyTasks () {
-    const[taskList, setTaskList] = useState([]);
+export function MyTasks (props) {
+    const { tasksList } = props;
+
+    const[taskList, setTaskList] = useState(tasksList || []);
 
     const Addtask = (taskDescription, dueDate, status, visibilityDB, plannedDate, uuid) => {
         const newKey = "task" + (Object.keys(taskList).length + 1);
@@ -21,40 +23,9 @@ export function MyTasks () {
         setTaskList(temp)
     }
 
-    const test = {
-        "task1": {
-            "uuid": "randomKey1",
-            "taskDescription": "Clean Apartment",
-            "status": true,
-            "visibilityDB": true,
-            "dueDate": "2026-06-04",
-            "plannedDate": "2024-02-04"
-        },
-        "task2": {
-            "uuid": "randomKey2",
-            "taskDescription": "Complete ENSF401 Research Assignment",
-            "status": false,
-            "visibilityDB": true,
-            "dueDate": "2024-02-13",
-            "plannedDate": "2024-02-04"
-        },
-        "task3": {
-            "uuid": "randomKey3",
-            "taskDescription": "Laundry",
-            "status": false,
-            "visibilityDB": false,
-            "dueDate": "2024-02-04",
-            "plannedDate": "2024-02-04"
-        }
-    }
-
-    useEffect(() => {
-        setTaskList(test)
-    }, []);
-
     return (
         <>
-            <div className="flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden h-full max-h-screen no-scrollbar">
 
                 {
                     Object.keys(taskList).map(taskKey => (

@@ -5,7 +5,7 @@ import '../css/MusicAnimation.css';
 
 export function GroupProfile(props) {
 
-    const { GroupID, GroupName, Members, GroupStatus, Chat, Admin } = props;
+    const { GroupID, GroupName, Members, GroupStatus, Chat, Admin, grpList} = props;
 
     return (
         <>
@@ -40,10 +40,31 @@ export function GroupProfile(props) {
 
                 </div>
 
-                <div className="text-friendsBracketAccent">
-                        Edit
-                </div>
+                {
+                    grpList ?
+                    (
+                        <div className="text-friendsBracketAccent">
+                            Edit
+                        </div>
+                    ) :
+                    (
+                        <div className="flex flex-row">
+                            <div className="w-1/2 mr-2 mb-2">
+                                <button className=" btn btn-circle bg-AddTaskBg w-12 h-12 rounded-xl flex justify-center items-center">
+                                    <img src="/images/GroupChat.svg" alt="grp chat icon" />
+                                </button>
+                            </div>
 
+                            <div className="w-1/2">
+                                <button className=" btn btn-circle bg-AddTaskBg w-12 h-12 rounded-xl flex justify-center items-center">
+                                    <img src="/images/BackButton.svg" alt="back button icon" />
+                                </button>
+                            </div>
+                        </div>
+                    )
+                }
+
+                
             </div>
         
         </>

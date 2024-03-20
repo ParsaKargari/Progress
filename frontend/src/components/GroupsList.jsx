@@ -76,6 +76,7 @@ export function GroupsList () {
                         GroupStatus = {groupsList[groupKey].GroupStatus}
                         Chat = {groupsList[groupKey].Chat}
                         Admin = {groupsList[groupKey].Admin}
+                        grpList = {true}
                     />
                 ))
             }
@@ -91,7 +92,7 @@ export function GroupsList () {
                     </div>
                 :
                     <>
-                    
+                        
                     </>
             }
         </>
