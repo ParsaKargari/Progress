@@ -33,46 +33,26 @@ router.get('/getFriends', async (req, res) => {
 
 router.get("/:id", async function (req, res, next) {
 
+    const user = await friends.getFriendUsername(req.params.id);
+    console.log(user);
     const friendsByID = await friends.getFriendsByID(req.params.id);
-    // for (let i = 0; i < friendsByID.length; i++) {
-    //     // if(friendsByID[])
-    //     res.send(friendsByID[1])
-    // }
+    // console.log(friendsByID)
+
     var splitIDs;
     var parsedFriendsJson = []
-    // friendsByID.forEach(async item => {
-    //     // Access the property 'bothuserfriends' of each object
-    //     splitIDs = item.bothuserfriends.split(" ");
-    //     splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
-
-    //     let friendUsername = await friends.getFriendUsername(splitIDs);
-    //     console.log(friendUsername[0])
-    //     parsedFriendsJson.push({ friendID: splitIDs, friendUsername: friendUsername });
-    //     //console.log(parsedFriendsJson)
-    //     // res.send(peopleIDs);
-    // });
-    const promises = friendsByID.map(async item => {
+    friendsByID.forEach(async item => {
         // Access the property 'bothuserfriends' of each object
-        let splitIDs = item.bothuserfriends.split(" ");
+        splitIDs = item.bothuserfriends.split(" ");
         splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
+        splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
+        console.log(splitIDs)
 
-        const friendUsername = await friends.getFriendUsername(splitIDs);
-        console.log(friendUsername);
-
-        return { friendID: splitIDs, friendUsername: friendUsername[0].Username };
+        parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1] });
+        //console.log(parsedFriendsJson)
+        // res.send(peopleIDs);
     });
-
-    Promise.all(promises)
-        .then(parsedFriendsJson => {
-            // All asynchronous operations have completed here
-            console.log(parsedFriendsJson);
-            // Now you can do whatever you need with the parsedFriendsJson
-            // For example, you can send it as a response
-            res.send(parsedFriendsJson);
-
-        })
-    console.log("BRUE")
-    // res.send(parsedFriendsJson)
+    console.log(parsedFriendsJson)
+    res.send(parsedFriendsJson)
 
 });
 
