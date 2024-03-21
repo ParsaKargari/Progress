@@ -43,14 +43,14 @@ router.get("/:id", async function (req, res, next) {
     friendsByID.forEach(async item => {
         // Access the property 'bothuserfriends' of each object
         splitIDs = item.bothuserfriends.split(" ");
-        splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
-        splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
+        //console.log(splitIDs)
+        //splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
+        //splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
         // console.log(splitIDs)
 
         parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1] });
     });
     console.log(parsedFriendsJson)
-    console.log("bruhhh")
     res.send(parsedFriendsJson)
 
 });
