@@ -8,9 +8,15 @@ var logger = require('morgan');
 
 var signUpRouter = require('./routes/SignUp')
 var app = express();
-var cors = require('cors');
 
-app.use(cors());
+var corsOptions = {
+  origin: 'https://progresslive.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
