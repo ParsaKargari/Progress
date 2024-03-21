@@ -33,8 +33,8 @@ router.get('/getFriends', async (req, res) => {
 
 router.get("/:id", async function (req, res, next) {
 
-    const user = await friends.getFriendUsername(req.params.id);
-    console.log(user);
+    // const user = await friends.getFriendUsername(req.params.id);
+    // console.log(user);
     const friendsByID = await friends.getFriendsByID(req.params.id);
     // console.log(friendsByID)
 
@@ -45,13 +45,12 @@ router.get("/:id", async function (req, res, next) {
         splitIDs = item.bothuserfriends.split(" ");
         splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
         splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
-        console.log(splitIDs)
+        // console.log(splitIDs)
 
         parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1] });
-        //console.log(parsedFriendsJson)
-        // res.send(peopleIDs);
     });
     console.log(parsedFriendsJson)
+    console.log("bruhhh")
     res.send(parsedFriendsJson)
 
 });
