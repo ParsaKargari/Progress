@@ -10,6 +10,7 @@ import axios from "axios";
 import { Snackbar } from "@mui/material";
 
 
+
 // this needs to be put in a env file at the end of the project for security.
 const supabase = createClient(
   process.env.REACT_APP_SUPABASE_URL,
@@ -30,7 +31,7 @@ function Login() {
   
     if (user) {
       // Use axios to fetch the username using the user ID from the backend
-      axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/signUp/${user.id}`)
+      axios.get(`${process.env.REACT_APP_API_URL}/signUp/${user.id}`, {withCredentials: true})
         .then(response => {
           const data = response.data;
           if (data.length > 0 && data[0].Username) {
