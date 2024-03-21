@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
 
-app.use((req, res, next) => {
+router.use((req, res, next) => {
   var origin = req.headers.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
     res.setHeader('Access-Control-Allow-Origin', origin);
