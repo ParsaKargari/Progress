@@ -8,6 +8,7 @@ var logger = require('morgan');
 
 var signUpRouter = require('./routes/SignUp')
 var app = express();
+var cors = require('cors');
 
 var corsOptions = {
   origin: 'https://progresslive.vercel.app',
@@ -15,6 +16,8 @@ var corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
+
 
 app.use(cors(corsOptions));
 
