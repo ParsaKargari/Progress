@@ -1,8 +1,26 @@
-import { React } from 'react';
+import { React, useState, useEffect } from 'react';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Friend from '../components/Friend';
 import MyUser from '../components/MyUser';
 export function FriendsBar () {
+    const[friendList, setFriendList] = useState([]);
+
+    const test = {
+        "tbhav": {
+            "uuid": "randomKey1",
+            "status": "myStatus"
+
+        },
+        "Beer God": {
+            "uuid": "randomKey2",
+            "status": "Drinking"
+        },
+    }
+
+
+    useEffect(() => {
+        setFriendList(test)
+    }, []);
 
     return (
         <div className="col-span-10 md:col-span-3 xl:col-span-2 bg-primary flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar px-8 flex flex-col justify-between">
@@ -25,10 +43,15 @@ export function FriendsBar () {
                     />
             </div>
 
-            {/* Friends component begins here */}
-            <Friend/>
-            <Friend/>
-            <Friend/>
+            {
+                Object.keys(friendList).map(friendKey => (
+                    <Friend
+                        name = {friendKey}
+                        status = {friendList[friendKey].status}
+                        uuid = {friendList[friendKey].uuid}
+                    />
+                ))
+            }
 
 
             {/* this needs to be hidden on increase in friends */}

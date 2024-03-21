@@ -1,8 +1,9 @@
     import React, { useState } from 'react';
     import CircularProgress from '@mui/joy/CircularProgress';
     import '../css/MusicAnimation.css';
-    export default function FriendProfile() {
+    export default function FriendProfile(props) {
         const [isPlaying, setIsPlaying] = useState(false);
+        const { name, status } = props;
 
         return (
             <div className='flex flex-row justify-start items-center py-1.5 '>
@@ -16,7 +17,7 @@
                 <div className='flex flex-col align-items-center'>
                     <div className='flex flex-row'>
                         <div className='flex'>
-                            <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'>vishnudhanda</p>
+                            <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'>{name}</p>
                             <p className='font-bold text-friendsBracketAccent font-standard text-[16px]'>(6)</p>
                             <img className='ml-1.5' src='/images/OnlineDot.svg'></img>
                         </div>
@@ -31,7 +32,7 @@
                         <p className={`font-regular text-DarkGrey font-light text-[16px]  ${isPlaying ? 'slide-left' : ''}`}>
 
                             {/* this is where status and song name would go */}
-                            {isPlaying ? 'Now Playing' : 'Grinding'}
+                            {isPlaying ? 'Now Playing' : status}
                         </p>
                     </div>
                 </div>
