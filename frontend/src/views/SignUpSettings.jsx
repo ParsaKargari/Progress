@@ -42,7 +42,7 @@ export default function SignUpSettings() {
         }
         var user_id = localStorage.getItem("User_ID");
         var user_email = localStorage.getItem("User_Email");
-        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/signUp/${user_id}/${userName}/${status}/${user_email}`)
+        fetch(`${process.env.REACT_APP_API_URL}/signUp/${user_id}/${userName}/${status}/${user_email}`)
         // addUsername(userName, user_id);
         // addStatus(status, user_id);
         // addEmail(user_email, user_id);
