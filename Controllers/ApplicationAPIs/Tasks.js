@@ -47,14 +47,29 @@ class Tasks {
         }
     }
 
-
-
     async addComment(task_id, username, new_comment) {
 
         try {
             let { data, error } = await this.client
                 .rpc('append_to_comments', {
                     new_comment,
+                    task_id,
+                    username
+                })
+            if (error) console.error(error)
+            else console.log(data)
+            return data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async addReaction(task_id, new_reaction, username) {
+        try {
+            let { data, error } = await this.client
+                .rpc('add_to_reactions', {
+                    new_reaction,
                     task_id,
                     username
                 })
@@ -103,7 +118,6 @@ class Tasks {
             throw error;
         }
     }
-
 
 }
 

@@ -1,5 +1,4 @@
 
-
 const SupabaseConnector = require('../APIGateway/Supabase.js');
 class SignUp {
     constructor() {
@@ -55,45 +54,7 @@ class SignUp {
         }
     }
 
-    async sendFriendRequest(from_id, to_id) {
-        let { data, error } = await this.client
-            .rpc('send_friend_request', {
-                from_id,
-                to_id
-            })
-        if (error) console.error(error)
-        else console.log(data)
 
-    }
-
-    async receiveFriendRequest(from_id, to_id) {
-        let { data, error } = await this.client
-            .rpc('receive_friend_request', {
-                from_id,
-                to_id
-            })
-        if (error) console.error(error)
-        else console.log(data)
-    }
-    async removeFriendRequestReceived(from_id, to_id) {
-        let { data, error } = await this.client
-            .rpc('remove_friend_request', {
-                from_id,
-                to_id,
-            })
-        if (error) console.error(error)
-        else console.log(data)
-    }
-
-    async removeFriendRequestSent(from_id, to_id) {
-        let { data, error } = await this.client
-            .rpc('remove_friend_request_sent', {
-                from_id,
-                to_id,
-            })
-        if (error) console.error(error)
-        else console.log(data)
-    }
 
 
 
