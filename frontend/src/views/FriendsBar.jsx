@@ -9,34 +9,53 @@ import Autocomplete from '@mui/material/Autocomplete';
 import RequestSent from '../components/RequestSent';
 import IncomingRequest from '../components/IncomingRequest';
 import axios from "axios";
+import { createClient } from "@supabase/supabase-js";
 
 export function FriendsBar () {
+    const supabase = createClient(
+        process.env.REACT_APP_SUPABASE_URL,
+        process.env.REACT_APP_SUPABASE_ANON_KEY
+      );
+      
     const test = {}
     const[friendList, setFriendList] = useState([test]);
     const { user } = useAuth();
 
+    const channel = supabase
+    .channel('schema-db-changes')
+    .on(
+    'postgres_changes',
+    {
+      event: 'INSERT',
+      schema: 'Friends',
+    },
+    (payload) => console.log(payload)
+    // getFriends()
+  )
+  .subscribe()
     
-    function getFriends() {
-    var user_id = localStorage.getItem("User_ID");
-    axios.get(`${process.env.REACT_APP_API_URL}/friends/${user.id}`).then(
-        response => {
-            const data = response.data;
-            console.log(data);
-            
-            data.forEach(item => {
-                console.log(item);
-                var newKey = '' + item.friendUsername
-                console.log(newKey)
-                test[newKey] = {friendID: item.friendID, status: item.friendStatus}
-                
-            })
-            console.log(test)
-            setFriendList(test)
-            })
-    }
+   
     
 
     useEffect(() => {
+        async function getFriends() {
+            var user_id = localStorage.getItem("User_ID");
+            axios.get(`${process.env.REACT_APP_API_URL}/friends/${user.id}`).then(
+                response => {
+                    const data = response.data;
+                    console.log(data);
+                    
+                    data.forEach(item => {
+                        console.log(item);
+                        var newKey = '' + item.friendUsername
+                        console.log(newKey)
+                        test[newKey] = {friendID: item.friendID, status: item.friendStatus}
+                        
+                    })
+                    console.log(test)
+                    setFriendList(test)
+                    })
+            }
         getFriends()
     }, []);
 
