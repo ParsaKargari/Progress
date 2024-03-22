@@ -1,32 +1,43 @@
 import { React, useState, useEffect } from 'react';
+import { useAuth } from "../context/AuthContext";
 import CircularProgress from '@mui/joy/CircularProgress';
 import Friend from '../components/Friend';
 import MyUser from '../components/MyUser';
 import Dialog from '@mui/material/Dialog';
-import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import RequestSent from '../components/RequestSent';
 import IncomingRequest from '../components/IncomingRequest';
+import axios from "axios";
 
 export function FriendsBar () {
-    const[friendList, setFriendList] = useState([]);
+    const test = {}
+    const[friendList, setFriendList] = useState([test]);
+    const { user } = useAuth();
 
-    const test = {
-        "tbhav": {
-            "uuid": "randomKey1",
-            "status": "myStatus"
-
-        },
-        "Beer God": {
-            "uuid": "randomKey2",
-            "status": "Drinking"
-        },
+    
+    function getFriends() {
+    var user_id = localStorage.getItem("User_ID");
+    axios.get(`${process.env.REACT_APP_API_URL}/friends/${user.id}`).then(
+        response => {
+            const data = response.data;
+            console.log(data);
+            
+            data.forEach(item => {
+                console.log(item);
+                var newKey = '' + item.friendUsername
+                console.log(newKey)
+                test[newKey] = {friendID: item.friendID, status: item.friendStatus}
+                
+            })
+            console.log(test)
+            setFriendList(test)
+            })
     }
-
+    
 
     useEffect(() => {
-        setFriendList(test)
+        getFriends()
     }, []);
 
 
