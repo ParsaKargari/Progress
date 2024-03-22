@@ -36,6 +36,14 @@ router.get("/:id", async function (req, res, next) {
     // const user = await friends.getFriendUsername(req.params.id);
     // console.log(user);
     const friendsByID = await friends.getFriendsByID(req.params.id);
+    const username = await friends.getFriendUsername(req.params.id);
+    const status = await friends.getFriendStatus(req.params.id)
+    console.log(friendsByID)
+    console.log(username)
+    console.log(status)
+    // friendsByID.forEach(friend => {
+    //     if (friend)
+    // })
     // console.log(friendsByID)
 
     var splitIDs;
@@ -43,12 +51,15 @@ router.get("/:id", async function (req, res, next) {
     friendsByID.forEach(async item => {
         // Access the property 'bothuserfriends' of each object
         splitIDs = item.bothuserfriends.split(" ");
+        // const status = await friends.getFriendUsername(splitIDs[0])
+        // console.log(status)
         //console.log(splitIDs)
-        //splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
-        //splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
+        splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
+        splitIDs.splice(splitIDs.indexOf(username[0].Username), 1);
+        splitIDs.splice(splitIDs.indexOf(status[0].Status), 1);
         // console.log(splitIDs)
-
-        parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1] });
+        // console.log(splitIDs)
+        parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1], friendStatus: splitIDs[2] });
     });
     console.log(parsedFriendsJson)
     res.send(parsedFriendsJson)
