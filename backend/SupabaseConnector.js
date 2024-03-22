@@ -1,3 +1,4 @@
+
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
@@ -9,6 +10,7 @@ class SupabaseConnector {
         process.env.SUPABASE_ANON_KEY
       );
       SupabaseConnector.instance = this;
+
     }
     return SupabaseConnector.instance;
   }
