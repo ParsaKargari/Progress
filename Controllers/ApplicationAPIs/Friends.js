@@ -9,11 +9,11 @@ class Friends {
         this.client = this.supabase.getClient();
     }
 
-    async addFriend(friend1ID, friend2ID, friend1Username, friend2Username) {
+    async addFriend(friend1ID, friend2ID, friend1Username, friend2Username, friend1Status, friend2Status) {
         try {
             const result = await this.client
                 .from('Friends')
-                .insert([{ Person1: friend1ID, Person2: friend2ID, Person1Username: friend1Username, Person2Username: friend2Username, DateBegan: new Date() }])
+                .insert([{ Person1: friend1ID, Person2: friend2ID, Person1Username: friend1Username, Person2Username: friend2Username, Person1Status: friend1Status, Person2Status: friend2Status, DateBegan: new Date() }])
                 .select();
             return result;
         } catch (error) {
@@ -28,7 +28,7 @@ class Friends {
                 person_id
             })
         if (error) console.error(error)
-        else console.log(data)
+        // else console.log(data)
         return data;
     }
 
@@ -80,6 +80,14 @@ class Friends {
         return data
     }
 
+    async getFriendStatus(user_id) {
+        const { data, error } = await this.client
+            .from('Users')
+            .select('Status')
+            .eq('UserID', user_id);
+        return data
+    }
+
 
     async sendAndReceiveFriendRequest(fromID, toID) {
         const resultSend = await this.sendFriendRequest(fromID, toID);
@@ -89,9 +97,12 @@ class Friends {
     async acceptFriendRequest(fromID, toID) {
         const resultRemoveReceive = await this.removeFriendRequestReceived(fromID, toID);
         const resultRemoveSend = await this.removeFriendRequestSent(fromID, toID);
-        const fromUsername = await this.getFriendUsername(fromID)
-        const toUsername = await this.getFriendUsername(toID)
-        const addedFriend = await this.addFriend(fromID, toID, fromUsername[0].Username, toUsername[0].Username);
+        const fromUsername = await this.getFriendUsername(fromID);
+        const toUsername = await this.getFriendUsername(toID);
+        const fromStatus = await this.getFriendStatus(fromID);
+        const toStatus = await this.getFriendStatus(toID);
+        const addedFriend = await this.addFriend(fromID, toID, fromUsername[0].Username, toUsername[0].Username, fromStatus[0].Status, toStatus[0].Status);
+
     }
 
     async declineFriendRequest(fromID, toID) {
