@@ -7,15 +7,15 @@ const request = require('request');
 const querystring = require('querystring');
 const { add } = require('nodemon/lib/rules/index.js');
 
+var env = require('dotenv').config();
 
-// import { DotenvConfigOptions } from 'dotenv';
+var client_id = process.env.SPOTIFY_CLIENT_ID;
+var client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+var redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
 
-var client_id = '26b0736d78ef449a92dc41137875af72'
-var client_secret = '4530b6e7f3e64af89a17d03e5d3097a0'
-var redirect_uri = 'http://localhost:9000/Spotify/callback'
 
 // Middleware to serve static files from the 'public' directory
-// router.use(express.static(__dirname + '/public'));
+
 
 // Middleware to enable CORS
 router.use(cors());
@@ -53,6 +53,7 @@ var user_id = null;
 router.get("/login", function(req, res) {
   var state = generateRandomString(16);
   var userId = req.query.user_id; // Assuming you have the user ID in the request object
+  console.log(client_id, client_secret, redirect_uri);
   user_id = userId;
   if(!userId) {
     return res.status(400).send("User ID is missing in the URL query parameters.");
