@@ -12,27 +12,27 @@ import axios from "axios";
 import { createClient } from "@supabase/supabase-js";
 
 export function FriendsBar () {
-    const supabase = createClient(
-        process.env.REACT_APP_SUPABASE_URL,
-        process.env.REACT_APP_SUPABASE_ANON_KEY
-      );
+    // const supabase = createClient(
+    //     process.env.REACT_APP_SUPABASE_URL,
+    //     process.env.REACT_APP_SUPABASE_ANON_KEY
+    //   );
       
     const test = {}
     const[friendList, setFriendList] = useState([test]);
     const { user } = useAuth();
 
-    const channel = supabase
-    .channel('schema-db-changes')
-    .on(
-    'postgres_changes',
-    {
-      event: 'INSERT',
-      schema: 'Friends',
-    },
-    (payload) => console.log(payload)
-    // getFriends()
-  )
-  .subscribe()
+//     const channel = supabase
+//     .channel('schema-db-changes')
+//     .on(
+//     'postgres_changes',
+//     {
+//       event: 'INSERT',
+//       schema: 'Friends',
+//     },
+//     (payload) => console.log(payload)
+//     // getFriends()
+//   )
+//   .subscribe()
     
    
     
