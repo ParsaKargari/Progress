@@ -31,6 +31,16 @@ router.get('/getFriends', async (req, res) => {
     }
 });
 
+
+router.get('/search', async (req, res) => {
+    try {
+        const result = await friends.getFriends();
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 router.get("/:id", async function (req, res, next) {
 
     // const user = await friends.getFriendUsername(req.params.id);

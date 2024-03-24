@@ -95,7 +95,14 @@ export function FriendsBar () {
     ];
 
 
-    
+    function searchFriend() {
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/search`).then(
+            response => { 
+
+
+
+            });
+    }
 
 
 
@@ -175,7 +182,7 @@ export function FriendsBar () {
                         />
                         
                         <div className='flex justify-center content-center pl-5 items-center'>
-                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button">
+                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={searchFriend}>
                                 <p className='text-[#559EB5] font-bold'>Send</p>
                             </button>
                         </div>
