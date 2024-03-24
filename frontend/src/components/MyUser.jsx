@@ -111,19 +111,20 @@ async function updateSongPlaying() {
 }
 
 
-// Check if interval fetching is allowed, then start the interval
-checkSpotifyIntervalAllowed().then(async allowed => {
-    if (allowed) {
-        // Call the updateSongPlaying function initially when the page loads
-        await updateSongPlaying();
+useEffect(() => {
+    checkSpotifyIntervalAllowed().then(async allowed => {
+        if (allowed) {
+            // Call the updateSongPlaying function initially when the page loads
+            await updateSongPlaying();
 
-        // Set interval to call the updateSongPlaying function repeatedly
-        const interval_To_Update_Spotify = 150000; // Interval in milliseconds (e.g., 150000 ms = 2.5 minutes)
-        const interval_Spotify_Update_Song = setInterval(updateSongPlaying, interval_To_Update_Spotify);
-    } else {
-        console.log('Interval fetching for Spotify not allowed by the API.');
-    }
-});
+            // Set interval to call the updateSongPlaying function repeatedly
+            const interval_To_Update_Spotify = 150000; // Interval in milliseconds (e.g., 150000 ms = 2.5 minutes)
+            const interval_Spotify_Update_Song = setInterval(updateSongPlaying, interval_To_Update_Spotify);
+        } else {
+            console.log('Interval fetching for Spotify not allowed by the API.');
+        }
+    });
+}, []); // Empty dependency array ensures that this effect runs only once
 
 
 useEffect(() => {
@@ -151,7 +152,7 @@ useEffect(() => {
                 className='cursor-pointer'
                 style={{ color: 'yellow' }}
                 determinate
-                size="md"
+                 size="md"
                 value={20}
                 variant="solid"
                 onClick={handleClickOpen}
