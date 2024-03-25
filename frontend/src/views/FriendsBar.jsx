@@ -9,7 +9,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import RequestSent from '../components/RequestSent';
 import IncomingRequest from '../components/IncomingRequest';
 import axios from "axios";
-import { createClient } from "@supabase/supabase-js";
 
 export function FriendsBar () {
     // const supabase = createClient(
@@ -20,6 +19,9 @@ export function FriendsBar () {
     const test = {}
     const[friendList, setFriendList] = useState([test]);
     const { user } = useAuth();
+    var friendSearchInput = '';
+    const [requestsSent, setRequestsSent] = useState([]);
+    const [requestsReceived, setRequestsReceived] = useState([]);
 
 //     const channel = supabase
 //     .channel('schema-db-changes')
@@ -95,15 +97,47 @@ export function FriendsBar () {
     ];
 
 
-    function searchFriend() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/search`).then(
+    function searchFriend(input) {
+        console.log(input)
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/search/${input}/${user.id}`)
+        .then(
             response => { 
 
-
+                console.log(response)
+                setRequestsReceived(response.data[0][0].RequestsReceived)
+                setRequestsSent(response.data[1][0].RequestsSent)
+                // console.log(requestsReceived);
+                // console.log(response.data[0][0].RequestsReceived)
 
             });
+
+        
+        
+        
+    }
+    function getRequests() {
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/search/getRequests/${user.id}`)
+        .then(
+            response => { 
+
+                console.log(response)
+                setRequestsReceived(response.data[0][0].RequestsReceived)
+                setRequestsSent(response.data[1][0].RequestsSent)
+                // console.log(requestsReceived);
+                // console.log(response.data[0][0].RequestsReceived)
+
+            });
+        console.log('rbuh')
     }
 
+
+    const [textInput, setTextInput] = useState('');
+    
+    const handleTextInputChange = event => {
+        setTextInput(event.target.value);
+        console.log(event.target.value);
+    };
+    
 
 
 
@@ -121,11 +155,10 @@ export function FriendsBar () {
                             Friends
                         </div>
                     </div>
-                    { /* */}
-                    <img className='mx-2 cursor-pointer'
-                        src={"/images/Plusicon.svg"}
-                    />
+                    {/* add friends go here */}
+                    <img onClick={handleClickOpen} className='mx-2 cursor-pointer' src={"/images/Plusicon.svg"} />
                 </div>
+
 
             {
                 Object.keys(friendList).map(friendKey => (
@@ -160,7 +193,7 @@ export function FriendsBar () {
                 }}
             >
                 <div className='flex-row px-2'>
-                    <p className='font-bold text-DarkGrey font-standard text-[20px] mr-1'>{'Friends'}</p>
+                    <p className='font-bold text-DarkGrey font-standard text-[20px] mr-1' >{'Friends'}</p>
                     <div className='flex flex-row jusify-content align-items'>
 
                         <Autocomplete
@@ -172,26 +205,28 @@ export function FriendsBar () {
                                 
                               }}
                             renderInput={(params) => (
-                                <TextField
+                                <TextField id='bruh'
                                     {...params}
                                     label="Search for Progress users..."
                                     margin="normal"
                                     variant="outlined"
+                                    onChange={handleTextInputChange}
+                                    
                                 />
                             )}
                         />
                         
-                        <div className='flex justify-center content-center pl-5 items-center'>
-                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={searchFriend}>
+                        <div className='flex justify-center content-center pl-5 items-center' >
+                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={() => {searchFriend(textInput); getRequests()}}>
                                 <p className='text-[#559EB5] font-bold'>Send</p>
                             </button>
                         </div>
                     </div>
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
-                    <RequestSent/>
+                    <RequestSent data={requestsSent}/>
                   
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
-                    <IncomingRequest/>
+                    <IncomingRequest data={requestsReceived}/>
                 </div>
             </Dialog>
         </div>

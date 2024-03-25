@@ -51,6 +51,8 @@ class Friends {
             })
         if (error) console.error(error)
         else console.log(data)
+
+        return data
     }
     async removeFriendRequestReceived(from_id, to_id) {
         let { data, error } = await this.client
@@ -60,6 +62,8 @@ class Friends {
             })
         if (error) console.error(error)
         else console.log(data)
+
+        
     }
 
     async removeFriendRequestSent(from_id, to_id) {
@@ -80,6 +84,14 @@ class Friends {
         return data
     }
 
+    async getFriendID(username) {
+        const { data, error } = await this.client
+            .from('Users')
+            .select('UserID')
+            .eq('Username', username);
+        return data
+    }
+
     async getFriendStatus(user_id) {
         const { data, error } = await this.client
             .from('Users')
@@ -88,10 +100,32 @@ class Friends {
         return data
     }
 
+    async getRequestsSent(user_id) {
+        const { data, error } = await this.client
+            .from('Users')
+            .select('RequestsSent')
+            .eq('UserID', user_id);
+        return data
+    }
+
+    async getRequestsReceived(user_id) {
+        const { data, error } = await this.client
+            .from('Users')
+            .select('RequestsReceived')
+            .eq('UserID', user_id);
+        return data
+    }
+
 
     async sendAndReceiveFriendRequest(fromID, toID) {
-        const resultSend = await this.sendFriendRequest(fromID, toID);
-        const resultReceive = await this.receiveFriendRequest(fromID, toID);
+        try {
+            const resultSend = await this.sendFriendRequest(fromID, toID);
+            const resultReceive = await this.receiveFriendRequest(fromID, toID);
+        }
+        catch (error) {
+            console.log(error)
+        }
+        
     }
 
     async acceptFriendRequest(fromID, toID) {
@@ -110,21 +144,7 @@ class Friends {
         const resultRemoveSend = await this.removeFriendRequestSent(fromID, toID);
     }
 
-    async sendAndReceiveFriendRequest(fromID, toID) {
-        const resultSend = await signup.sendFriendRequest(fromID, toID);
-        const resultReceive = await signup.receiveFriendRequest(fromID, toID);
-    }
 
-    async acceptFriendRequest(fromID, toID) {
-        const resultRemoveReceive = await signup.removeFriendRequestReceived(fromID, toID);
-        const resultRemoveSend = await signup.removeFriendRequestSent(fromID, toID);
-        const addedFriend = this.addFriend(fromID, toID);
-    }
-
-    async declineFriendRequest(fromID, toID) {
-        const resultRemoveReceive = await signup.removeFriendRequestReceived(fromID, toID);
-        const resultRemoveSend = await signup.removeFriendRequestSent(fromID, toID);
-    }
 }
 
 module.exports = Friends;

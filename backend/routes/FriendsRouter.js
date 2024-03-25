@@ -32,14 +32,36 @@ router.get('/getFriends', async (req, res) => {
 });
 
 
-router.get('/search', async (req, res) => {
+router.get('/search/:input/:id', async (req, res) => {
     try {
-        const result = await friends.getFriends();
-        res.json(result);
+        const newid = await friends.getFriendID(req.params.input);
+        console.log(typeof(newid[0].UserID));
+        console.log(typeof(req.params.id));
+        const test = await friends.sendAndReceiveFriendRequest(req.params.id, newid[0].UserID);
+        var requestsSent = await friends.getRequestsSent(req.params.id);
+        var requestsRecieved = await friends.getRequestsReceived(req.params.id);
+        let allRequests = [requestsRecieved,requestsSent];
+        res.send(allRequests);
+
+        
     } catch (error) {
+        
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+router.get('/getRequests/:id', async (req, res) => {
+        console.log('pls')
+        var requestsSent = await friends.getRequestsSent(req.params.id);
+        var requestsRecieved = await friends.getRequestsReceived(req.params.id);
+        let allRequests = [requestsRecieved,requestsSent];
+        
+        res.send(allRequests);
+
+        
+    
+});
+
 
 router.get("/:id", async function (req, res, next) {
 
