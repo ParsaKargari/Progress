@@ -3,7 +3,7 @@ const { createClient } = require('@supabase/supabase-js');
 class SupabaseConnector {
     constructor() {
         if (!SupabaseConnector.instance) {
-            this.client = createClient("https://opibjtddqpdpnytgulvm.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9waWJqdGRkcXBkcG55dGd1bHZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY1MDU1MzUsImV4cCI6MjAyMjA4MTUzNX0.bzwZbig3eS8EiUof8ium4yDVIm607IlGL0xq6vaYiEU");
+            this.client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
             SupabaseConnector.instance = this;
         }
         return SupabaseConnector.instance;

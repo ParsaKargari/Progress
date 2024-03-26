@@ -6,6 +6,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../css/Login.css";
 import { LoadingProvider, useLoading } from '../context/LoadingContext';
+import axios from "axios";
+import { Snackbar } from "@mui/material";
+
 
 
 // this needs to be put in a env file at the end of the project for security.
@@ -19,98 +22,51 @@ function Login() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { setIsLoading } = useLoading();
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  
 
   useEffect(() => {
-
-    // Only proceed if there is a user
     setIsLoading(true);
-
-    // if (user === null) {
-    //   console.log("user is null");
-    // }
-    // else {
-    //   var isSignedIn = false;
-    //   console.log("user:", user.id)
-    //   fetch(`http://localhost:9000/signUp/${user.id}`)
-
-    //   .then(res => res.json())
-    //   .then(res => {
-    //     try {
-    //       if (res[0].Username != null) {
-    //         isSignedIn = true;
-    //         console.log(res[0].Username)
-    //       }
-    //     }
-    //     catch {
-          
-    //     }
-          
-    //       if (isSignedIn === true) {
-    //         navigate(`/home`);
-    //       }
-    //       })
-    //       .catch(error => {
-    //         console.error("Failed to fetch username:", error);
-    //     })
-    //     .finally(() => {
-    //         setIsLoading(false);
-    //     });
-          
-    //   localStorage.setItem("User_ID", user.id);
-    //   localStorage.setItem("User_Email", user.email);
-    // }
-    
+  
     if (user) {
-        // getUsername(user.id)
-        //     .then(result => {
-        //         if (result[0]?.Username != null) {
-        //             // If username exists, navigate to home
-        //             navigate(`/home`);
-        //         } else {
-        //             // If no username, navigate to signup (assuming you need to complete the signup process)
-        //             navigate(`/signup`);
-        //         }
-        //     })
-        var isSignedIn = false;
-      console.log("user:", user.id)
-      fetch(`http://localhost:9000/signUp/${user.id}`)
-
-      .then(res => res.json())
-      .then(res => {
-        try {
-          if (res[0].Username != null) {
-            isSignedIn = true;
-            console.log(res[0].Username)
-          }
-        }
-        catch {
-          
-        }
-          
-          if (isSignedIn === true) {
+      // Use axios to fetch the username using the user ID from the backend
+      axios.get(`${process.env.REACT_APP_API_URL}/signUp/${user.id}`, {withCredentials: true})
+        .then(response => {
+          const data = response.data;
+          if (data.length > 0 && data[0].Username) {
+            // If username exists, navigate to home
             navigate(`/home`);
+          } else {
+            // If no username, navigate to signup (assuming you need to complete the signup process)
+            navigate(`/signup`);
           }
-          else {
-            navigate(`/signup`)
-          }
-          })
-            .catch(error => {
-                console.error("Failed to fetch username:", error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-
-        localStorage.setItem("User_ID", user.id);
-        localStorage.setItem("User_Email", user.email);
+        })
+        .catch(error => {
+          console.error("Failed to fetch username:", error);
+          setSnackbarMessage("Failed to fetch username. Please try again."); // Set the snackbar message
+          setSnackbarOpen(true); // Open the snackbar
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+  
+      // Store user ID and email in localStorage
+      localStorage.setItem("User_ID", user.id);
+      localStorage.setItem("User_Email", user.email);
     } else {
-        console.log("No user detected.");
-        setIsLoading(false);
+      setSpin(true);
+      console.log("No user detected.");
+      setIsLoading(false);
     }
-}, [user, navigate, setIsLoading]);
+  }, [user, navigate, setIsLoading]);
 
-    
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
 
   
   return (
@@ -171,6 +127,13 @@ function Login() {
         />
       </div>
     </div>
+    <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
     </>
   );
 }
