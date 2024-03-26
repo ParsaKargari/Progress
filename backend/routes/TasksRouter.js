@@ -55,4 +55,45 @@ router.get('/getHeatMapData/:userID/:startDate/:endDate', async(req, res) => {
     }
 });
 
+router.get('/getVisibilityByTaskId/:taskId', async(req, res) => {
+    const { taskId } = req.params;
+    try {
+        const visibility = await tasks.getVisibilityByTaskId(taskId);
+        res.json({ visibility });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.post('/updateVisibility/:taskId/:visibility', async(req, res) => {
+    const { taskId, visibility } = req.params;
+    const isPublic = visibility === 'true';
+
+    try {
+        const result = await tasks.updateTaskVisibility(taskId, isPublic);;
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.delete('/deleteTask/:taskId', async(req, res) => {
+    const { taskId } = req.params;
+
+    try {
+        const result = await tasks.deleteTaskById(taskId);
+        if (result) {
+            res.status(200).json({ message: 'Task deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'Task not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 module.exports = router;

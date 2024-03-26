@@ -1,53 +1,72 @@
-import { React, useState, useLayoutEffect, useRef, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import "../css/DatePicker.css";
 
+export function TaskComponent(props) {
+    const { uuid, taskDescription, dueDate, status, visibilityDB, plannedDate } = props;
 
-export function TaskComponent (props) {
-
-    const { taskDescription, dueDate, status, visibilityDB, plannedDate, uuid } = props;
-    // console.log(taskDescription);
-    // console.log(dueDate);
-    // console.log(status);
-    // console.log(visibilityDB);
-    // console.log(uuid);
-
-    const [date, setDate] = useState(props.dueDate);
-    const [planneddate, setPlanneddate] = useState(props.plannedDate);
-    const [visibility, setVisibility] = useState(props.visibilityDB);
-    const [editing, SetEditing] = useState(false);
-
-    const [checked, setChecked] = useState(props.status);
-
+    const [date, setDate] = useState(dueDate);
+    const [planneddate, setPlanneddate] = useState(plannedDate);
+    const [editing, setEditing] = useState(false);
+    const [checked, setChecked] = useState(status);
+    const [visibility, setVisibility] = useState(visibilityDB); 
 
     const handleChange = (event) => {
         setChecked(event.target.checked);
-        if(event.target.checked === true){
+        if (event.target.checked === true) {
             var task = document.getElementById(`${uuid}`);
             task.classList.add("line-through");
-        }
-        else{
+        } else {
             var task = document.getElementById(`${uuid}`);
             task.classList.remove("line-through");
         }
     };
 
-    const handleEditClick =() => {
-        SetEditing(!editing);
-    }
+    const setVisibilityHandler = async (newVisibility) => { 
+        console.log(uuid)
+        console.log(newVisibility)
+        try {
+            const response = await fetch(`http://localhost:9000/Tasks/updateVisibility/${uuid}/${newVisibility}`, {
+                method: 'POST'
 
+            });
+            if (response.ok) {
+                setVisibility(newVisibility); // Update visibility 
+            } else {
+                throw new Error('Failed to update visibility');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            const response = await fetch(`http://localhost:9000/Tasks/deleteTask/${uuid}`, {
+                method: 'DELETE'
+            });
+        } catch (error) {
+            console.error(error);
+        }
+        // NEED TO CHANGE @shivamdesai04. Figure out a way to delete this task, it does 
+        // from database but not here, untill / unless page is
+        // reloaded
+        window.location.reload()
+    };
+
+    const handleEditClick = () => {
+        setEditing(!editing);
+    };
 
     function formatDate(formatDate) {
         const date = new Date(formatDate);
-        
         date.setDate(date.getDate() + 1);
         const formattedDate = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
-        
         return formattedDate;
     }
 
     useEffect(() => {
-        if (checked === true){
+        if (checked === true) {
             var task = document.getElementById(`${uuid}`);
             task.classList.add("line-through");
         }
@@ -56,34 +75,28 @@ export function TaskComponent (props) {
     return (
         <>
             <div className="mb-2 flex flex-row">
-                
                 <div className="pr-2">
-                <Checkbox
-                    checked={checked}
-                    onChange={handleChange}
-                    inputProps={{ 'aria-label': 'controlled' }}
-                    style={{
-                        color: '#00789E', // Change color to your desired hex color
-                        borderRadius: '4px', // Add border radius for rounded corners
-                    }}
-                />
+                    <Checkbox
+                        checked={checked}
+                        onChange={handleChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                        style={{
+                            color: '#00789E',
+                            borderRadius: '4px',
+                        }}
+                    />
                 </div>
-
                 <div className="flex flex-col">
                     <div className="font-standard text-DarkGrey flex flex-row items-center flex-wrap">
-                        <h1 
+                        <h1
                             id={`${uuid}`}
                             className="font-standard text-DarkGrey decoration-DarkGrey decoration-2 truncate font-bold	text-base transition duration-500"
                         >
-
-                            {props.taskDescription}
-
+                            {taskDescription}
                         </h1>
-
-                        
-                        <button 
-                        onClick={() => {setVisibility(!visibility)}}
-                        className=" btn btn-circle bg-transparent rounded-full flex justify-center items-center ml-2 transition-opacity duration-500"
+                        <button
+                            onClick={() => { setVisibilityHandler(!visibility) }}
+                            className=" btn btn-circle bg-transparent rounded-full flex justify-center items-center ml-2 transition-opacity duration-500"
                         >
                             {visibility ? (
                                 <img src="/images/eye.svg" alt="add task sign" />
@@ -91,87 +104,48 @@ export function TaskComponent (props) {
                                 <img src="/images/closeEye.svg" alt="add task sign" />
                             )}
                         </button>
-                            
-
-                        
                     </div>
-
                     <div className="font-standard text-DarkGrey flex flex-row items-center flex-wrap">
-
-                        {
-                            editing ? 
+                        {editing ? (
                             <>
-                                <h5
-                                className=" text-textcolour font-standard text-base decoration-2 truncate"
-                                >
+                                <h5 className=" text-textcolour font-standard text-base decoration-2 truncate">
                                     Planned for :
                                 </h5>
-                                
-                                <input type="date" value={planneddate} onChange={e => {setPlanneddate(e.target.value)}} class="dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
+                                <input type="date" value={planneddate} onChange={e => { setPlanneddate(e.target.value) }} className="dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
                             </>
-                            :
-                            <h5 
-                            id="formattedDate"
-                            className=" text-textcolour font-standard text-base decoration-2 truncate"
-                            >
+                        ) : (
+                            <h5 id="formattedDate" className=" text-textcolour font-standard text-base decoration-2 truncate">
                                 Planned for {formatDate(planneddate)}
                             </h5>
-                        }
-
-                        {
-                            editing ? 
+                        )}
+                        {editing ? (
                             <>
-                                <h5 
-                                className="ml-2 text-textcolour font-standard text-base decoration-2 truncate"
-                                >
-                                    Due : 
+                                <h5 className="ml-2 text-textcolour font-standard text-base decoration-2 truncate">
+                                    Due :
                                 </h5>
-
-                                <input type="date" value={date} onChange={e => {setDate(e.target.value)}} className="dateInput" class="dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
+                                <input type="date" value={date} onChange={e => { setDate(e.target.value) }} className="dateInput" class="dateInput ml-2 block focus:border-0 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 md:text-sm md:leading-6"></input>
                             </>
-                            
-                            
-                            :
-                            <h5 
-                            className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate"
-                            >   
+                        ) : (
+                            <h5 className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate">
                                 Due {formatDate(date)}
                             </h5>
-                        }
-
-                        {
-                            editing ?
-                            <>
-                                <h5 
-                                    className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate"
-                                    onClick={handleEditClick}
-                                >
-                                    Save
-                                </h5>
-                            </>
-                            :
-                            <>
-                                <h5 
-                                    className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate"
-                                    onClick={handleEditClick}
-                                >
-                                    Edit
-                                </h5>
-                            </>
-                        }
-
-                        
-                        <h5 
-                            className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate"
-                        >
+                        )}
+                        {editing ? (
+                            <h5 className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate" onClick={handleEditClick}>
+                                Save
+                            </h5>
+                        ) : (
+                            <h5 className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate" onClick={handleEditClick}>
+                                Edit
+                            </h5>
+                        )}
+                        <h5 className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate" onClick={handleDelete}>
                             Delete
                         </h5>
-
                     </div>
-
-                    
                 </div>
             </div>
         </>
     )
 }
+

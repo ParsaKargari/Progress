@@ -50,6 +50,20 @@ class Tasks {
         }
     }
 
+    async updateTaskVisibility(taskId, newVisibility) {
+        try {
+            const result = await this.client
+                .from('Tasks')
+                .update({ PublicVisibility: newVisibility })
+                .eq('TaskID', taskId)
+                .single();
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
 
 
     async addComment(task_id, username, new_comment) {
@@ -106,6 +120,37 @@ class Tasks {
             throw error;
         }
     }
+
+    async getVisibilityByTaskId(taskId) {
+        try {
+            const result = await this.client
+                .from('Tasks')
+                .select('PublicVisibility')
+                .eq('TaskID', taskId)
+                .single();
+            return result.data.PublicVisibility;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+
+    async deleteTaskById(taskId) {
+        try {
+            const result = await this.client
+                .from('Tasks')
+                .delete()
+                .eq('TaskID', taskId);
+            return result > 0;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+
+
 
 
 }
