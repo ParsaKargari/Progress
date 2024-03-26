@@ -22,7 +22,7 @@ export function TaskComponent(props) {
         setChecked(newCheckedStatus); // Optimistically update the UI
     
         try {
-            const response = await fetch(`http://localhost:9000/tasks/updateCompletionStatus/${uuid}/${newCheckedStatus}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks/updateCompletionStatus/${uuid}/${newCheckedStatus}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export function TaskComponent(props) {
         console.log(uuid)
         console.log(newVisibility)
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/updateVisibility/${uuid}/${newVisibility}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/updateVisibility/${uuid}/${newVisibility}`, {
                 method: 'POST'
 
             });
@@ -61,7 +61,7 @@ export function TaskComponent(props) {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/deleteTask/${uuid}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/deleteTask/${uuid}`, {
                 method: 'DELETE'
             });
         } catch (error) {
@@ -73,7 +73,7 @@ export function TaskComponent(props) {
     const handleEditClick = async () => {
         if (editing) {
             try {
-                const response = await fetch(`http://localhost:9000/tasks/addDueDate/${uuid}/${date}`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks/addDueDate/${uuid}/${date}`, {
                     method: 'POST'
                 });
                 if (response.ok) {

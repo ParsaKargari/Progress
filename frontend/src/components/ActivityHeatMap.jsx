@@ -16,7 +16,7 @@ export default function ActivityHeatMap() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/getHeatMapData/${user.id}/2021-01-01/2028-01-01`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/getHeatMapData/${user.id}/2021-01-01/2028-01-01`);
             if (response.ok) {
                 const responseData = await response.json();
                 // Filter out dates with a count of 0 and map to the desired structure

@@ -58,7 +58,7 @@ function TasksBar() {
     const addedDate = new Date().toISOString().split('T')[0]; // Get today's date
 
     try {
-      const response = await fetch(`http://localhost:9000/Tasks/createTask/${user.id}/${addedDate}/${taskDescr}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/createTask/${user.id}/${addedDate}/${taskDescr}`, {
         method: 'POST',
       });
       if (!response.ok) {

@@ -43,7 +43,7 @@ export default function FriendProfile() {
         console.log('Color:', color);
 
         // Send the data to the backend
-        await fetch(`http://localhost:9000/settings/updateSettings?user_id=${user.id}`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/settings/updateSettings?user_id=${user.id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export default function FriendProfile() {
         // Assuming you     have access to the user ID
         // Redirect to the backend route /Spotify/login along with the user ID
         // so that users can login from spotify and validate
-        window.location.href = `http://localhost:9000/spotify/login?user_id=${user.id}`;
+        window.location.href = `${process.env.REACT_APP_API_URL}/spotify/login?user_id=${user.id}`;
         // window.location.href = `http://localhost:9000/spotify/currently_playing?user_id=${user.id}`
         // upon completion or not, it will 
       }
@@ -85,7 +85,7 @@ export default function FriendProfile() {
 // Function to check if interval fetching is allowed for Spotify
 async function checkSpotifyIntervalAllowed() {
     try {
-        const response = await fetch(`http://localhost:9000/spotify/isUserSignedIn?user_id=${user.id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/spotify/isUserSignedIn?user_id=${user.id}`);
         
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -104,7 +104,7 @@ async function checkSpotifyIntervalAllowed() {
 
 // Function to fetch currently playing song from Spotify
 async function updateSongPlaying() {
-    fetch(`http://localhost:9000/spotify/currently_playing?user_id=${user.id}`)
+    fetch(`${process.env.REACT_APP_API_URL}/spotify/currently_playing?user_id=${user.id}`)
         .catch(error => {
             console.error('There was a problem updating the currently playing song:', error);
         });
@@ -131,7 +131,7 @@ useEffect(() => {
 useEffect(() => {
     async function LoadPersonalSettings() {
         try {
-            const response = await fetch(`http://localhost:9000/settings/getSettings?user_id=${user.id}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/settings/getSettings?user_id=${user.id}`);
             const data = await response.json();
             console.log('Settings Response:', data);
             setUsername(data[0].Username || "vishnudhanda(notfound)");
@@ -162,7 +162,7 @@ useEffect(() => {
             <div className='flex flex-col align-items-center'>
                 <div className='flex flex-row'>
                     <div className='flex'>
-                        <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'> {username || "vishnudhanda(notfound)"}</p>
+                        <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'> {username || "Not Found"}</p>
                         <p className='font-bold text-friendsBracketAccent font-standard text-[16px]'>(6)</p>
                     </div>
                 </div>
