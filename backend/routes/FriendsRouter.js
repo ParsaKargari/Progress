@@ -72,7 +72,7 @@ router.get('/search/:input/:id', async (req, res) => {
         }
 
 
-        
+
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: 'Internal Server Error' });
@@ -80,19 +80,19 @@ router.get('/search/:input/:id', async (req, res) => {
 });
 
 router.get('/getRequests/:id', async (req, res) => {
-        var requestsSent = await friends.getRequestsSent(req.params.id);
-        var requestsReceived = await friends.getRequestsReceived(req.params.id);
-        
-        console.log(requestsReceived[0].RequestsReceived)
-        console.log(requestsSent[0].RequestsSent)
-        var usernamesSent = await friends.getUserNamesFromIDList(requestsReceived[0].RequestsReceived);
-        var usernamesReceived = await friends.getUserNamesFromIDList(requestsSent[0].RequestsSent);
-        let allRequests = [usernamesReceived, usernamesSent];
-        
-        res.send(allRequests);
+    var requestsSent = await friends.getRequestsSent(req.params.id);
+    var requestsReceived = await friends.getRequestsReceived(req.params.id);
 
-        
-    
+    console.log(requestsReceived[0].RequestsReceived)
+    console.log(requestsSent[0].RequestsSent)
+    var usernamesSent = await friends.getUserNamesFromIDList(requestsReceived[0].RequestsReceived);
+    var usernamesReceived = await friends.getUserNamesFromIDList(requestsSent[0].RequestsSent);
+    let allRequests = [usernamesReceived, usernamesSent];
+
+    res.send(allRequests);
+
+
+
 });
 
 
@@ -110,39 +110,35 @@ router.get('/declineFriend/:id/:friendId', async (req, res) => {
 
 });
 
-router.get("/:id", async function (req, res, next) {
+router.get("/:id", async (req, res, next) => {
 
-    // const user = await friends.getFriendUsername(req.params.id);
-    // console.log(user);
-    const friendsByID = await friends.getFriendsByID(req.params.id);
     const username = await friends.getFriendUsername(req.params.id);
     const status = await friends.getFriendStatus(req.params.id)
-    console.log(friendsByID)
-    console.log(username)
-    console.log(status)
-    // friendsByID.forEach(friend => {
-    //     if (friend)
-    // })
-    // console.log(friendsByID)
+    const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id)
 
-    var splitIDs;
-    var parsedFriendsJson = []
-    friendsByID.forEach(async item => {
-        // Access the property 'bothuserfriends' of each object
-        splitIDs = item.bothuserfriends.split(" ");
-        // const status = await friends.getFriendUsername(splitIDs[0])
-        // console.log(status)
-        //console.log(splitIDs)
-        splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
-        splitIDs.splice(splitIDs.indexOf(username[0].Username), 1);
-        splitIDs.splice(splitIDs.indexOf(status[0].Status), 1);
-        // console.log(splitIDs)
-        // console.log(splitIDs)
-        parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1], friendStatus: splitIDs[2] });
-    });
-    console.log(parsedFriendsJson)
+    parsedFriendsJson = []
+    for (let i = 0; i < friendsByID.length; i++) {
+        let friendID = friendsByID[i].Person1;
+        let friendUsername = friendsByID[i].Person1Username;
+        let friendStatus = friendsByID[i].Person1Status;
+
+        if (friendsByID[i].Person1 === req.params.id) {
+            friendID = friendsByID[i].Person2;
+        }
+
+        if (friendsByID[i].Person1Username === username) {
+            friendUsername = friendsByID[i].Person2Username;
+        }
+
+        if (friendsByID[i].Person1Status === status) {
+            friendStatus = friendsByID[i].Person2Status;
+        }
+
+        parsedFriendsJson.push({ friendID: friendID, friendUsername: friendUsername, friendStatus: friendStatus });
+
+    }
     res.send(parsedFriendsJson)
 
-});
+})
 
 module.exports = router;
