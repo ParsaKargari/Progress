@@ -1,5 +1,5 @@
 const SupabaseConnector = require('../APIGateway/Supabase.js');
-// NOT YET TESTED
+
 class Groups {
     constructor() {
         this.supabase = new SupabaseConnector();

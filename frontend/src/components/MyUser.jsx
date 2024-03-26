@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
+
+
 import CircularProgress from '@mui/joy/CircularProgress';
 import '../css/MusicAnimation.css';
 import { BlockPicker } from 'react-color';
 import Dialog from '@mui/material/Dialog';
 import { useAuth } from '../context/AuthContext';
+
 
 
 export default function FriendProfile() {
@@ -14,6 +18,8 @@ export default function FriendProfile() {
     const [ringColor, setRingColor] = useState('#697689'); // Default yellow color
 
     const { signOut } = useAuth();
+    const { user } = useAuth();
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -27,8 +33,32 @@ export default function FriendProfile() {
         setRingColor(color.hex);
     };
 
-    const handleSave = () => {
-        // Implement save functionality
+    const handleSave = async () => {
+        // get the username from the input field
+        const username = document.getElementById('username').value;
+        const status = document.getElementById('status').value;
+        const color = ringColor;
+        console.log('Username:', username);
+        console.log('Status:', status);
+        console.log('Color:', color);
+
+        // Send the data to the backend
+        await fetch(`http://localhost:9000/settings/updateSettings?user_id=${user.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, status, color }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                setOpen(false); // Close the dialog after saving
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
     };
 
     const handleLogout = async () => {
@@ -41,6 +71,81 @@ export default function FriendProfile() {
     };
 
 
+    
+    const handleSpotifyLogin = async () => {
+        // Assuming you     have access to the user ID
+        // Redirect to the backend route /Spotify/login along with the user ID
+        // so that users can login from spotify and validate
+        window.location.href = `http://localhost:9000/spotify/login?user_id=${user.id}`;
+        // window.location.href = `http://localhost:9000/spotify/currently_playing?user_id=${user.id}`
+        // upon completion or not, it will 
+      }
+
+
+// Function to check if interval fetching is allowed for Spotify
+async function checkSpotifyIntervalAllowed() {
+    try {
+        const response = await fetch(`http://localhost:9000/spotify/isUserSignedIn?user_id=${user.id}`);
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json(); // Await the JSON parsing
+        
+        console.log('Response:', data); // Log the actual data
+        
+        return data;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        return false; // Return false in case of an error
+    }
+}
+
+// Function to fetch currently playing song from Spotify
+async function updateSongPlaying() {
+    fetch(`http://localhost:9000/spotify/currently_playing?user_id=${user.id}`)
+        .catch(error => {
+            console.error('There was a problem updating the currently playing song:', error);
+        });
+}
+
+
+// Check if interval fetching is allowed, then start the interval
+useEffect(() => {
+    checkSpotifyIntervalAllowed().then(async allowed => {
+        if (allowed) {
+            // Call the updateSongPlaying function initially when the page loads
+            await updateSongPlaying();
+
+            // Set interval to call the updateSongPlaying function repeatedly
+            const interval_To_Update_Spotify = 150000; // Interval in milliseconds (e.g., 150000 ms = 2.5 minutes)
+            const interval_Spotify_Update_Song = setInterval(updateSongPlaying, interval_To_Update_Spotify);
+        } else {
+            console.log('Interval fetching for Spotify not allowed by the API.');
+        }
+    });
+}, []); 
+
+
+useEffect(() => {
+    async function LoadPersonalSettings() {
+        try {
+            const response = await fetch(`http://localhost:9000/settings/getSettings?user_id=${user.id}`);
+            const data = await response.json();
+            console.log('Settings Response:', data);
+            setUsername(data[0].Username || "vishnudhanda(notfound)");
+            setStatus(data[0].Status || "Database!");
+            setRingColor(data[0].color || '#697689');
+        } catch (error) {
+            console.error('Error loading personal settings:', error.message);
+        }
+    }
+
+    LoadPersonalSettings(); // Load personal settings when component mounts
+}, [user.id]); // Load personal settings whenever user ID changes
+    
+      
 
     return (
         <div className='flex flex-row justify-start items-center py-1.5 pb-3 border-t-2 border-betterWithFriends'>
@@ -57,13 +162,13 @@ export default function FriendProfile() {
             <div className='flex flex-col align-items-center'>
                 <div className='flex flex-row'>
                     <div className='flex'>
-                        <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'>vishnudhanda</p>
+                        <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'> {username || "vishnudhanda(notfound)"}</p>
                         <p className='font-bold text-friendsBracketAccent font-standard text-[16px]'>(6)</p>
                     </div>
                 </div>
                 <div className='flex flex-row mx-3 align-items-center'>
                     <div className='flex flex-row'>
-                        <p className='text-DarkGrey font-standard text-[16px]'>Database!</p>
+                        <p className='text-DarkGrey font-standard text-[16px]'>{status || "Database!"} </p>
                     </div>
                 </div>
             </div>
@@ -128,7 +233,7 @@ export default function FriendProfile() {
 
                     <button className="flex items-center justify-items-center content-center border border-[#1ED760] min-h-12 min-w-20 rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard " type="button">
                         <img className='ml-1.5' src='/images/spotify.svg' alt="Spotify Logo" />
-                        <p className=' text-[#1ED760] font-bold py-0.5 px-4'>Login with Spotify</p>
+                        <p className=' text-[#1ED760] font-bold py-0.5 px-4' onClick={handleSpotifyLogin}>Login with Spotify</p>
                     </button>
 
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-0.5 mr-1'>Logout</p>
