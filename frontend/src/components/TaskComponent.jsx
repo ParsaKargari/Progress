@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import "../css/DatePicker.css";
+import { useTasks } from '../context/TasksContext';
+import { useAuth } from '../context/AuthContext';
 
 export function TaskComponent(props) {
     const { uuid, taskDescription, dueDate, status, visibilityDB, plannedDate } = props;
@@ -11,6 +13,9 @@ export function TaskComponent(props) {
     const [editing, setEditing] = useState(false);
     const [checked, setChecked] = useState(status);
     const [visibility, setVisibility] = useState(visibilityDB); 
+    const { fetchTasks } = useTasks();
+    const { user } = useAuth();
+    
 
     const handleChange = async (event) => {
         setChecked(event.target.checked);
@@ -28,6 +33,8 @@ export function TaskComponent(props) {
             if (!response.ok) {
                 throw new Error('Failed to update completion status');
             }
+
+            fetchTasks(user.id); // Fetch tasks again to update the UI
         } catch (error) {
             console.error(error);
         }
@@ -45,6 +52,8 @@ export function TaskComponent(props) {
             } else {
                 throw new Error('Failed to update visibility');
             }
+
+            fetchTasks(user.id); // Fetch tasks again to update the UI
         } catch (error) {
             console.error(error);
         }
@@ -58,10 +67,7 @@ export function TaskComponent(props) {
         } catch (error) {
             console.error(error);
         }
-        // NEED TO CHANGE @shivamdesai04. Figure out a way to delete this task, it does 
-        // from database but not here, untill / unless page is
-        // reloaded
-        window.location.reload()
+        fetchTasks(user.id); // Fetch tasks again to update the UI
     };
 
     const handleEditClick = async () => {
@@ -74,6 +80,8 @@ export function TaskComponent(props) {
                 } else {
                     throw new Error('Failed to save due date');
                 }
+
+                fetchTasks(user.id); // Fetch tasks again to update the UI
             } catch (error) {
                 console.error(error);
             }
