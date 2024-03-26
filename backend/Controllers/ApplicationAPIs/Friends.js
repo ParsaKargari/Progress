@@ -1,4 +1,4 @@
-const SupabaseConnector = require('../APIGateway/Supabase.js');
+const SupabaseConnector = require('../../SupabaseConnector.js');
 
 class Friends {
     constructor() {

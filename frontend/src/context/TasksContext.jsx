@@ -9,7 +9,7 @@ export const TasksProvider = ({ children }) => {
 
     const fetchTasks = useCallback(async (userId) => {
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/getTasks/${userId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/getTasks/${userId}`);
             const json = await response.json();
             const tasks = json.data || [];
             setTasks(tasks);

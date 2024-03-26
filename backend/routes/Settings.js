@@ -5,13 +5,18 @@ var cors = require('cors');
 var cookieParser = require('cookie-parser');
 
 
+var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
+
 router.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization');
-    next();
-}
-    );
+  var origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+  next();
+});
 
 
 router.get('/getSettings', async (req, res) => {

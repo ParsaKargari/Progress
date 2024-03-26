@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Friends = require('../../Controllers/ApplicationAPIs/Friends');
+const Friends = require('../Controllers/ApplicationAPIs/Friends');
 
 const friends = new Friends();
 

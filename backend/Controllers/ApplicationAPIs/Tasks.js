@@ -1,4 +1,4 @@
-const SupabaseConnector = require('../APIGateway/Supabase.js');
+const SupabaseConnector = require('../../SupabaseConnector.js');
 
 // const { v1: uuidv1 } = require('uuid');
 
