@@ -7,15 +7,19 @@ export default function IncomingRequest(props) {
 
 
     function accept() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/acceptFriend/${user.id}/${id}`);
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/acceptFriend/${user.id}/${id}`)
+        .catch();
+        document.getElementById('removable').innerHTML='';
+       
 
     }
     function decline() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/declineFriend/${user.id}/${id}`);
-
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/declineFriend/${user.id}/${id}`)
+        .catch();
+        document.getElementById('removable').innerHTML='';
     }
     return (
-        <div className='flex flex-row my-1 justify-between'>
+        <div className='flex flex-row my-1 justify-between' id='removable'>
             <div className="font-standard text-DarkGrey text-16">
                 {data}
             </div>

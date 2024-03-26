@@ -152,6 +152,7 @@ class Friends {
         try {
             const resultSend = await this.sendFriendRequest(fromID, toID);
             const resultReceive = await this.receiveFriendRequest(fromID, toID);
+            
         }
         catch (error) {
             console.log(error)

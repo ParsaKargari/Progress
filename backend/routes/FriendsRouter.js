@@ -36,10 +36,14 @@ router.get('/search/:input/:id', async (req, res) => {
     try {
         const newid = await friends.getFriendID(req.params.input);
         try  {
-            const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id)
+            const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id);
+            
             const requestsReceived = await friends.getRequestsReceived(req.params.id);
+            
+            
+            
             console.log("FRIENDS BY ID", friendsByID);
-            var friendsIDS = []
+            var friendsIDS = [];
             for (let i = 0; i < friendsByID.length; i++) {
                 let friendID = friendsByID[i].Person1;
 
@@ -49,30 +53,35 @@ router.get('/search/:input/:id', async (req, res) => {
                 }
                 friendsIDS.push(friendID);
             }
-            console.log("AHHHHHHHHHHHHHHHHHHHHHHH", friendsIDS)
-
-            if (requestsReceived[0].RequestsReceived.includes(newid[0].UserID)) {
-                res.send('This user has already sent you a friend request! Accept it to add them as a friend.');
+            if (!requestsReceived == null) {
+                if (requestsReceived[0].RequestsReceived.includes(newid[0].UserID)) {
+                    res.send('This user has already sent you a friend request! Accept it to add them as a friend.');
+                }
             }
+            
 
             else if (friendsIDS.includes(newid[0].UserID) ) {
                 res.send('User Already Added As Friend');
             }
             else {
                 const test = await friends.sendAndReceiveFriendRequest(req.params.id, newid[0].UserID);
-                res.send('success');
+                res.send('Friend Request Successfully Sent.');
             }
         }
         catch (error) {
-            res.send("User Not Found.");
+            res.send(error);
         }
 
 
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.send("Please Enter A Username")
     }
+});
+
+router.get('/search//:id', async (req, res) => {
+    res.send("Please Enter A Username.");
 });
 
 router.get('/getRequests/:id', async (req, res) => {

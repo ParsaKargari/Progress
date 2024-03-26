@@ -11,10 +11,6 @@ import IncomingRequest from '../components/IncomingRequest';
 import axios from "axios";
 
 export function FriendsBar () {
-    // const supabase = createClient(
-    //     process.env.REACT_APP_SUPABASE_URL,
-    //     process.env.REACT_APP_SUPABASE_ANON_KEY
-    //   );
       
     const test = {}
     const[friendList, setFriendList] = useState([test]);
@@ -27,21 +23,6 @@ export function FriendsBar () {
     const [requestsSent, setRequestsSent] = useState(['apldplas']);
     const [requestsReceived, setRequestsReceived] = useState(['sdkalsdka']);
 
-//     const channel = supabase
-//     .channel('schema-db-changes')
-//     .on(
-//     'postgres_changes',
-//     {
-//       event: 'INSERT',
-//       schema: 'Friends',
-//     },
-//     (payload) => console.log(payload)
-//     // getFriends()
-//   )
-//   .subscribe()
-    
-   
-    
 
     useEffect(() => {
 
@@ -50,24 +31,6 @@ export function FriendsBar () {
     }, []);
 
 
-
-    function friends() {
-        // var userName = document.getElementById("inline-first-name").value;
-        // var status = document.getElementById("inline-status").value;
-        // if (userName === "" || status === "") {
-        //     alert("Please fill out all fields!");
-        //     return;
-        // }
-        // else {
-        //     navigation(`/home`, {replace : true})
-        // }
-        var user_id = localStorage.getItem("User_ID");
-        // var user_email = localStorage.getItem("User_Email");
-        fetch(`http://localhost:9000/friends/${user_id}`)
-        // addUsername(userName, user_id);
-        // addStatus(status, user_id);
-        // addEmail(user_email, user_id);
-    }
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -111,10 +74,6 @@ export function FriendsBar () {
         .then(
             response => { 
                 alert(response.data);
-                console.log(response)
-
-                // console.log(requestsReceived);
-                // console.log(response.data[0][0].RequestsReceived)
 
             });
 
@@ -131,16 +90,12 @@ export function FriendsBar () {
 
 
                 response.data[1].forEach(item => {
-                    console.log(item.username);
-                    // var newKey = '' + item.friendUsername
-                    // console.log(newKey)
+                    
                     var username = item.username
                     received[item.id] = {name : username};
                 })
                 response.data[0].forEach(item => {
-                    console.log(item.username);
-                    // var newKey = '' + item.friendUsername
-                    // console.log(newKey)
+                    
                     var username = item.username
                     sent[item.id] = {name : username};
                 })
@@ -237,7 +192,14 @@ export function FriendsBar () {
                         />
                         
                         <div className='flex justify-center content-center pl-5 items-center' >
-                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={()  =>{searchFriend(textInput); getRequests()}}>
+                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={()  =>{searchFriend(textInput); getRequests(); {
+                Object.keys(requestsSent).map(friendKey => (
+                    <RequestSent
+                        id = {friendKey}
+                        name = {requestsSent[friendKey].name}
+                    />
+                ))
+            }}}>
                                 <p className='text-[#559EB5] font-bold'>Send</p>
                             </button>
                         </div>
@@ -259,10 +221,7 @@ export function FriendsBar () {
                     />
                 ))
             }
-                    {/* <RequestSent data={requestsSent}/> */}
-                  
-                  
-                    {/* <IncomingRequest data={requestsReceived}/> */}
+
                 </div>
             </Dialog>
         </div>
