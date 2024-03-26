@@ -66,7 +66,7 @@ export default function ActivityHeatMap() {
                 style={{ height: '210px' }}
                 rectRender={(props, data) => {
                     return (
-                        <Tooltip content={`${data.date}, Count: ${data.count || '0'}, Completed: ${data.completed || '0'}`} key={props.key}>
+                        <Tooltip content={`${data.date}, Count: ${data.count} ,Completed: ${data.completed || '0'}`} key={props.key}>
                             <rect {...props} key={props.key} onClick={() => handleCellClick(data.date)} />
                         </Tooltip>
                     );
