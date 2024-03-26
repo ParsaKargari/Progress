@@ -110,7 +110,7 @@ export function FriendsBar () {
         axios.get(`${process.env.REACT_APP_API_URL}/friends/search/${input}/${user.id}`)
         .then(
             response => { 
-
+                alert(response.data);
                 console.log(response)
 
                 // console.log(requestsReceived);

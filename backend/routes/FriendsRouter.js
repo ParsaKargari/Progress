@@ -36,9 +36,36 @@ router.get('/search/:input/:id', async (req, res) => {
     try {
         const newid = await friends.getFriendID(req.params.input);
         try  {
-            const test = await friends.sendAndReceiveFriendRequest(req.params.id, newid[0].UserID);
-            res.send('success');
-            
+            const friendsByID = await friends.getFriendsByID(req.params.id);
+            const requestsReceived = await friends.getRequestsReceived(req.params.id);
+            var splitIDs;
+            var parsedFriendsJson = []
+            var alreadyFriend = false;
+            friendsByID.forEach(async item => {
+                // Access the property 'bothuserfriends' of each object
+                splitIDs = item.bothuserfriends.split(" ");
+                // const status = await friends.getFriendUsername(splitIDs[0])
+                // console.log(status)
+                //console.log(splitIDs)
+                splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
+                splitIDs.splice(splitIDs.indexOf(username[0].Username), 1);
+                splitIDs.splice(splitIDs.indexOf(status[0].Status), 1);
+                // console.log(splitIDs)
+                // console.log(splitIDs)
+                parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1], friendStatus: splitIDs[2] });
+            });
+
+            if (requestsReceived[0].RequestsReceived.includes(newid[0].UserID)) {
+                res.send('This user has already sent you a friend request! Accept it to add them as a friend.');
+            }
+
+            else if (true ) {
+                res.send('User Already Added As Friend');
+            }
+            else {
+                const test = await friends.sendAndReceiveFriendRequest(req.params.id, newid[0].UserID);
+                res.send('success');
+            }
         }
         catch (error) {
             res.send("User Not Found.");
