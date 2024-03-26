@@ -28,6 +28,7 @@ router.get('/getFriends', async (req, res) => {
         res.json(result);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
+
     }
 });
 
@@ -47,7 +48,7 @@ router.get('/search/:input/:id', async (req, res) => {
             for (let i = 0; i < friendsByID.length; i++) {
                 let friendID = friendsByID[i].Person1;
 
-        
+
                 if (friendsByID[i].Person1 === req.params.id) {
                     friendID = friendsByID[i].Person2;
                 }
@@ -60,7 +61,7 @@ router.get('/search/:input/:id', async (req, res) => {
             }
             
 
-            else if (friendsIDS.includes(newid[0].UserID) ) {
+            else if (friendsIDS.includes(newid[0].UserID)) {
                 res.send('User Already Added As Friend');
             }
             else {
@@ -126,20 +127,21 @@ router.get("/:id", async (req, res, next) => {
         let friendID = friendsByID[i].Person1;
         let friendUsername = friendsByID[i].Person1Username;
         let friendStatus = friendsByID[i].Person1Status;
+        let friendPercentage = friendsByID[i].Person1Percentage;
 
         if (friendsByID[i].Person1 === req.params.id) {
             friendID = friendsByID[i].Person2;
-        }
-
-        if (friendsByID[i].Person1Username === username) {
             friendUsername = friendsByID[i].Person2Username;
-        }
-
-        if (friendsByID[i].Person1Status === status) {
             friendStatus = friendsByID[i].Person2Status;
+            friendPercentage = friendsByID[i].Person2Percentage;
         }
 
-        parsedFriendsJson.push({ friendID: friendID, friendUsername: friendUsername, friendStatus: friendStatus });
+        parsedFriendsJson.push({
+            friendID: friendID,
+            friendUsername: friendUsername,
+            friendStatus: friendStatus,
+            friendPercentage: friendPercentage
+        });
 
     }
     res.send(parsedFriendsJson)

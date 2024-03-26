@@ -13,11 +13,11 @@ import axios from "axios";
 export function FriendsBar () {
       
     const test = {}
-    const[friendList, setFriendList] = useState([test]);
+    const [friendList, setFriendList] = useState([test]);
     const received = {}
-    const[sentList, setSentList] = useState([received]);
+    const [sentList, setSentList] = useState([received]);
     const sent = {}
-    const[receivedList, setReceivedList] = useState([sent]);
+    const [receivedList, setReceivedList] = useState([sent]);
     const { user } = useAuth();
     var friendSearchInput = '';
     const [requestsSent, setRequestsSent] = useState(['apldplas']);
@@ -48,18 +48,18 @@ export function FriendsBar () {
             response => {
                 const data = response.data;
                 console.log(data);
-                
+
                 data.forEach(item => {
                     console.log(item);
                     var newKey = '' + item.friendUsername
                     console.log(newKey)
-                    test[newKey] = {friendID: item.friendID, status: item.friendStatus}
-                    
+                    test[newKey] = { friendID: item.friendID, status: item.friendStatus, percentage: item.friendPercentage }
+
                 })
                 console.log(test)
                 setFriendList(test)
-                })
-        }
+            })
+    }
     // Sample array of suggestions
     const suggestions = [
         { label: 'Friend 1' },
@@ -71,22 +71,23 @@ export function FriendsBar () {
     function searchFriend(input) {
         console.log(input)
         axios.get(`${process.env.REACT_APP_API_URL}/friends/search/${input}/${user.id}`)
-        .then(
-            response => { 
-                alert(response.data);
+            .then(
+                response => {
+                    alert(response.data);
 
-            });
 
-        
-        
-        
+                });
+
+
+
+
     }
     async function getRequests() {
         axios.get(`${process.env.REACT_APP_API_URL}/friends/getRequests/${user.id}`)
-        .then(
-            response => { 
+            .then(
+                response => {
 
-                console.log("GET REQUESTS RESPONSE", response)
+                    console.log("GET REQUESTS RESPONSE", response)
 
 
                 response.data[1].forEach(item => {
@@ -102,21 +103,21 @@ export function FriendsBar () {
                 setRequestsReceived(received)
                 setRequestsSent(sent)
 
-            });
+                });
     }
 
 
     const [textInput, setTextInput] = useState('');
-    
+
     const handleTextInputChange = event => {
         setTextInput(event.target.value);
         console.log(event.target.value);
     };
-    
 
 
 
- 
+
+
 
     return (
         <div className="col-span-10 md:col-span-3 xl:col-span-2 bg-primary flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar px-8 flex flex-col justify-between">
@@ -135,15 +136,16 @@ export function FriendsBar () {
                 </div>
 
 
-            {
-                Object.keys(friendList).map(friendKey => (
-                    <Friend
-                        name = {friendKey}
-                        status = {friendList[friendKey].status}
-                        uuid = {friendList[friendKey].uuid}
-                    />
-                ))
-            }
+                {
+                    Object.keys(friendList).map(friendKey => (
+                        <Friend
+                            name={friendKey}
+                            status={friendList[friendKey].status}
+                            uuid={friendList[friendKey].uuid}
+                            percentage={friendList[friendKey].percentage}
+                        />
+                    ))
+                }
 
                 {/* this needs to be hidden on increase in friends */}
                 <div className='flex flex-col rounded-xl p-4 bg-betterWithFriends my-3'>
@@ -172,13 +174,13 @@ export function FriendsBar () {
                     <div className='flex flex-row jusify-content align-items'>
 
                         <Autocomplete
-                           size='small'
+                            size='small'
                             freeSolo
                             options={suggestions.map((option) => option.label)}
                             style={{
                                 width: 300,
-                                
-                              }}
+
+                            }}
                             renderInput={(params) => (
                                 <TextField id='bruh'
                                     {...params}
@@ -186,20 +188,13 @@ export function FriendsBar () {
                                     margin="normal"
                                     variant="outlined"
                                     onChange={handleTextInputChange}
-                                    
+
                                 />
                             )}
                         />
-                        
+
                         <div className='flex justify-center content-center pl-5 items-center' >
-                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={()  =>{searchFriend(textInput); getRequests(); {
-                Object.keys(requestsSent).map(friendKey => (
-                    <RequestSent
-                        id = {friendKey}
-                        name = {requestsSent[friendKey].name}
-                    />
-                ))
-            }}}>
+                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={() => { searchFriend(textInput); getRequests() }}>
                                 <p className='text-[#559EB5] font-bold'>Send</p>
                             </button>
                         </div>

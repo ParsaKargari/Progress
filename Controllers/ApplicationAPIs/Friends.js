@@ -9,11 +9,20 @@ class Friends {
         this.client = this.supabase.getClient();
     }
 
-    async addFriend(friend1ID, friend2ID, friend1Username, friend2Username, friend1Status, friend2Status) {
+    async addFriend(friend1ID, friend2ID,
+        friend1Username, friend2Username,
+        friend1Status, friend2Status,
+        friend1Percentage, friend2Percentage) {
         try {
             const result = await this.client
                 .from('Friends')
-                .insert([{ Person1: friend1ID, Person2: friend2ID, Person1Username: friend1Username, Person2Username: friend2Username, Person1Status: friend1Status, Person2Status: friend2Status, DateBegan: new Date() }])
+                .insert([{
+                    Person1: friend1ID, Person2: friend2ID,
+                    Person1Username: friend1Username, Person2Username: friend2Username,
+                    Person1Status: friend1Status, Person2Status: friend2Status,
+                    Person1Percentage: friend1Percentage, Person2Percentage: friend2Percentage,
+                    DateBegan: new Date()
+                }])
                 .select();
             return result;
         } catch (error) {
@@ -22,14 +31,14 @@ class Friends {
         }
     }
 
-    async updateFriendStatus(id, column_name, new_status, person){
+    async updateFriendStatus(id, column_name, new_status, person) {
         const { data, error } = await this.client
-        .from('Friends')
-        .update({ [column_name]: new_status })
-        .eq([person], id)
-        .select()
+            .from('Friends')
+            .update({ [column_name]: new_status })
+            .eq([person], id)
+            .select()
 
-        
+
     }
 
     async getFriendsByID(person_id) {
@@ -147,6 +156,31 @@ class Friends {
         return data
     }
 
+    async getPercentage(user_id) {
+        const { data, error } = await this.client
+            .from('Tasks')
+            .select('*')
+            .eq('UserID', user_id);
+        let falseCount = 0;
+        let trueCount = 0;
+        data.forEach(status => {
+            if (status.CompletionStatus === true) {
+                trueCount += 1;
+            }
+            else {
+                falseCount += 1;
+            }
+        })
+
+        if ((falseCount + trueCount) === 0) {
+            return 0;
+        }
+        else {
+            return ((trueCount / (falseCount + trueCount)) * 100);
+        }
+
+    }
+
 
     async sendAndReceiveFriendRequest(fromID, toID) {
         try {
@@ -165,10 +199,16 @@ class Friends {
         const resultRemoveSend = await this.removeFriendRequestSent(fromID, toID);
         const fromUsername = await this.getFriendUsername(fromID);
         const toUsername = await this.getFriendUsername(toID);
-        console.log(toUsername, fromUsername)
+        const fromPercentage = await this.getPercentage(fromID);
+        const toPercentage = await this.getPercentage(toID);
+        console.log(toPercentage, fromPercentage);
+        // console.log(toUsername, fromUsername);
         const fromStatus = await this.getFriendStatus(fromID);
         const toStatus = await this.getFriendStatus(toID);
-        const addedFriend = await this.addFriend(fromID, toID, fromUsername[0].Username, toUsername[0].Username, fromStatus[0].Status, toStatus[0].Status);
+        const addedFriend = await this.addFriend(fromID, toID,
+            fromUsername[0].Username, toUsername[0].Username,
+            fromStatus[0].Status, toStatus[0].Status,
+            fromPercentage, toPercentage);
 
     }
 
