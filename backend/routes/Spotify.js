@@ -12,7 +12,7 @@ const { add } = require('nodemon/lib/rules/index.js');
 
 var client_id = '26b0736d78ef449a92dc41137875af72'
 var client_secret = '4530b6e7f3e64af89a17d03e5d3097a0'
-var redirect_uri = 'http://localhost:9000/Spotify/callback'
+var redirect_uri = `${process.env.REACT_APP_API_URL}/Spotify/callback`
 
 // Middleware to serve static files from the 'public' directory
 // router.use(express.static(__dirname + '/public'));
