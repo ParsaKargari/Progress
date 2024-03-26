@@ -8,6 +8,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ActivityHeatMap from '../components/ActivityHeatMap';
 import TextField from '@mui/material/TextField';
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from 'react';
+
 
 
 export function ActivityBar() {
@@ -53,6 +56,35 @@ export function ActivityBar() {
             comments: []
         },
     ];
+
+
+    const { user } = useAuth();
+    const user_id = user.id;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log("User ID: ", user_id);
+                const response = await fetch(`http://localhost:9000/activity/getFriendsActivity?user_id=${user_id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const jsonData = await response.json();
+                console.log("INSIDE FETCHING DATA FOR ACTIVITIES:");
+                console.log(jsonData);
+
+
+
+                // setActivities(jsonData);
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+        console.log("Activities: ", activities)
+
+    }, []);
 
     const [hoveredActivityId, setHoveredActivityId] = useState(null);
     const [activities, setActivities] = useState(initialActivities);
