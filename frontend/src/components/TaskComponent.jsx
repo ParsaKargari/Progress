@@ -15,6 +15,7 @@ export function TaskComponent(props) {
     const [visibility, setVisibility] = useState(visibilityDB); 
     const { fetchTasks } = useTasks();
     const { user } = useAuth();
+    const { triggerHeatmapRefresh } = useTasks();
     
 
     const handleChange = async (event) => {
@@ -33,6 +34,7 @@ export function TaskComponent(props) {
                 throw new Error('Failed to update completion status');
             }
             fetchTasks(user.id); // Fetch tasks again to update the UI only if you need to synchronize other parts of the task not related to the checkbox
+            triggerHeatmapRefresh(); // Trigger a refresh of the heatmap
         } catch (error) {
             console.error(error);
             setChecked(!newCheckedStatus); // Revert the checkbox state if the update fails
@@ -68,6 +70,7 @@ export function TaskComponent(props) {
             console.error(error);
         }
         fetchTasks(user.id); // Fetch tasks again to update the UI
+        triggerHeatmapRefresh(); // Trigger a refresh of the heatmap
     };
 
     const handleEditClick = async () => {

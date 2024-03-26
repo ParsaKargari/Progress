@@ -7,7 +7,11 @@ const tasks = new Tasks();
 router.post('/createTask/:userId/:addedDate/:taskDescr', async(req, res) => {
     const { userId, addedDate, taskDescr } = req.params;
     try {
-        const result = await tasks.createTask(userId, taskDescr, addedDate, null, false);
+        // Set the due date to the next day by default
+        const today = new Date().toISOString().split('T')[0];
+        const nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+        const result = await tasks.createTask(userId, taskDescr, addedDate, nextDay, false);
         res.json(result);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });

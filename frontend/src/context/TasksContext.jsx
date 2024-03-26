@@ -6,6 +6,7 @@ export const useTasks = () => useContext(TasksContext);
 
 export const TasksProvider = ({ children }) => {
     const [tasks, setTasks] = useState([]);
+    const [refreshHeatmapCounter, setRefreshHeatmapCounter] = useState(0);
 
     const fetchTasks = useCallback(async (userId) => {
         try {
@@ -18,8 +19,12 @@ export const TasksProvider = ({ children }) => {
         }
     }, []);
 
+    const triggerHeatmapRefresh = useCallback(() => {
+        setRefreshHeatmapCounter(count => count + 1);
+    }, []);
+
     return (
-        <TasksContext.Provider value={{ tasks, setTasks, fetchTasks }}>
+        <TasksContext.Provider value={{ tasks, setTasks, fetchTasks, triggerHeatmapRefresh, refreshHeatmapCounter }}>
             {children}
         </TasksContext.Provider>
     );
