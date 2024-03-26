@@ -15,19 +15,19 @@ export function FriendsBar () {
     const test = {}
     const [friendList, setFriendList] = useState([test]);
     const received = {}
-    const [sentList, setSentList] = useState([received]);
     const sent = {}
-    const [receivedList, setReceivedList] = useState([sent]);
     const { user } = useAuth();
     var friendSearchInput = '';
-    const [requestsSent, setRequestsSent] = useState(['apldplas']);
-    const [requestsReceived, setRequestsReceived] = useState(['sdkalsdka']);
+    const [requestsSent, setRequestsSent] = useState([sent]);
+    const [requestsReceived, setRequestsReceived] = useState([received]);
+    const [requestsSentComponents, setRequestsSentComponents] = useState([]);
 
 
     useEffect(() => {
 
         getFriends()
         getRequests()
+        
     }, []);
 
 
@@ -105,6 +105,20 @@ export function FriendsBar () {
 
                 });
     }
+
+    useEffect(() => {
+        // After requests sent are fetched, update the state
+        // This will trigger a re-render of the component with updated data
+        const requestSentComponents = Object.keys(requestsSent).map(friendKey => (
+            <RequestSent
+                id={friendKey}
+                name={requestsSent[friendKey].name}
+            />
+        ));
+        
+        // Now update your component state
+        setRequestsSentComponents(requestSentComponents);
+    }, [requestsSent]);
 
 
     const [textInput, setTextInput] = useState('');
@@ -200,14 +214,8 @@ export function FriendsBar () {
                         </div>
                     </div>
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
-                    {
-                Object.keys(requestsSent).map(friendKey => (
-                    <RequestSent
-                        id = {friendKey}
-                        name = {requestsSent[friendKey].name}
-                    />
-                ))
-            }  <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
+                    {requestsSentComponents}  
+            <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
                                 {
                 Object.keys(requestsReceived).map(friendKey => (
                     <IncomingRequest
