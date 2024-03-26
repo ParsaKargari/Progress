@@ -149,11 +149,36 @@ class Tasks {
         }
     }
 
+    async addDueDate(taskId, dueDate) {
+        try {
+            const result = await this.client
+                .from('Tasks')
+                .update({ DueDate: dueDate })
+                .eq('TaskID', taskId)
+                .select();
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async updateCompletionStatus(taskId, completionStatus) {
+        try {
+            const result = await this.client
+                .from('Tasks')
+                .update({ CompletionStatus: completionStatus })
+                .eq('TaskID', taskId)
+                .select();
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 
 
 
 
 }
-
-
 module.exports = Tasks;

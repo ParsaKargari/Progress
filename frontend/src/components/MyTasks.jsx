@@ -25,8 +25,8 @@ export function MyTasks() {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                // const response = await fetch(`http://localhost:9000/Tasks/getTasks/${user.id}`);
-                const response = await fetch(`http://localhost:9000/Tasks/getTasks/2de6e655-4a5d-46ed-8fa5-331faf789295`);
+                const response = await fetch(`http://localhost:9000/Tasks/getTasks/${user.id}`);
+                // const response = await fetch(`http://localhost:9000/Tasks/getTasks/some-user-id`);
                 const json = await response.json();
                 const tasks = json.data || []; 
                 setTaskList(tasks);

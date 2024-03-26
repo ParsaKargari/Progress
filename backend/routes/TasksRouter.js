@@ -4,15 +4,16 @@ const Tasks = require('../../Controllers/ApplicationAPIs/Tasks');
 
 const tasks = new Tasks();
 
-router.post('/createTask', async(req, res) => {
-    const { userId, taskDescription, addedDate, dueDate, publicVisibility } = req.body;
+router.post('/createTask/:userId/:addedDate/:taskDescr', async(req, res) => {
+    const { userId, addedDate, taskDescr } = req.params;
     try {
-        const result = await tasks.createTask(userId, taskDescription, addedDate, dueDate, publicVisibility);
+        const result = await tasks.createTask(userId, taskDescr, addedDate, null, false);
         res.json(result);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 
 router.get('/getTasks/:userId', async(req, res) => {
@@ -94,6 +95,33 @@ router.delete('/deleteTask/:taskId', async(req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+router.post('/addDueDate/:taskId/:dueDate', async(req, res) => {
+    const { taskId } = req.params;
+    let { dueDate } = req.params;
+    dueDate = new Date(dueDate);
+
+    try {
+        const result = await tasks.addDueDate(taskId, dueDate);
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.post('/updateCompletionStatus/:taskId/:completionStatus', async(req, res) => {
+    const { taskId, completionStatus } = req.params;
+
+    try {
+        const result = await tasks.updateCompletionStatus(taskId, completionStatus === 'true');
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 
 module.exports = router;

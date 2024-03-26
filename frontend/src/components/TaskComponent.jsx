@@ -5,13 +5,14 @@ import "../css/DatePicker.css";
 export function TaskComponent(props) {
     const { uuid, taskDescription, dueDate, status, visibilityDB, plannedDate } = props;
 
-    const [date, setDate] = useState(dueDate);
+    // Initialize the date state with the dueDate prop
+    const [date, setDate] = useState(dueDate || ''); // Ensure date is not null
     const [planneddate, setPlanneddate] = useState(plannedDate);
     const [editing, setEditing] = useState(false);
     const [checked, setChecked] = useState(status);
     const [visibility, setVisibility] = useState(visibilityDB); 
 
-    const handleChange = (event) => {
+    const handleChange = async (event) => {
         setChecked(event.target.checked);
         if (event.target.checked === true) {
             var task = document.getElementById(`${uuid}`);
@@ -20,8 +21,17 @@ export function TaskComponent(props) {
             var task = document.getElementById(`${uuid}`);
             task.classList.remove("line-through");
         }
+        try {
+            const response = await fetch(`http://localhost:9000/tasks/updateCompletionStatus/${uuid}/${event.target.checked}`, {
+                method: 'POST'
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update completion status');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
-
     const setVisibilityHandler = async (newVisibility) => { 
         console.log(uuid)
         console.log(newVisibility)
@@ -54,15 +64,41 @@ export function TaskComponent(props) {
         window.location.reload()
     };
 
-    const handleEditClick = () => {
+    const handleEditClick = async () => {
+        if (editing) {
+            try {
+                const response = await fetch(`http://localhost:9000/tasks/addDueDate/${uuid}/${date}`, {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                } else {
+                    throw new Error('Failed to save due date');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
         setEditing(!editing);
     };
 
-    function formatDate(formatDate) {
-        const date = new Date(formatDate);
-        date.setDate(date.getDate() + 1);
-        const formattedDate = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
-        return formattedDate;
+    function formatDate(dateString) {
+        if (!dateString) {
+            // Random placeholder instead of null can be changed
+            return '--No Date Set--'; 
+        }
+
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date'; 
+            }
+            date.setDate(date.getDate() + 1);
+            const formattedDate = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+            return formattedDate;
+        } catch (error) {
+            console.error('Error formatting date:', error);
+            return 'Error';
+        }
     }
 
     useEffect(() => {
@@ -76,15 +112,15 @@ export function TaskComponent(props) {
         <>
             <div className="mb-2 flex flex-row">
                 <div className="pr-2">
-                    <Checkbox
-                        checked={checked}
-                        onChange={handleChange}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                        style={{
-                            color: '#00789E',
-                            borderRadius: '4px',
-                        }}
-                    />
+                <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                    style={{
+                        color: '#00789E',
+                        borderRadius: '4px',
+                    }}
+                />
                 </div>
                 <div className="flex flex-col">
                     <div className="font-standard text-DarkGrey flex flex-row items-center flex-wrap">
@@ -148,4 +184,3 @@ export function TaskComponent(props) {
         </>
     )
 }
-
