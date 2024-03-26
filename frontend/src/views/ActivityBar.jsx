@@ -9,6 +9,9 @@ import MenuItem from '@mui/material/MenuItem';
 import ActivityHeatMap from '../components/ActivityHeatMap';
 import TextField from '@mui/material/TextField';
 
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from 'react';
+
 
 export function ActivityBar() {
     // Initial activities
@@ -60,9 +63,40 @@ export function ActivityBar() {
     const [currentActivityIdForReaction, setCurrentActivityIdForReaction] = useState(null);
     const [commentInputActivityId, setCommentInputActivityId] = useState(null);
 
+    const { user } = useAuth();
+    const user_id = user.id;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log("User ID: ", user_id);
+                const response = await fetch(`http://localhost:9000/activity/getFriendsActivity?user_id=${user_id}`);
+                console.log("Response: ", response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const jsonData = await response.json();
+                console.log("INSIDE FETCHING DATA FOR ACTIVITIES:");
+                console.log(jsonData);
+
+
+
+                setActivities(jsonData);
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+        console.log("Activities After Fetch Data: ", activities)
+
+    }, []);
+    console.log("Activities: ", activities)
+
     const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
 
-    const [newComments, setNewComments] = useState(initialActivities.reduce((acc, activity) => {
+    const [newComments, setNewComments] = useState(activities.reduce((acc, activity) => {
         acc[activity.id] = '';
         return acc;
       }, {}));
@@ -106,7 +140,7 @@ export function ActivityBar() {
     // Function to add or remove reaction
     const handleReactionClick = (activityId, emoji) => {
         const updatedActivities = activities.map(activity => {
-            if (activity.id === activityId) {
+            if (activity.id === activityId && activity.reactions) {
                 const existingReactionIndex = activity.reactions.findIndex(reaction => reaction.emoji === emoji && reaction.by === 'Current User');
                 if (existingReactionIndex > -1) {
                     // Remove the reaction if it exists
@@ -115,6 +149,10 @@ export function ActivityBar() {
                     // Add the reaction if it does not exist
                     activity.reactions.push({ emoji, by: 'Current User' });
                 }
+            }
+            else if (activity.id === activityId) {
+                // Add the reaction if it does not exist
+                activity.reactions = [{ emoji, by: 'Current User' }];
             }
             return activity;
         });
@@ -172,7 +210,7 @@ export function ActivityBar() {
                                 </div>
                             </div>
                             <div className='ml-2 mb-2'>
-                            {Object.entries(activity.reactions.reduce((acc, { emoji, by }) => {
+                            {Object.entries((activity.reactions || []).reduce((acc, { emoji, by }) => {
                                 if (!acc[emoji]) acc[emoji] = [];
                                 acc[emoji].push(by);
                                 return acc;
@@ -191,7 +229,7 @@ export function ActivityBar() {
                             ))}
 
                             </div>
-                            {activity.comments.map((comment, index) => (
+                            {activity && activity.comments && activity.comments.map((comment, index) => (
                                 <div key={index} className="flex items-center mb-2 ml-6 pr-16">
                                     <div className="ml-2 text-text2 font-regular"><span className='font-semibold'>{comment[0]}</span> {comment[1]}</div>
                                 </div>
