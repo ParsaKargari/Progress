@@ -17,8 +17,18 @@ var redirect_uri = `${process.env.REACT_APP_API_URL}/Spotify/callback`
 // Middleware to serve static files from the 'public' directory
 // router.use(express.static(__dirname + '/public'));
 
-// Middleware to enable CORS
-router.use(cors());
+var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
+
+router.use((req, res, next) => {
+  var origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+  next();
+});
 
 // Middleware to parse cookies
 router.use(cookieParser());
