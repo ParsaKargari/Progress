@@ -9,11 +9,20 @@ class Friends {
         this.client = this.supabase.getClient();
     }
 
-    async addFriend(friend1ID, friend2ID, friend1Username, friend2Username, friend1Status, friend2Status) {
+    async addFriend(friend1ID, friend2ID,
+        friend1Username, friend2Username,
+        friend1Status, friend2Status,
+        friend1Percentage, friend2Percentage) {
         try {
             const result = await this.client
                 .from('Friends')
-                .insert([{ Person1: friend1ID, Person2: friend2ID, Person1Username: friend1Username, Person2Username: friend2Username, Person1Status: friend1Status, Person2Status: friend2Status, DateBegan: new Date() }])
+                .insert([{
+                    Person1: friend1ID, Person2: friend2ID,
+                    Person1Username: friend1Username, Person2Username: friend2Username,
+                    Person1Status: friend1Status, Person2Status: friend2Status,
+                    Person1Percentage: friend1Percentage, Person2Percentage: friend2Percentage,
+                    DateBegan: new Date()
+                }])
                 .select();
             return result;
         } catch (error) {
@@ -192,10 +201,13 @@ class Friends {
         const fromPercentage = await this.getPercentage(fromID);
         const toPercentage = await this.getPercentage(toID);
         console.log(toPercentage, fromPercentage);
-        console.log(toUsername, fromUsername);
+        // console.log(toUsername, fromUsername);
         const fromStatus = await this.getFriendStatus(fromID);
         const toStatus = await this.getFriendStatus(toID);
-        const addedFriend = await this.addFriend(fromID, toID, fromUsername[0].Username, toUsername[0].Username, fromStatus[0].Status, toStatus[0].Status);
+        const addedFriend = await this.addFriend(fromID, toID,
+            fromUsername[0].Username, toUsername[0].Username,
+            fromStatus[0].Status, toStatus[0].Status,
+            fromPercentage, toPercentage);
 
     }
 
