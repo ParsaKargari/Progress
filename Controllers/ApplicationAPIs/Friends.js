@@ -32,6 +32,16 @@ class Friends {
         return data;
     }
 
+    async getFriendsWithPersonAllData(person_value) {
+        let { data, error } = await this.client
+            .rpc('getfriendswithpersonall', {
+                person_value
+            })
+        return data;
+        // if (error) console.error(error)
+        // else console.log(data)
+    }
+
     async sendFriendRequest(from_id, to_id) {
         let { data, error } = await this.client
             .rpc('send_friend_request', {
@@ -98,7 +108,7 @@ class Friends {
             })
         if (error) console.error(error)
         else console.log(data)
-        
+
         return data;
     }
 
