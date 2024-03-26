@@ -23,7 +23,7 @@ router.get('/getFriendsActivity', async (req, res) => {
    
     console.log(data);
     
-    res.send(data);
+    res.json(data);
 }
     catch(error){
         res.status(500).json({ error: error});
