@@ -1,6 +1,5 @@
 
-const { v1: uuidv1 } = require('uuid');
-uuidv1();
+
 
 const Friends = require('../ApplicationAPIs/Friends.js');
 async function testFriends() {
@@ -19,8 +18,11 @@ async function testFriends() {
         const fromID4 = "369d491d-e85a-4719-8e22-0d488c4c0b00";
         const fromName4 = "joao"
 
+        const percentage = await friends.getPercentage("2de6e655-4a5d-46ed-8fa5-331faf789295");
+        console.log(percentage)
+
         //const addfriend = await friends.addFriend(fromID, toID, fromName, toName)
-        if (1) {
+        if (0) {
 
             const friendRequest = await friends.sendAndReceiveFriendRequest(fromID, toID)
             // const friendRequest2 = await friends.sendAndReceiveFriendRequest(fromID2, toID)
