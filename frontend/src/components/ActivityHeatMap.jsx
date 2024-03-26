@@ -17,9 +17,20 @@ export default function ActivityHeatMap() {
     const fetchData = async () => {
         try {
             const response = await fetch(`http://localhost:9000/Tasks/getHeatMapData/${user.id}/2021-01-01/2028-01-01`);
-            const responseData = await response.json();
-            console.log('Response data:', responseData);
-            setData(responseData);
+            if (response.ok) {
+                const responseData = await response.json();
+                // Filter out dates with a count of 0 and map to the desired structure
+                const processedData = responseData
+                    .map(item => ({
+                        date: item.date,
+                        count: item.completed // Assuming 'completed' is the number of completed tasks
+                    }))
+                    .filter(item => item.count > 0); // Only include dates where the count is greater than 0
+    
+                setData(processedData);
+            } else {
+                throw new Error('Failed to heatmap data');
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -29,12 +40,11 @@ export default function ActivityHeatMap() {
         console.log('Data:', data);
     }, [data]);
 
-    if (!data.length) {
-        return <div>Loading...</div>;
-    }
+
 
     const today = new Date().toISOString().slice(0, 10).replaceAll('-', '/');
     const todayData = data.find(d => d.date === today) || { date: today, count: 0, completed: 0 };
+
 
     const handleCellClick = (date) => {
         setSelected(date);
@@ -44,7 +54,7 @@ export default function ActivityHeatMap() {
         <div>
             <div className='ml-2 mb-4'>
                 <Chip
-                    label={`${todayData.completed} tasks completed today`}
+                    label={`${todayData.count || '0'} tasks completed today`}
                     icon={<WhatshotIcon />}
                     sx={{
                         color: 'white',
@@ -66,7 +76,7 @@ export default function ActivityHeatMap() {
                 style={{ height: '210px' }}
                 rectRender={(props, data) => {
                     return (
-                        <Tooltip content={`${data.date}, Count: ${data.count} ,Completed: ${data.completed || '0'}`} key={props.key}>
+                        <Tooltip content={`${data.date}, Completed: ${data.count || '0'}`} key={props.key}>
                             <rect {...props} key={props.key} onClick={() => handleCellClick(data.date)} />
                         </Tooltip>
                     );
