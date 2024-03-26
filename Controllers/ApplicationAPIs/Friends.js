@@ -154,6 +154,7 @@ class Friends {
         const resultRemoveSend = await this.removeFriendRequestSent(fromID, toID);
         const fromUsername = await this.getFriendUsername(fromID);
         const toUsername = await this.getFriendUsername(toID);
+        console.log(toUsername, fromUsername)
         const fromStatus = await this.getFriendStatus(fromID);
         const toStatus = await this.getFriendStatus(toID);
         const addedFriend = await this.addFriend(fromID, toID, fromUsername[0].Username, toUsername[0].Username, fromStatus[0].Status, toStatus[0].Status);

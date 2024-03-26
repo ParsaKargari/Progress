@@ -77,7 +77,7 @@ router.get('/acceptFriend/:id/:friendId', async (req, res) => {
 });
 
 router.get('/declineFriend/:id/:friendId', async (req, res) => {
-    await friends.declineFriendRequest(req.params.id, req.params.friendId);
+    await friends.declineFriendRequest(req.params.friendId, req.params.id);
 
     res.send('success');
 
