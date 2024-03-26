@@ -17,14 +17,13 @@ router.get('/getFriendsActivity', async (req, res) => {
     user_id= req.query.user_id;
     console.log(user_id);
     ids = await friends.getListOfFriendsFromMyID(user_id);
-    console.log("list of friends is")
     console.log(ids);
-    let {data, error} = await friends.client.rpc('get_tasks_with_user_ids', {ids});
+    const data = await friends.getListOfTasksFromIDList(ids);
     console.log("ALL ACTIVITIES OF FRIENDS ARE:")
-    if (error) console.error(error);
-    else console.log(data);
+   
+    console.log(data);
     
-    res.json(data);
+    res.send(data);
 }
     catch(error){
         res.status(500).json({ error: error});

@@ -136,12 +136,30 @@ class Friends {
         })
         if (error) console.error(error)
         
-        return data;}
+        return data;
+    }
         catch(error){
             console.error(error);
             
         }
     }
+
+    async getListOfTasksFromIDList(ids) {
+        // ids = [
+        //     '1f8fa9f7-69f4-41f1-97d4-c3903f583158',
+        //     'bfe67180-dd8a-11ee-bd50-8346420c96fe',
+        //     'some-user-id'
+        // ];
+        try{
+            let {data, error} = await this.client.rpc('get_tasks_with_user_ids', {ids});
+            //console.log(data)
+            return data;
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
+
     
 
 
