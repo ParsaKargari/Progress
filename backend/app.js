@@ -55,6 +55,7 @@ const friendsRouter = require('../backend/routes/FriendsRouter.js');
 const groupsRouter = require('../backend/routes/GroupsRouter.js');
 const tasksRouter = require('../backend/routes/TasksRouter.js');
 const settingsRouter = require('../backend/routes/Settings.js');
+const ActivityRouter = require('../backend/routes/ActivityRouter.js');
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -77,6 +78,7 @@ app.use('/spotify', SpotifyLoginRouter)
 app.use('/Spotify', SpotifyLoginRouter)
 app.use('/signUp', signUpRouter)
 app.use('/tasks', tasksRouter)
+app.use('/activity', ActivityRouter);
 // app.use('/Spotify', SpotifyLoginRouter)
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

@@ -13,23 +13,22 @@ router.use((req,res,next) => {
 
 
 router.get('/getFriendsActivity', async (req, res) => {
-    user_id= req.query.user_id;
-    local_data=null;
     try{
-        await getFriendsByID(user_id).then((data) => {
-            local_data = data;
-        });
-
-
+    user_id= req.query.user_id;
+    console.log(user_id);
+    ids = await friends.getListOfFriendsFromMyID(user_id);
+    console.log("list of friends is")
+    console.log(ids);
+    let {data, error} = await friends.client.rpc('get_tasks_with_user_ids', {ids});
+    console.log("ALL ACTIVITIES OF FRIENDS ARE:")
+    if (error) console.error(error);
+    else console.log(data);
+    
+    res.json(data);
+}
+    catch(error){
+        res.status(500).json({ error: error});
     }
-    catch{
-        res.status(500).json({error: 'Problem while fetching friends by user_id'});
-    }
-
-
-    // After getting lsit of all friends we are going to fetch each of those friends' tasks that have been completed.
-
-    // for (x in local_data){
-    //     await getFriendsActivity(x);}
-
 });
+
+module.exports = router;

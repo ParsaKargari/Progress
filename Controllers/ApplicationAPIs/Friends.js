@@ -125,6 +125,26 @@ class Friends {
         const resultRemoveReceive = await signup.removeFriendRequestReceived(fromID, toID);
         const resultRemoveSend = await signup.removeFriendRequestSent(fromID, toID);
     }
+
+
+    //David Made This ONE
+    async getListOfFriendsFromMyID(person_value) {
+        try{
+        let { data, error } = await this.client
+        .rpc('getfriendswithperson', {
+            person_value
+        })
+        if (error) console.error(error)
+        
+        return data;}
+        catch(error){
+            console.error(error);
+            
+        }
+    }
+    
+
+
 }
 
 module.exports = Friends;
