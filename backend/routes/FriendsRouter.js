@@ -54,8 +54,13 @@ router.get('/search/:input/:id', async (req, res) => {
 
 router.get('/getRequests/:id', async (req, res) => {
         var requestsSent = await friends.getRequestsSent(req.params.id);
-        var requestsRecieved = await friends.getRequestsReceived(req.params.id);
-        let allRequests = [requestsRecieved,requestsSent];
+        var requestsReceived = await friends.getRequestsReceived(req.params.id);
+        
+        console.log(requestsReceived[0].RequestsReceived)
+        console.log(requestsSent[0].RequestsSent)
+        var usernamesSent = await friends.getUserNamesFromIDList(requestsReceived[0].RequestsReceived);
+        var usernamesReceived = await friends.getUserNamesFromIDList(requestsSent[0].RequestsSent);
+        let allRequests = [usernamesReceived, usernamesSent];
         
         res.send(allRequests);
 

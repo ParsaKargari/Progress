@@ -18,10 +18,10 @@ export function FriendsBar () {
       
     const test = {}
     const[friendList, setFriendList] = useState([test]);
-    const test2 = {}
-    const[sentList, setSentList] = useState([test2]);
-    const test3 = {}
-    const[receivedList, setReceivedList] = useState([test3]);
+    const received = {}
+    const[sentList, setSentList] = useState([received]);
+    const sent = {}
+    const[receivedList, setReceivedList] = useState([sent]);
     const { user } = useAuth();
     var friendSearchInput = '';
     const [requestsSent, setRequestsSent] = useState(['apldplas']);
@@ -125,25 +125,22 @@ export function FriendsBar () {
             response => { 
 
                 console.log("GET REQUESTS RESPONSE", response)
-                setRequestsReceived(response.data[0][0].RequestsReceived)
-                console.log(response.data[0][0].RequestsReceived)
-                setRequestsSent(response.data[1][0].RequestsSent)
-                console.log(response.data[1][0].RequestsSent)
-                setReceivedList()
-                response.data[0][0].RequestsReceived.forEach(item => {
-                    console.log(item);
+
+
+                response.data[1].forEach(item => {
+                    console.log(item.username);
                     // var newKey = '' + item.friendUsername
                     // console.log(newKey)
-                    test2[item] = {};
+                    received[item.username] = {};
                 })
-                response.data[1][0].RequestsSent.forEach(item => {
-                    console.log(item);
+                response.data[0].forEach(item => {
+                    console.log(item.username);
                     // var newKey = '' + item.friendUsername
                     // console.log(newKey)
-                    test3[item] = {};
+                    sent[item.username] = {};
                 })
-                setRequestsReceived(test2)
-                setRequestsSent(test3)
+                setRequestsReceived(received)
+                setRequestsSent(sent)
 
             });
     }
@@ -245,8 +242,6 @@ export function FriendsBar () {
                 Object.keys(requestsSent).map(friendKey => (
                     <RequestSent
                         name = {friendKey}
-                        // status = {friendList[friendKey].status}
-                        // uuid = {friendList[friendKey].uuid}
                     />
                 ))
             }  <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
@@ -254,8 +249,6 @@ export function FriendsBar () {
                 Object.keys(requestsReceived).map(friendKey => (
                     <IncomingRequest
                         name = {friendKey}
-                        // status = {friendList[friendKey].status}
-                        // uuid = {friendList[friendKey].uuid}
                     />
                 ))
             }
