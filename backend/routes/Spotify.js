@@ -1,22 +1,9 @@
 const SupabaseConnector = require('../SupabaseConnector.js');
 var express = require('express');
-var router = express.Router();
-var cors = require('cors');
-var cookieParser = require('cookie-parser');
 const request = require('request');
 const querystring = require('querystring');
-const { add } = require('nodemon/lib/rules/index.js');
 
-
-// import { DotenvConfigOptions } from 'dotenv';
-
-var client_id = '26b0736d78ef449a92dc41137875af72'
-var client_secret = '4530b6e7f3e64af89a17d03e5d3097a0'
-var redirect_uri = `${process.env.REACT_APP_API_URL}/Spotify/callback`
-
-// Middleware to serve static files from the 'public' directory
-// router.use(express.static(__dirname + '/public'));
-
+var router = express.Router();
 var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
 
 router.use((req, res, next) => {
@@ -30,8 +17,15 @@ router.use((req, res, next) => {
   next();
 });
 
-// Middleware to parse cookies
-router.use(cookieParser());
+
+// import { DotenvConfigOptions } from 'dotenv';
+
+var client_id = `${process.env.SPOTIFY_CLIENT_ID}`;
+var client_secret = `${process.env.SPOTIFY_CLIENT_SECRET}`;
+var redirect_uri = `${process.env.API_URL}/Spotify/callback`
+
+
+
 
 const generateRandomString = (length) => {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -42,13 +36,6 @@ const generateRandomString = (length) => {
   }
   return randomString;
 };
-
-router.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type', 'Authorization');
-  next();
-});
 
 
 var stateKey = 'spotify_auth_state';
@@ -131,7 +118,7 @@ router.get("/callback", function(req, res) {
 
         await addSpotifyLoginInformation(user_id, access_token, refresh_token);
 
-        res.redirect('http://localhost:3000/home');
+        res.redirect(`${process.env.SPOTIFY_REDIRECT_URL}/home`);
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -159,7 +146,7 @@ router.get('/currently_playing', async function(req, res) {
     // console.log("user id is", user_id, "SpotifyAUthriization token is", spotifyInformation[0].Spotify_Authorization_Token, "SpotifyRefreshToken is", spotifyInformation[0].Spotify_Refresh_Token);
     // await callCurrentlyPlayingEndpoint(user_id, spotifyInformation[0].Spotify_Authorization_Token, spotifyInformation[0].Spotify_Refresh_Token);
     console.log("callcurrentlyplayingfunction called");
-    res.redirect('http://localhost:3000/home');
+    res.redirect(`${process.env.SPOTIFY_REDIRECT_URL}/home`);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
