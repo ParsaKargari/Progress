@@ -44,24 +44,7 @@ export function FriendsBar () {
     
 
     useEffect(() => {
-        async function getFriends() {
-            var user_id = localStorage.getItem("User_ID");
-            axios.get(`${process.env.REACT_APP_API_URL}/friends/${user.id}`).then(
-                response => {
-                    const data = response.data;
-                    console.log(data);
-                    
-                    data.forEach(item => {
-                        console.log(item);
-                        var newKey = '' + item.friendUsername
-                        console.log(newKey)
-                        test[newKey] = {friendID: item.friendID, status: item.friendStatus}
-                        
-                    })
-                    console.log(test)
-                    setFriendList(test)
-                    })
-            }
+
         getFriends()
         getRequests()
     }, []);
@@ -92,8 +75,28 @@ export function FriendsBar () {
 
     const handleClose = () => {
         setOpen(false);
+        getFriends();
+        getRequests();
     };
 
+    async function getFriends() {
+        var user_id = localStorage.getItem("User_ID");
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/${user.id}`).then(
+            response => {
+                const data = response.data;
+                console.log(data);
+                
+                data.forEach(item => {
+                    console.log(item);
+                    var newKey = '' + item.friendUsername
+                    console.log(newKey)
+                    test[newKey] = {friendID: item.friendID, status: item.friendStatus}
+                    
+                })
+                console.log(test)
+                setFriendList(test)
+                })
+        }
     // Sample array of suggestions
     const suggestions = [
         { label: 'Friend 1' },
@@ -131,13 +134,15 @@ export function FriendsBar () {
                     console.log(item.username);
                     // var newKey = '' + item.friendUsername
                     // console.log(newKey)
-                    received[item.username] = {};
+                    var username = item.username
+                    received[item.id] = {name : username};
                 })
                 response.data[0].forEach(item => {
                     console.log(item.username);
                     // var newKey = '' + item.friendUsername
                     // console.log(newKey)
-                    sent[item.username] = {};
+                    var username = item.username
+                    sent[item.id] = {name : username};
                 })
                 setRequestsReceived(received)
                 setRequestsSent(sent)
@@ -241,14 +246,16 @@ export function FriendsBar () {
                     {
                 Object.keys(requestsSent).map(friendKey => (
                     <RequestSent
-                        name = {friendKey}
+                        id = {friendKey}
+                        name = {requestsSent[friendKey].name}
                     />
                 ))
             }  <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
                                 {
                 Object.keys(requestsReceived).map(friendKey => (
                     <IncomingRequest
-                        name = {friendKey}
+                    id = {friendKey}
+                    name = {requestsReceived[friendKey].name}
                     />
                 ))
             }

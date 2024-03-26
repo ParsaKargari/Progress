@@ -1,16 +1,17 @@
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 export default function IncomingRequest(props) {
-    const  data  = props.name;
+    const data = props.name;
+    const id = props.id;
     const { user } = useAuth();
 
 
     function accept() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/acceptFriend/${user.id}/${data}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/acceptFriend/${user.id}/${id}`);
 
     }
     function decline() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/declineFriend/${user.id}/${data}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/declineFriend/${user.id}/${id}`);
 
     }
     return (
