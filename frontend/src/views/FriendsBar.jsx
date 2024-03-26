@@ -18,10 +18,14 @@ export function FriendsBar () {
       
     const test = {}
     const[friendList, setFriendList] = useState([test]);
+    const test2 = {}
+    const[sentList, setSentList] = useState([test2]);
+    const test3 = {}
+    const[receivedList, setReceivedList] = useState([test3]);
     const { user } = useAuth();
     var friendSearchInput = '';
-    const [requestsSent, setRequestsSent] = useState([]);
-    const [requestsReceived, setRequestsReceived] = useState([]);
+    const [requestsSent, setRequestsSent] = useState(['apldplas']);
+    const [requestsReceived, setRequestsReceived] = useState(['sdkalsdka']);
 
 //     const channel = supabase
 //     .channel('schema-db-changes')
@@ -59,6 +63,7 @@ export function FriendsBar () {
                     })
             }
         getFriends()
+        getRequests()
     }, []);
 
 
@@ -104,8 +109,7 @@ export function FriendsBar () {
             response => { 
 
                 console.log(response)
-                setRequestsReceived(response.data[0][0].RequestsReceived)
-                setRequestsSent(response.data[1][0].RequestsSent)
+
                 // console.log(requestsReceived);
                 // console.log(response.data[0][0].RequestsReceived)
 
@@ -115,19 +119,33 @@ export function FriendsBar () {
         
         
     }
-    function getRequests() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/search/getRequests/${user.id}`)
+    async function getRequests() {
+        axios.get(`${process.env.REACT_APP_API_URL}/friends/getRequests/${user.id}`)
         .then(
             response => { 
 
-                console.log(response)
+                console.log("GET REQUESTS RESPONSE", response)
                 setRequestsReceived(response.data[0][0].RequestsReceived)
+                console.log(response.data[0][0].RequestsReceived)
                 setRequestsSent(response.data[1][0].RequestsSent)
-                // console.log(requestsReceived);
-                // console.log(response.data[0][0].RequestsReceived)
+                console.log(response.data[1][0].RequestsSent)
+                setReceivedList()
+                response.data[0][0].RequestsReceived.forEach(item => {
+                    console.log(item);
+                    // var newKey = '' + item.friendUsername
+                    // console.log(newKey)
+                    test2[item] = {};
+                })
+                response.data[1][0].RequestsSent.forEach(item => {
+                    console.log(item);
+                    // var newKey = '' + item.friendUsername
+                    // console.log(newKey)
+                    test3[item] = {};
+                })
+                setRequestsReceived(test2)
+                setRequestsSent(test3)
 
             });
-        console.log('rbuh')
     }
 
 
@@ -217,16 +235,34 @@ export function FriendsBar () {
                         />
                         
                         <div className='flex justify-center content-center pl-5 items-center' >
-                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={() => {searchFriend(textInput); getRequests()}}>
+                            <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={()  =>{searchFriend(textInput); getRequests()}}>
                                 <p className='text-[#559EB5] font-bold'>Send</p>
                             </button>
                         </div>
                     </div>
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
-                    <RequestSent data={requestsSent}/>
+                    {
+                Object.keys(requestsSent).map(friendKey => (
+                    <RequestSent
+                        name = {friendKey}
+                        // status = {friendList[friendKey].status}
+                        // uuid = {friendList[friendKey].uuid}
+                    />
+                ))
+            }  <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
+                                {
+                Object.keys(requestsReceived).map(friendKey => (
+                    <IncomingRequest
+                        name = {friendKey}
+                        // status = {friendList[friendKey].status}
+                        // uuid = {friendList[friendKey].uuid}
+                    />
+                ))
+            }
+                    {/* <RequestSent data={requestsSent}/> */}
                   
-                    <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
-                    <IncomingRequest data={requestsReceived}/>
+                  
+                    {/* <IncomingRequest data={requestsReceived}/> */}
                 </div>
             </Dialog>
         </div>

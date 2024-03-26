@@ -35,23 +35,24 @@ router.get('/getFriends', async (req, res) => {
 router.get('/search/:input/:id', async (req, res) => {
     try {
         const newid = await friends.getFriendID(req.params.input);
-        console.log(typeof(newid[0].UserID));
-        console.log(typeof(req.params.id));
-        const test = await friends.sendAndReceiveFriendRequest(req.params.id, newid[0].UserID);
-        var requestsSent = await friends.getRequestsSent(req.params.id);
-        var requestsRecieved = await friends.getRequestsReceived(req.params.id);
-        let allRequests = [requestsRecieved,requestsSent];
-        res.send(allRequests);
+        try  {
+            const test = await friends.sendAndReceiveFriendRequest(req.params.id, newid[0].UserID);
+            res.send('success');
+            
+        }
+        catch (error) {
+            res.send("User Not Found.");
+        }
+
 
         
     } catch (error) {
-        
+        console.log(error)
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 router.get('/getRequests/:id', async (req, res) => {
-        console.log('pls')
         var requestsSent = await friends.getRequestsSent(req.params.id);
         var requestsRecieved = await friends.getRequestsReceived(req.params.id);
         let allRequests = [requestsRecieved,requestsSent];
@@ -62,6 +63,20 @@ router.get('/getRequests/:id', async (req, res) => {
     
 });
 
+
+router.get('/acceptFriend/:id/:friendId', async (req, res) => {
+    await friends.acceptFriendRequest(req.params.friendId, req.params.id);
+
+    res.send('success');
+
+});
+
+router.get('/declineFriend/:id/:friendId', async (req, res) => {
+    await friends.declineFriendRequest(req.params.id, req.params.friendId);
+
+    res.send('success');
+
+});
 
 router.get("/:id", async function (req, res, next) {
 
