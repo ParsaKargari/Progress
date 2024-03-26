@@ -3,6 +3,8 @@ var express = require('express');
 var router = express.Router();
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
+const Friends = require('../../Controllers/ApplicationAPIs/Friends');
+const friends = new Friends();
 
 
 router.use((req, res, next) => {
@@ -43,11 +45,15 @@ router.post('/updateSettings', async (req, res) => {
     console.log("status is, ", status);
     try {
 
+        friends.updateFriendStatus(user_id, 'Person1Status', status, 'Person1');
+        friends.updateFriendStatus(user_id, 'Person2Status', status, 'Person2');
+
         const result = await client
             .from('Users')
             .update([{ Username:username, color: color, Status: status }])
             .eq('UserID', user_id);
             console.log("result is, ", result);
+    
         res.json(result);
     } catch (error) {
         console.log(error);

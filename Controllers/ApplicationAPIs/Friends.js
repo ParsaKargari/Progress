@@ -22,6 +22,16 @@ class Friends {
         }
     }
 
+    async updateFriendStatus(id, column_name, new_status, person){
+        const { data, error } = await this.client
+        .from('Friends')
+        .update({ [column_name]: new_status })
+        .eq([person], id)
+        .select()
+
+        
+    }
+
     async getFriendsByID(person_id) {
         let { data, error } = await this.client
             .rpc('bothuserfriends', {

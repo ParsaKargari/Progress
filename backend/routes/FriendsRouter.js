@@ -36,30 +36,26 @@ router.get('/search/:input/:id', async (req, res) => {
     try {
         const newid = await friends.getFriendID(req.params.input);
         try  {
-            const friendsByID = await friends.getFriendsByID(req.params.id);
+            const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id)
             const requestsReceived = await friends.getRequestsReceived(req.params.id);
-            var splitIDs;
-            var parsedFriendsJson = []
-            var alreadyFriend = false;
-            friendsByID.forEach(async item => {
-                // Access the property 'bothuserfriends' of each object
-                splitIDs = item.bothuserfriends.split(" ");
-                // const status = await friends.getFriendUsername(splitIDs[0])
-                // console.log(status)
-                //console.log(splitIDs)
-                splitIDs.splice(splitIDs.indexOf(req.params.id), 1);
-                splitIDs.splice(splitIDs.indexOf(username[0].Username), 1);
-                splitIDs.splice(splitIDs.indexOf(status[0].Status), 1);
-                // console.log(splitIDs)
-                // console.log(splitIDs)
-                parsedFriendsJson.push({ friendID: splitIDs[0], friendUsername: splitIDs[1], friendStatus: splitIDs[2] });
-            });
+            console.log("FRIENDS BY ID", friendsByID);
+            var friendsIDS = []
+            for (let i = 0; i < friendsByID.length; i++) {
+                let friendID = friendsByID[i].Person1;
+
+        
+                if (friendsByID[i].Person1 === req.params.id) {
+                    friendID = friendsByID[i].Person2;
+                }
+                friendsIDS.push(friendID);
+            }
+            console.log("AHHHHHHHHHHHHHHHHHHHHHHH", friendsIDS)
 
             if (requestsReceived[0].RequestsReceived.includes(newid[0].UserID)) {
                 res.send('This user has already sent you a friend request! Accept it to add them as a friend.');
             }
 
-            else if (true ) {
+            else if (friendsIDS.includes(newid[0].UserID) ) {
                 res.send('User Already Added As Friend');
             }
             else {
