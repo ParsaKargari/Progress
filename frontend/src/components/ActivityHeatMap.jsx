@@ -8,17 +8,17 @@ import { useAuth } from '../context/AuthContext';
 export default function ActivityHeatMap() {
     const [selected, setSelected] = useState('');
     const { user } = useAuth();
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         fetchData();
-    }, []); 
+    }, []);
 
     const fetchData = async () => {
         try {
             const response = await fetch(`http://localhost:9000/Tasks/getHeatMapData/${user.id}/2021-01-01/2028-01-01`);
             const responseData = await response.json();
-            console.log('Response data:', responseData); 
+            console.log('Response data:', responseData);
             setData(responseData);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -26,25 +26,25 @@ export default function ActivityHeatMap() {
     };
 
     useEffect(() => {
-        console.log('Data:', data); 
-    }, [data]); 
+        console.log('Data:', data);
+    }, [data]);
 
-    if (!data) {
-        return <div>Loading...</div>; 
+    if (!data.length) {
+        return <div>Loading...</div>;
     }
 
-    const { date, count } = data; 
+    const today = new Date().toISOString().slice(0, 10).replaceAll('-', '/');
+    const todayData = data.find(d => d.date === today) || { date: today, count: 0, completed: 0 };
 
     const handleCellClick = (date) => {
         setSelected(date);
-
     };
 
     return (
         <div>
             <div className='ml-2 mb-4'>
                 <Chip
-                    label={`${count} tasks completed on ${date}`}
+                    label={`${todayData.completed} tasks completed today`}
                     icon={<WhatshotIcon />}
                     sx={{
                         color: 'white',
@@ -57,7 +57,7 @@ export default function ActivityHeatMap() {
             </div>
 
             <HeatMap
-                value={[{ date, count }]} // Pass an array containing the single data object
+                value={data} // Pass the array directly to the HeatMap component
                 weekLabels={['', 'M', '', 'W', '', 'F', '']}
                 startDate={new Date('2024/01/01')}
                 endDate={new Date('2024/05/19')}
@@ -66,7 +66,7 @@ export default function ActivityHeatMap() {
                 style={{ height: '210px' }}
                 rectRender={(props, data) => {
                     return (
-                        <Tooltip content={`${data.date}, Count: ${data.count || '0'}`} key={props.key}>
+                        <Tooltip content={`${data.date}, Count: ${data.count || '0'}, Completed: ${data.completed || '0'}`} key={props.key}>
                             <rect {...props} key={props.key} onClick={() => handleCellClick(data.date)} />
                         </Tooltip>
                     );
