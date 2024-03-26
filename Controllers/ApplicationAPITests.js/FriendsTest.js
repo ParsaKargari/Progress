@@ -23,16 +23,16 @@ async function testFriends() {
         if (1) {
 
             const friendRequest = await friends.sendAndReceiveFriendRequest(fromID, toID)
-            const friendRequest2 = await friends.sendAndReceiveFriendRequest(fromID2, toID)
-            const friendRequest3 = await friends.sendAndReceiveFriendRequest(fromID3, toID)
-            const friendRequest4 = await friends.sendAndReceiveFriendRequest(fromID4, toID)
+            // const friendRequest2 = await friends.sendAndReceiveFriendRequest(fromID2, toID)
+            // const friendRequest3 = await friends.sendAndReceiveFriendRequest(fromID3, toID)
+            // const friendRequest4 = await friends.sendAndReceiveFriendRequest(fromID4, toID)
         }
 
-        if (1) {
+        if (0) {
             const acceptFriendRequest = await friends.acceptFriendRequest(fromID, toID);
-            const acceptFriendRequest2 = await friends.acceptFriendRequest(fromID2, toID);
-            const acceptFriendRequest3 = await friends.acceptFriendRequest(fromID3, toID);
-            const acceptFriendRequest4 = await friends.acceptFriendRequest(fromID4, toID);
+            // const acceptFriendRequest2 = await friends.acceptFriendRequest(fromID2, toID);
+            // const acceptFriendRequest3 = await friends.acceptFriendRequest(fromID3, toID);
+            // const acceptFriendRequest4 = await friends.acceptFriendRequest(fromID4, toID);
             //console.log('acceptFriendRequest Result:', acceptFriendRequest);
             //const declineFriendRequest = await friends.declineFriendRequest(fromID, toID);
             //console.log('declineFriendRequest Result:', declineFriendRequest);

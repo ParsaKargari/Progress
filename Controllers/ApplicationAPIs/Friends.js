@@ -63,7 +63,7 @@ class Friends {
         if (error) console.error(error)
         else console.log(data)
 
-        
+
     }
 
     async removeFriendRequestSent(from_id, to_id) {
@@ -91,6 +91,15 @@ class Friends {
             .eq('Username', username);
         return data
     }
+    async getUserNamesFromIDList(ids) {
+        let { data, error } = await this.client
+            .rpc('get_usernames_by_ids', {
+                ids
+            })
+        if (error) console.error(error)
+        else console.log(data)
+    }
+
 
     async getFriendStatus(user_id) {
         const { data, error } = await this.client
@@ -125,7 +134,7 @@ class Friends {
         catch (error) {
             console.log(error)
         }
-        
+
     }
 
     async acceptFriendRequest(fromID, toID) {
