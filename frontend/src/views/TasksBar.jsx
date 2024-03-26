@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -8,6 +8,7 @@ import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../context/AuthContext';
 import { MyTasks } from '../components/MyTasks';
+import { useTasks } from '../context/TasksContext';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -30,6 +31,7 @@ function CustomTabPanel(props) {
   );
 }
 
+
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
@@ -40,6 +42,7 @@ function TasksBar() {
   const theme = useTheme();
   const { user } = useAuth();
   const [value, setValue] = useState(0);
+  const { fetchTasks } = useTasks();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -61,12 +64,18 @@ function TasksBar() {
       if (!response.ok) {
         throw new Error('Failed to add task');
       }
-      // need to reload after new Task s added
+      
+      fetchTasks(user.id);
       
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
+
+  // Fetch tasks when the component mounts
+  useEffect(() => {
+    fetchTasks(user.id);
+  }, []);
 
   return (
     <>
@@ -129,6 +138,7 @@ function TasksBar() {
                       fontWeight: 'bold',
                     }}
                     label="Group Tasks"
+                    disabled
                   />
                 </Tabs>
               </Box>

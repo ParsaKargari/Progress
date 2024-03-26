@@ -10,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoadingScreen from './components/LoadingComponent'; // Import LoadingScreen
 import { LoadingProvider, useLoading } from './context/LoadingContext'; // Import LoadingProvider and useLoading hook
 import reportWebVitals from './tests/reportWebVitals';
+import { TasksProvider } from './context/TasksContext';
 
 const App = () => {
   const { isLoading } = useLoading(); // Use the loading state
@@ -18,19 +19,21 @@ const App = () => {
     <>
       {isLoading && <LoadingScreen />}
       <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route path="/signup" element={
-            <ProtectedRoute>
-              <SignUpSettings />
-            </ProtectedRoute>
-          } />
-          <Route path="/home" element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }/>
-        </Routes>
+        <TasksProvider>
+          <Routes>
+            <Route exact path="/" element={<Login />} />
+            <Route path="/signup" element={
+              <ProtectedRoute>
+                <SignUpSettings />
+              </ProtectedRoute>
+            } />
+            <Route path="/home" element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }/>
+          </Routes>
+        </TasksProvider>
       </BrowserRouter>
     </>
   );
