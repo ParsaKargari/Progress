@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Groups = require('../../Controllers/ApplicationAPIs/Groups');
+const Groups = require('../Controllers/ApplicationAPIs/Groups');
 
 const groups = new Groups();
 

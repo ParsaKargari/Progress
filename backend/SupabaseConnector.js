@@ -10,7 +10,6 @@ class SupabaseConnector {
         process.env.SUPABASE_ANON_KEY
       );
       SupabaseConnector.instance = this;
-
     }
     return SupabaseConnector.instance;
   }
