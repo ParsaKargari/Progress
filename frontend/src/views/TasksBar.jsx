@@ -43,6 +43,7 @@ function TasksBar() {
   const { user } = useAuth();
   const [value, setValue] = useState(0);
   const { fetchTasks } = useTasks();
+  const { triggerHeatmapRefresh } = useTasks();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -66,6 +67,7 @@ function TasksBar() {
       }
       
       fetchTasks(user.id);
+      triggerHeatmapRefresh();
       
     } catch (error) {
       console.error('Error adding task:', error);

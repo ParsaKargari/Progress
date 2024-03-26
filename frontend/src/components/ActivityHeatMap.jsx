@@ -4,15 +4,19 @@ import Tooltip from '@uiw/react-tooltip';
 import Chip from '@mui/material/Chip';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import { useAuth } from '../context/AuthContext';
+import { useTasks } from '../context/TasksContext';
 
 export default function ActivityHeatMap() {
     const [selected, setSelected] = useState('');
+    const [todaysCount, setTodaysCount] = useState(0);
     const { user } = useAuth();
     const [data, setData] = useState([]);
+    const { refreshHeatmapCounter } = useTasks();
+
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [refreshHeatmapCounter]);
 
     const fetchData = async () => {
         try {
@@ -28,6 +32,10 @@ export default function ActivityHeatMap() {
                     .filter(item => item.count > 0); // Only include dates where the count is greater than 0
     
                 setData(processedData);
+                // Calculate todays count
+                const today = new Date().toISOString().slice(0, 10).replaceAll('-', '/');
+                const todayData = processedData.find(d => d.date === today) || { date: today, count: 0 };
+                setTodaysCount(todayData.count);
             } else {
                 throw new Error('Failed to heatmap data');
             }
@@ -41,11 +49,6 @@ export default function ActivityHeatMap() {
     }, [data]);
 
 
-
-    const today = new Date().toISOString().slice(0, 10).replaceAll('-', '/');
-    const todayData = data.find(d => d.date === today) || { date: today, count: 0, completed: 0 };
-
-
     const handleCellClick = (date) => {
         setSelected(date);
     };
@@ -54,7 +57,7 @@ export default function ActivityHeatMap() {
         <div>
             <div className='ml-2 mb-4'>
                 <Chip
-                    label={`${todayData.count || '0'} tasks completed today`}
+                    label={`${todaysCount || '0'} tasks completed today`}
                     icon={<WhatshotIcon />}
                     sx={{
                         color: 'white',
