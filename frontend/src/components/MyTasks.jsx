@@ -11,6 +11,7 @@ export function MyTasks() {
         <div className="flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar">
             {tasks.map(task => (
                 <TaskComponent
+                    key={task.TaskID}
                     uuid={task.TaskID}
                     taskDescription={task.TaskDescription}
                     status={task.CompletionStatus}
