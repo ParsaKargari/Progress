@@ -10,8 +10,8 @@ import RequestSent from '../components/RequestSent';
 import IncomingRequest from '../components/IncomingRequest';
 import axios from "axios";
 
-export function FriendsBar () {
-      
+export function FriendsBar() {
+
     const test = {}
     const [friendList, setFriendList] = useState([test]);
     const received = {}
@@ -24,10 +24,9 @@ export function FriendsBar () {
 
 
     useEffect(() => {
-
         getFriends()
         getRequests()
-        
+
     }, []);
 
 
@@ -59,6 +58,7 @@ export function FriendsBar () {
                 console.log(test)
                 setFriendList(test)
             })
+        axios.get(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`)
     }
     // Sample array of suggestions
     const suggestions = [
@@ -90,18 +90,18 @@ export function FriendsBar () {
                     console.log("GET REQUESTS RESPONSE", response)
 
 
-                response.data[1].forEach(item => {
-                    
-                    var username = item.username
-                    received[item.id] = {name : username};
-                })
-                response.data[0].forEach(item => {
-                    
-                    var username = item.username
-                    sent[item.id] = {name : username};
-                })
-                setRequestsReceived(received)
-                setRequestsSent(sent)
+                    response.data[1].forEach(item => {
+
+                        var username = item.username
+                        received[item.id] = { name: username };
+                    })
+                    response.data[0].forEach(item => {
+
+                        var username = item.username
+                        sent[item.id] = { name: username };
+                    })
+                    setRequestsReceived(received)
+                    setRequestsSent(sent)
 
                 });
     }
@@ -115,7 +115,7 @@ export function FriendsBar () {
                 name={requestsSent[friendKey].name}
             />
         ));
-        
+
         // Now update your component state
         setRequestsSentComponents(requestSentComponents);
     }, [requestsSent]);
@@ -214,16 +214,16 @@ export function FriendsBar () {
                         </div>
                     </div>
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
-                    {requestsSentComponents}  
-            <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
-                                {
-                Object.keys(requestsReceived).map(friendKey => (
-                    <IncomingRequest
-                    id = {friendKey}
-                    name = {requestsReceived[friendKey].name}
-                    />
-                ))
-            }
+                    {requestsSentComponents}
+                    <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
+                    {
+                        Object.keys(requestsReceived).map(friendKey => (
+                            <IncomingRequest
+                                id={friendKey}
+                                name={requestsReceived[friendKey].name}
+                            />
+                        ))
+                    }
 
                 </div>
             </Dialog>

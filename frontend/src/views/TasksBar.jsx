@@ -16,28 +16,28 @@ import { MyTasks } from '../components/MyTasks';
 import { useTasks } from '../context/TasksContext';
 
 function CustomTabPanel(props) {
-    
-    const { children, value, index, ...other } = props;
-    
-  
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{
-                px: 2,  
-                pt: 2, 
-            }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
+
+  const { children, value, index, ...other } = props;
+
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{
+          px: 2,
+          pt: 2,
+        }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
 }
 
 
@@ -63,7 +63,7 @@ function TasksBar() {
   };
 
   const handleAddTask = async () => {
-    
+
     const taskDescr = document.getElementById('taskInput').value;
     const now = new Date();
     const addedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -76,10 +76,12 @@ function TasksBar() {
       if (!response.ok) {
         throw new Error('Failed to add task');
       }
-      
+
+      const updatingPercent = await fetch(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`)
+
       fetchTasks(user.id);
       triggerHeatmapRefresh();
-      
+
     } catch (error) {
       console.error('Error adding task:', error);
     }
