@@ -53,6 +53,12 @@ router.post('/updateSettings', async (req, res) => {
         friends.updateFriendStatus(user_id, 'Person1Status', status, 'Person1');
         friends.updateFriendStatus(user_id, 'Person2Status', status, 'Person2');
 
+        friends.updateFriendStatus(user_id, 'Person1Username', username, 'Person1');
+        friends.updateFriendStatus(user_id, 'Person2Username', username, 'Person2');
+
+
+        
+
         const result = await client
             .from('Users')
             .update([{ Username:username, color: color, Status: status }])
