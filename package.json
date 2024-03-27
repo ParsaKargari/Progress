@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "test": "mocha backend/Controllers/ApplicationAPITests.js/chaiTests --recursive --exit"
+  },
+  "devDependencies": {
+    "chai": "^5.1.0",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.4.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.40.0"
+  }
+  
+}
