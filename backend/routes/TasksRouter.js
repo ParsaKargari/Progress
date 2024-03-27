@@ -6,7 +6,7 @@ const Friends = require('../Controllers/ApplicationAPIs/Friends');
 const friends = new Friends();
 const tasks = new Tasks();
 
-router.post('/createTask/:userId/:addedDate/:taskDescr', async(req, res) => {
+router.post('/createTask/:userId/:addedDate/:taskDescr', async (req, res) => {
     const { userId, addedDate, taskDescr } = req.params;
     try {
         // Set the due date to the next day by default
@@ -22,7 +22,7 @@ router.post('/createTask/:userId/:addedDate/:taskDescr', async(req, res) => {
 
 
 
-router.get('/getTasks/:userId', async(req, res) => {
+router.get('/getTasks/:userId', async (req, res) => {
     const userId = req.params.userId;
     try {
         const result = await tasks.getTasks(userId);
@@ -32,7 +32,7 @@ router.get('/getTasks/:userId', async(req, res) => {
     }
 });
 
-router.get('/getTask/:taskId', async(req, res) => {
+router.get('/getTask/:taskId', async (req, res) => {
     const taskId = req.params.taskId;
     try {
         const result = await tasks.getTaskById(taskId);
@@ -42,7 +42,7 @@ router.get('/getTask/:taskId', async(req, res) => {
     }
 });
 
-router.post('/addComment', async(req, res) => {
+router.post('/addComment', async (req, res) => {
     const { task_id, username, new_comment } = req.body;
     try {
         const result = await tasks.addComment(task_id, username, new_comment);
@@ -52,7 +52,7 @@ router.post('/addComment', async(req, res) => {
     }
 });
 
-router.get('/getHeatMapData/:userID/:startDate/:endDate', async(req, res) => {
+router.get('/getHeatMapData/:userID/:startDate/:endDate', async (req, res) => {
     const { userID, startDate, endDate } = req.params;
     try {
         const result = await tasks.getHeatMapData(userID, startDate, endDate);
@@ -62,7 +62,7 @@ router.get('/getHeatMapData/:userID/:startDate/:endDate', async(req, res) => {
     }
 });
 
-router.get('/getVisibilityByTaskId/:taskId', async(req, res) => {
+router.get('/getVisibilityByTaskId/:taskId', async (req, res) => {
     const { taskId } = req.params;
     try {
         const visibility = await tasks.getVisibilityByTaskId(taskId);
@@ -73,7 +73,7 @@ router.get('/getVisibilityByTaskId/:taskId', async(req, res) => {
     }
 });
 
-router.post('/updateVisibility/:taskId/:visibility', async(req, res) => {
+router.post('/updateVisibility/:taskId/:visibility', async (req, res) => {
     const { taskId, visibility } = req.params;
     const isPublic = visibility === 'true';
 
@@ -86,7 +86,7 @@ router.post('/updateVisibility/:taskId/:visibility', async(req, res) => {
     }
 });
 
-router.delete('/deleteTask/:taskId', async(req, res) => {
+router.delete('/deleteTask/:taskId', async (req, res) => {
     const { taskId } = req.params;
 
     try {
@@ -102,7 +102,7 @@ router.delete('/deleteTask/:taskId', async(req, res) => {
     }
 });
 
-router.post('/addDueDate/:taskId/:dueDate', async(req, res) => {
+router.post('/addDueDate/:taskId/:dueDate', async (req, res) => {
     const { taskId } = req.params;
     let { dueDate } = req.params;
     dueDate = new Date(dueDate);
@@ -116,8 +116,8 @@ router.post('/addDueDate/:taskId/:dueDate', async(req, res) => {
     }
 });
 
-router.post('/updateCompletionStatus/:taskId/:completionStatus', async(req, res) => {
-    const { taskId, completionStatus} = req.params;
+router.post('/updateCompletionStatus/:taskId/:completionStatus', async (req, res) => {
+    const { taskId, completionStatus } = req.params;
 
     try {
         const result = await tasks.updateCompletionStatus(taskId, completionStatus === 'true');
@@ -129,7 +129,7 @@ router.post('/updateCompletionStatus/:taskId/:completionStatus', async(req, res)
     }
 });
 
-router.post('/updatePercentage/:userId', async(req, res) => {
+router.get('/updatePercentage/:userId', async (req, res) => {
     const { userId } = req.params;
 
     try {
@@ -137,7 +137,7 @@ router.post('/updatePercentage/:userId', async(req, res) => {
         console.log("NEWPERCENTAGE", newPercentage)
         friends.updateFriendStatus(userId, 'Person1Percentage', newPercentage, 'Person1');
         friends.updateFriendStatus(userId, 'Person2Percentage', newPercentage, 'Person2');
-        res.json(newPercentage);
+        res.send(newPercentage);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });

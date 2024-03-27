@@ -1,5 +1,5 @@
 // import React, { useState } from 'react';
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 
 
 import CircularProgress from '@mui/joy/CircularProgress';
@@ -16,7 +16,7 @@ export default function FriendProfile() {
     const [username, setUsername] = useState('');
     const [status, setStatus] = useState('');
     const [ringColor, setRingColor] = useState('#697689'); // Default yellow color
-
+    const [ringPercentage, setRingPercentage] = useState(0);
     const { signOut } = useAuth();
     const { user } = useAuth();
 
@@ -71,7 +71,7 @@ export default function FriendProfile() {
     };
 
 
-    
+
     const handleSpotifyLogin = async () => {
         // Assuming you     have access to the user ID
         // Redirect to the backend route /Spotify/login along with the user ID
@@ -79,73 +79,86 @@ export default function FriendProfile() {
         window.location.href = `${process.env.REACT_APP_API_URL}/spotify/login?user_id=${user.id}`;
         // window.location.href = `http://localhost:9000/spotify/currently_playing?user_id=${user.id}`
         // upon completion or not, it will 
-      }
-
-
-// Function to check if interval fetching is allowed for Spotify
-async function checkSpotifyIntervalAllowed() {
-    try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/spotify/isUserSignedIn?user_id=${user.id}`);
-        
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        
-        const data = await response.json(); // Await the JSON parsing
-        
-        console.log('Response:', data); // Log the actual data
-        
-        return data;
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        return false; // Return false in case of an error
     }
-}
-
-// Function to fetch currently playing song from Spotify
-async function updateSongPlaying() {
-    fetch(`${process.env.REACT_APP_API_URL}/spotify/currently_playing?user_id=${user.id}`)
-        .catch(error => {
-            console.error('There was a problem updating the currently playing song:', error);
-        });
-}
 
 
-// Check if interval fetching is allowed, then start the interval
-useEffect(() => {
-    checkSpotifyIntervalAllowed().then(async allowed => {
-        if (allowed) {
-            // Call the updateSongPlaying function initially when the page loads
-            await updateSongPlaying();
-
-            // Set interval to call the updateSongPlaying function repeatedly
-            const interval_To_Update_Spotify = 150000; // Interval in milliseconds (e.g., 150000 ms = 2.5 minutes)
-            const interval_Spotify_Update_Song = setInterval(updateSongPlaying, interval_To_Update_Spotify);
-        } else {
-            console.log('Interval fetching for Spotify not allowed by the API.');
-        }
-    });
-}, []); 
-
-
-useEffect(() => {
-    async function LoadPersonalSettings() {
+    // Function to check if interval fetching is allowed for Spotify
+    async function checkSpotifyIntervalAllowed() {
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/settings/getSettings?user_id=${user.id}`);
-            const data = await response.json();
-            console.log('Settings Response:', data);
-            setUsername(data[0].Username || "vishnudhanda(notfound)");
-            setStatus(data[0].Status || "Database!");
-            setRingColor(data[0].color || '#697689');
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/spotify/isUserSignedIn?user_id=${user.id}`);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json(); // Await the JSON parsing
+
+            console.log('Response:', data); // Log the actual data
+
+            return data;
         } catch (error) {
-            console.error('Error loading personal settings:', error.message);
+            console.error('There was a problem with the fetch operation:', error);
+            return false; // Return false in case of an error
         }
     }
 
-    LoadPersonalSettings(); // Load personal settings when component mounts
-}, [user.id]); // Load personal settings whenever user ID changes
-    
-      
+    // Function to fetch currently playing song from Spotify
+    async function updateSongPlaying() {
+        fetch(`${process.env.REACT_APP_API_URL}/spotify/currently_playing?user_id=${user.id}`)
+            .catch(error => {
+                console.error('There was a problem updating the currently playing song:', error);
+            });
+    }
+
+
+    // Check if interval fetching is allowed, then start the interval
+    useEffect(() => {
+        checkSpotifyIntervalAllowed().then(async allowed => {
+            if (allowed) {
+                // Call the updateSongPlaying function initially when the page loads
+                await updateSongPlaying();
+
+                // Set interval to call the updateSongPlaying function repeatedly
+                const interval_To_Update_Spotify = 150000; // Interval in milliseconds (e.g., 150000 ms = 2.5 minutes)
+                const interval_Spotify_Update_Song = setInterval(updateSongPlaying, interval_To_Update_Spotify);
+            } else {
+                console.log('Interval fetching for Spotify not allowed by the API.');
+            }
+        });
+    }, []);
+
+
+    useEffect(() => {
+        async function LoadPersonalSettings() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/settings/getSettings?user_id=${user.id}`);
+                const data = await response.json();
+                console.log('Settings Response:', data);
+                setUsername(data[0].Username || "vishnudhanda(notfound)");
+                setStatus(data[0].Status || "Database!");
+                setRingColor(data[0].color || '#697689');
+            } catch (error) {
+                console.error('Error loading personal settings:', error.message);
+            }
+        }
+
+        LoadPersonalSettings(); // Load personal settings when component mounts
+    }, [user.id]); // Load personal settings whenever user ID changes
+
+    useEffect(() => {
+        async function LoadPersonalRing() {
+            try {
+                const percentage = await fetch(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`);
+                console.log("SWAG PERCENTAGE", percentage)
+                setRingPercentage(percentage);
+            } catch (error) {
+                console.log(error)
+            }
+
+
+        }
+        LoadPersonalRing();
+    }, [])
 
     return (
         <div className='flex flex-row justify-start items-center py-1.5 pb-3 border-t-2 border-betterWithFriends'>
@@ -153,8 +166,8 @@ useEffect(() => {
                 className='cursor-pointer'
                 style={{ color: 'yellow' }}
                 determinate
-                 size="md"
-                value={20}
+                size="md"
+                value={0}
                 variant="solid"
                 onClick={handleClickOpen}
             />
@@ -213,7 +226,7 @@ useEffect(() => {
                     />
 
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-2 mr-1'>Ring Color</p>
-        
+
                     <CircularProgress
                         className='cursor-pointer'
                         style={{ color: ringColor }}
@@ -221,14 +234,14 @@ useEffect(() => {
                         size="md"
                         value={30}
                         variant="solid"
-                        
+
                     />
-                    
-                        <div>
-                            <div/>
-                            <BlockPicker color={ringColor} onChange={handleRingColorChange} triangle='hide' />
-                        </div>
-            
+
+                    <div>
+                        <div />
+                        <BlockPicker color={ringColor} onChange={handleRingColorChange} triangle='hide' />
+                    </div>
+
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-2 mr-1'>Connect Spotify</p>
 
                     <button className="flex items-center justify-items-center content-center border border-[#1ED760] min-h-12 min-w-20 rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard " type="button">
