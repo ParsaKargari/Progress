@@ -1,4 +1,4 @@
-const SupabaseConnector = require('../APIGateway/Supabase.js');
+const SupabaseConnector = require('../../SupabaseConnector.js');
 
 // const { v1: uuidv1 } = require('uuid');
 
@@ -88,39 +88,45 @@ class Tasks {
         try {
             const tasks = await this.client
                 .from('Tasks')
-                .select('AddedDate')
+                .select('AddedDate, CompletionStatus')
                 .eq('UserID', userID)
                 .gte('DueDate', startDate)
                 .lte('DueDate', endDate);
-            // console.log(tasks)
+    
             let map = {};
             tasks.data.forEach(task => {
                 const key = task.AddedDate;
+                // Initialize the key in the map if it doesn't exist
                 if (!map[key]) {
-                    map[key] = 1;
-                } else {
-                    map[key]++;
+                    map[key] = { count: 0, completed: 0 };
+                }
+                // Increment the count for each task
+                map[key].count++;
+                // If the task is completed, also increment the completed count
+                if (task.CompletionStatus) {
+                    map[key].completed++;
                 }
             });
-
-            console.log(map)
-
-            let newMap = {};
-            for (let key in map) {
-                newMap["date"] = key.replaceAll("-", "/");
-                newMap["count"] = map[key]
-            };
-
-            console.log(newMap);
-            return newMap;
-
-
+    
+            // The map will have the format: {'YYYY-MM-DD': { count: x, completed: y }, ...}
+            // Convert it to an array of objects with the desired format
+            let result = Object.keys(map).map(key => {
+                return {
+                    date: key.replaceAll("-", "/"),
+                    count: map[key].count,
+                    completed: map[key].completed
+                };
+            });
+    
+            console.log(result);
+            return result;
+    
         } catch (error) {
             console.error(error);
             throw error;
         }
     }
-
+    
     async getVisibilityByTaskId(taskId) {
         try {
             const result = await this.client

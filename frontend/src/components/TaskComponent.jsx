@@ -15,35 +15,37 @@ export function TaskComponent(props) {
     const [visibility, setVisibility] = useState(visibilityDB); 
     const { fetchTasks } = useTasks();
     const { user } = useAuth();
+    const { triggerHeatmapRefresh } = useTasks();
     
 
     const handleChange = async (event) => {
-        setChecked(event.target.checked);
-        if (event.target.checked === true) {
-            var task = document.getElementById(`${uuid}`);
-            task.classList.add("line-through");
-        } else {
-            var task = document.getElementById(`${uuid}`);
-            task.classList.remove("line-through");
-        }
+        const newCheckedStatus = event.target.checked;
+        setChecked(newCheckedStatus); // Optimistically update the UI
+    
         try {
-            const response = await fetch(`http://localhost:9000/tasks/updateCompletionStatus/${uuid}/${event.target.checked}`, {
-                method: 'POST'
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks/updateCompletionStatus/${uuid}/${newCheckedStatus}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ CompletionStatus: newCheckedStatus }), // Ensure you send the new status in the body if needed by your API
             });
             if (!response.ok) {
                 throw new Error('Failed to update completion status');
             }
-
-            fetchTasks(user.id); // Fetch tasks again to update the UI
+            fetchTasks(user.id); // Fetch tasks again to update the UI only if you need to synchronize other parts of the task not related to the checkbox
+            triggerHeatmapRefresh(); // Trigger a refresh of the heatmap
         } catch (error) {
             console.error(error);
+            setChecked(!newCheckedStatus); // Revert the checkbox state if the update fails
         }
     };
+    
     const setVisibilityHandler = async (newVisibility) => { 
         console.log(uuid)
         console.log(newVisibility)
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/updateVisibility/${uuid}/${newVisibility}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/updateVisibility/${uuid}/${newVisibility}`, {
                 method: 'POST'
 
             });
@@ -61,19 +63,20 @@ export function TaskComponent(props) {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/deleteTask/${uuid}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/deleteTask/${uuid}`, {
                 method: 'DELETE'
             });
         } catch (error) {
             console.error(error);
         }
         fetchTasks(user.id); // Fetch tasks again to update the UI
+        triggerHeatmapRefresh(); // Trigger a refresh of the heatmap
     };
 
     const handleEditClick = async () => {
         if (editing) {
             try {
-                const response = await fetch(`http://localhost:9000/tasks/addDueDate/${uuid}/${date}`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks/addDueDate/${uuid}/${date}`, {
                     method: 'POST'
                 });
                 if (response.ok) {
@@ -109,17 +112,10 @@ export function TaskComponent(props) {
         }
     }
 
-    useEffect(() => {
-        if (checked === true) {
-            var task = document.getElementById(`${uuid}`);
-            task.classList.add("line-through");
-        }
-    }, []);
-
     return (
         <>
             <div className="mb-2 flex flex-row">
-                <div className="pr-2">
+            <div className="pr-2">
                 <Checkbox
                     checked={checked}
                     onChange={handleChange}
@@ -129,15 +125,16 @@ export function TaskComponent(props) {
                         borderRadius: '4px',
                     }}
                 />
-                </div>
+            </div>
                 <div className="flex flex-col">
                     <div className="font-standard text-DarkGrey flex flex-row items-center flex-wrap">
                         <h1
                             id={`${uuid}`}
-                            className="font-standard text-DarkGrey decoration-DarkGrey decoration-2 truncate font-bold	text-base transition duration-500"
+                            className={`font-standard text-DarkGrey decoration-DarkGrey truncate font-bold text-base transition duration-500 ${checked ? 'line-through' : ''}`}
                         >
                             {taskDescription}
                         </h1>
+
                         <button
                             onClick={() => { setVisibilityHandler(!visibility) }}
                             className=" btn btn-circle bg-transparent rounded-full flex justify-center items-center ml-2 transition-opacity duration-500"

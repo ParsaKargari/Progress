@@ -4,47 +4,63 @@ import Tooltip from '@uiw/react-tooltip';
 import Chip from '@mui/material/Chip';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import { useAuth } from '../context/AuthContext';
+import { useTasks } from '../context/TasksContext';
 
 export default function ActivityHeatMap() {
     const [selected, setSelected] = useState('');
+    const [todaysCount, setTodaysCount] = useState(0);
     const { user } = useAuth();
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
+    const { refreshHeatmapCounter } = useTasks();
+
 
     useEffect(() => {
         fetchData();
-    }, []); 
+    }, [refreshHeatmapCounter]);
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/getHeatMapData/${user.id}/2021-01-01/2028-01-01`);
-            const responseData = await response.json();
-            console.log('Response data:', responseData); 
-            setData(responseData);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/getHeatMapData/${user.id}/2021-01-01/2028-01-01`);
+            if (response.ok) {
+                const responseData = await response.json();
+                // Filter out dates with a count of 0 and map to the desired structure
+                const processedData = responseData
+                    .map(item => ({
+                        date: item.date,
+                        count: item.completed // Assuming 'completed' is the number of completed tasks
+                    }))
+                    .filter(item => item.count > 0); // Only include dates where the count is greater than 0
+    
+                setData(processedData);
+                // Calculate todays count
+                const now = new Date();
+                const today = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+                console.log('Today Date:', today);
+                const todayData = processedData.find(d => d.date === today) || { date: today, count: 0 };
+                console.log('Today:', todayData);
+                setTodaysCount(todayData.count);
+            } else {
+                throw new Error('Failed to heatmap data');
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
     useEffect(() => {
-        console.log('Data:', data); 
-    }, [data]); 
+        console.log('Data:', data);
+    }, [data]);
 
-    if (!data) {
-        return <div>Loading...</div>; 
-    }
-
-    const { date, count } = data; 
 
     const handleCellClick = (date) => {
         setSelected(date);
-
     };
 
     return (
         <div>
             <div className='ml-2 mb-4'>
                 <Chip
-                    label={`${count} tasks completed on ${date}`}
+                    label={`${todaysCount} tasks completed today`}
                     icon={<WhatshotIcon />}
                     sx={{
                         color: 'white',
@@ -57,7 +73,7 @@ export default function ActivityHeatMap() {
             </div>
 
             <HeatMap
-                value={[{ date, count }]} // Pass an array containing the single data object
+                value={data} // Pass the array directly to the HeatMap component
                 weekLabels={['', 'M', '', 'W', '', 'F', '']}
                 startDate={new Date('2024/01/01')}
                 endDate={new Date('2024/05/19')}
@@ -66,7 +82,7 @@ export default function ActivityHeatMap() {
                 style={{ height: '210px' }}
                 rectRender={(props, data) => {
                     return (
-                        <Tooltip content={`${data.date}, Count: ${data.count || '0'}`} key={props.key}>
+                        <Tooltip content={`${data.date}, Completed: ${data.count || '0'}`} key={props.key}>
                             <rect {...props} key={props.key} onClick={() => handleCellClick(data.date)} />
                         </Tooltip>
                     );

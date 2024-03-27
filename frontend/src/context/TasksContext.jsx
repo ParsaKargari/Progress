@@ -6,10 +6,11 @@ export const useTasks = () => useContext(TasksContext);
 
 export const TasksProvider = ({ children }) => {
     const [tasks, setTasks] = useState([]);
+    const [refreshHeatmapCounter, setRefreshHeatmapCounter] = useState(0);
 
     const fetchTasks = useCallback(async (userId) => {
         try {
-            const response = await fetch(`http://localhost:9000/Tasks/getTasks/${userId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/getTasks/${userId}`);
             const json = await response.json();
             const tasks = json.data || [];
             setTasks(tasks);
@@ -18,8 +19,12 @@ export const TasksProvider = ({ children }) => {
         }
     }, []);
 
+    const triggerHeatmapRefresh = useCallback(() => {
+        setRefreshHeatmapCounter(count => count + 1);
+    }, []);
+
     return (
-        <TasksContext.Provider value={{ tasks, setTasks, fetchTasks }}>
+        <TasksContext.Provider value={{ tasks, setTasks, fetchTasks, triggerHeatmapRefresh, refreshHeatmapCounter }}>
             {children}
         </TasksContext.Provider>
     );

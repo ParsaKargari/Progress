@@ -6,29 +6,38 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
-import { useAuth } from '../context/AuthContext';
+import { createTheme } from '@mui/material/styles';
+import { useAuth } from "../context/AuthContext";
+
+
+import { ActivityBar } from './ActivityBar';
+import { FriendsBar } from './FriendsBar';
 import { MyTasks } from '../components/MyTasks';
 import { useTasks } from '../context/TasksContext';
 
 function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
- 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ px: 2, pt: 2 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
+    
+    const { children, value, index, ...other } = props;
+    
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{
+                px: 2,  
+                pt: 2, 
+            }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
 }
 
 
@@ -43,6 +52,7 @@ function TasksBar() {
   const { user } = useAuth();
   const [value, setValue] = useState(0);
   const { fetchTasks } = useTasks();
+  const { triggerHeatmapRefresh } = useTasks();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -55,10 +65,12 @@ function TasksBar() {
   const handleAddTask = async () => {
     
     const taskDescr = document.getElementById('taskInput').value;
-    const addedDate = new Date().toISOString().split('T')[0]; // Get today's date
+    const now = new Date();
+    const addedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    console.log('Adding task:', taskDescr, addedDate);
 
     try {
-      const response = await fetch(`http://localhost:9000/Tasks/createTask/${user.id}/${addedDate}/${taskDescr}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/createTask/${user.id}/${addedDate}/${taskDescr}`, {
         method: 'POST',
       });
       if (!response.ok) {
@@ -66,6 +78,7 @@ function TasksBar() {
       }
       
       fetchTasks(user.id);
+      triggerHeatmapRefresh();
       
     } catch (error) {
       console.error('Error adding task:', error);

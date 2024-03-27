@@ -7,10 +7,14 @@ export function MyTasks() {
     const { tasks } = useTasks();
     const { user } = useAuth();
 
+    // Sort tasks based on TaskID
+    const sortedTasks = tasks.sort((a, b) => a.TaskID.localeCompare(b.TaskID));
+
     return (
         <div className="flex-1 overflow-y-auto overflow-x-hidden h-screen max-h-screen no-scrollbar">
-            {tasks.map(task => (
+            {sortedTasks.map(task => (
                 <TaskComponent
+                    key={task.TaskID}
                     uuid={task.TaskID}
                     taskDescription={task.TaskDescription}
                     status={task.CompletionStatus}
