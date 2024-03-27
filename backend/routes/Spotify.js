@@ -2,7 +2,6 @@ const SupabaseConnector = require('../SupabaseConnector.js');
 var express = require('express');
 const request = require('request');
 const querystring = require('querystring');
-
 var router = express.Router();
 var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
 
@@ -50,6 +49,7 @@ var user_id = null;
 router.get("/login", function(req, res) {
   var state = generateRandomString(16);
   var userId = req.query.user_id; // Assuming you have the user ID in the request object
+  console.log(client_id, client_secret, redirect_uri);
   user_id = userId;
   if(!userId) {
     return res.status(400).send("User ID is missing in the URL query parameters.");
