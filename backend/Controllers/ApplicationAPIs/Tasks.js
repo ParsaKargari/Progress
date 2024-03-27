@@ -172,13 +172,13 @@ class Tasks {
         try {
             let completionTime = null;
             if (completionStatus) {
-                completionTime = new Date().toLocaleString();
+                completionTime = new Date().toISOString(); // UTC time
             }
             const result = await this.client
                 .from('Tasks')
                 .update({
                     CompletionStatus: completionStatus,
-                    CompletionTime: completionTime
+                    CompletionTime: completionTime // Now in UTC
                 })
                 .eq('TaskID', taskId)
                 .select();
@@ -188,6 +188,7 @@ class Tasks {
             throw error;
         }
     }
+    
 
 
 }

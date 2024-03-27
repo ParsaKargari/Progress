@@ -145,28 +145,34 @@ export function ActivityBar() {
         setCommentInputActivityId(prevId => prevId === activityId ? null : activityId); // Toggle the input for the specific activity
     };
 
-    const timeAgo = (dateString) => {
-        if (!dateString) {
-          return "Error"; // or "Time unknown", etc.
+    const timeAgo = (utcDateString) => {
+        if (!utcDateString) {
+            return "No date provided"; // or "Time unknown", etc.
         }
-      
-        const date = new Date(dateString);
-        const now = new Date();
-        const secondsAgo = Math.floor((now - date) / 1000);
-      
+    
+        const now = new Date(); // Local time
+        const nowUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+                                now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+    
+        const utcDate = new Date(utcDateString);
+    
+        const secondsAgo = Math.floor((nowUtc - utcDate) / 1000);
+    
         if (secondsAgo < 0) {
-          return "In the future"; // If the date is somehow ahead of the current time
+            return "In the future"; 
         }
-      
+    
         const minutesAgo = Math.floor(secondsAgo / 60);
         const hoursAgo = Math.floor(minutesAgo / 60);
         const daysAgo = Math.floor(hoursAgo / 24);
-      
+    
         if (daysAgo > 0) return `${daysAgo}d ago`;
         if (hoursAgo > 0) return `${hoursAgo}h ago`;
         if (minutesAgo > 0) return `${minutesAgo}m ago`;
         return `${secondsAgo}s ago`;
-      };
+    };
+    
+    
       
 
     const handleClick = (event, activityId) => {
