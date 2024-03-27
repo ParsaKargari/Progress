@@ -1,4 +1,4 @@
-const SupabaseConnector = require('../APIGateway/Supabase.js');
+const SupabaseConnector = require('../../SupabaseConnector');
 class Activity {
     constructor() {
         this.supabase = new SupabaseConnector();

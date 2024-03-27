@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Friends = require('../../Controllers/ApplicationAPIs/Friends');
-const Activity = require('../../Controllers/ApplicationAPIs/Activity');
+const Friends = require('../Controllers/ApplicationAPIs/Friends');
+const Activity = require('../Controllers/ApplicationAPIs/Activity');
 const add = require('nodemon/lib/rules/add');
 const friends = new Friends();
 const activity = new Activity();
