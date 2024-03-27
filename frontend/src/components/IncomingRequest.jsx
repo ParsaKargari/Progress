@@ -9,7 +9,7 @@ export default function IncomingRequest(props) {
     function accept() {
         axios.get(`${process.env.REACT_APP_API_URL}/friends/acceptFriend/${user.id}/${id}`)
         .catch();
-        document.getElementById('removableIncomming').innerHTML='';
+        document.getElementById('removableIncoming').innerHTML='';
        
 
     }
