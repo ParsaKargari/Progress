@@ -124,9 +124,7 @@ router.get('/declineFriend/:id/:friendId', async (req, res) => {
 
 router.get("/:id", async (req, res, next) => {
 
-    const username = await friends.getFriendUsername(req.params.id);
-    const status = await friends.getFriendStatus(req.params.id)
-    const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id)
+    const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id);
 
     parsedFriendsJson = []
     for (let i = 0; i < friendsByID.length; i++) {

@@ -1,60 +1,77 @@
-
-
-
-const SupabaseConnector = require('../SupabaseConnector.js');
+const SupabaseConnector = require("../SupabaseConnector.js");
 supabase = new SupabaseConnector();
 client = supabase.getClient();
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 router.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-  });
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
-
-router.get("/:id/:taskName", async function(req, res, next) {
-    let today_date = new Date();
-        var time_added = "" + today_date.getFullYear() + "-"
-            + (today_date.getMonth() + 1) + "-"
-            + today_date.getDate();
-    await createTask(req.params.id, req.params.taskName, time_added, time_added, false);
-    // var tasks = await getTaskById(req.params.id);
-    // res.send(tasks);
-
+router.get("/:id/:taskName", async function (req, res, next) {
+  let today_date = new Date();
+  var time_added =
+    "" +
+    today_date.getFullYear() +
+    "-" +
+    (today_date.getMonth() + 1) +
+    "-" +
+    today_date.getDate();
+  await createTask(
+    req.params.id,
+    req.params.taskName,
+    time_added,
+    time_added,
+    false
+  );
+  // var tasks = await getTaskById(req.params.id);
+  // res.send(tasks);
 });
 
 module.exports = router;
 
-async function createTask(userID, taskDescription, addedDate, dueDate, publicVisibility) {
-    try {
-        const result = await this.client
-            .from('Tasks')
-            .insert([{ UserID: userID, TaskDescription: taskDescription, AddedDate: addedDate, DueDate: dueDate, PublicVisibility: publicVisibility }])
-            .select();
-        return result;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-
+async function createTask(
+  userID,
+  taskDescription,
+  addedDate,
+  dueDate,
+  publicVisibility
+) {
+  try {
+    const result = await this.client
+      .from("Tasks")
+      .insert([
+        {
+          UserID: userID,
+          TaskDescription: taskDescription,
+          AddedDate: addedDate,
+          DueDate: dueDate,
+          PublicVisibility: publicVisibility,
+        },
+      ])
+      .select();
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 async function getTaskById(userID) {
-            try {
-                const result = await this.client
-                    .from('Tasks')
-                    .select('*')
-                    .eq('UserID', userID);
-                return result;
-            } catch (error) {
-                console.error(error);
-                throw error;
-            }
-        }
-
+  try {
+    const result = await this.client
+      .from("Tasks")
+      .select("*")
+      .eq("UserID", userID);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 //  TO BE TESTED
 // class Tasks {
@@ -166,8 +183,6 @@ async function getTaskById(userID) {
 //             throw error;
 //         }
 //     }
-
-
 
 //     async getHeatMapData(userID, startDate, endDate) {
 //         try {
