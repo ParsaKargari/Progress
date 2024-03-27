@@ -3,7 +3,8 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import '../css/MusicAnimation.css';
 export default function FriendProfile(props) {
     const [isPlaying, setIsPlaying] = useState(false);
-    const { name, status, percentage } = props;
+    const { name, status, percentage, onlineStatus } = props;
+    console.log('Online', onlineStatus);
 
     return (
         <div className='flex flex-row justify-start items-center py-1.5 '>
@@ -19,7 +20,14 @@ export default function FriendProfile(props) {
                     <div className='flex'>
                         <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'>{name}</p>
                         <p className='font-bold text-friendsBracketAccent font-standard text-[16px]'></p>
-                        <img className='ml-1.5' src='/images/OnlineDot.svg'></img>
+
+                        {/* if onlineStatus == Online, show green dot else red */}
+                        {onlineStatus === 'Online' ? (
+                            <img className='ml-1.5' src='/images/OnlineDot.svg'></img>
+                        ) : (
+                            <img className='ml-1.5' src='/images/OfflineDot.svg'></img>
+                        )
+                        }
                     </div>
                 </div>
                 <div className='flex flex-row mx-3 align-items-center'>

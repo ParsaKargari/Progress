@@ -42,7 +42,7 @@ router.get("/getFriends", async (req, res) => {
 router.get("/search/:input/:id", async (req, res) => {
   try {
     const newid = await friends.getFriendID(req.params.input);
-    console.log("New ID",newid);
+    console.log("New ID", newid);
     try {
       const friendsByID = await friends.getFriendsWithPersonAllData(
         req.params.id
@@ -60,8 +60,17 @@ router.get("/search/:input/:id", async (req, res) => {
         friendsIDS.push(friendID);
       }
 
-      if (requestsReceived && requestsReceived[0] && requestsReceived[0].RequestsReceived && requestsReceived[0].RequestsReceived.includes(newid[0].UserID.toString())) {
-        res.send("This user has already sent you a friend request! Accept it to add them as a friend.");
+      if (
+        requestsReceived &&
+        requestsReceived[0] &&
+        requestsReceived[0].RequestsReceived &&
+        requestsReceived[0].RequestsReceived.includes(
+          newid[0].UserID.toString()
+        )
+      ) {
+        res.send(
+          "This user has already sent you a friend request! Accept it to add them as a friend."
+        );
       } else if (friendsIDS.includes(newid[0].UserID)) {
         res.send("User Already Added As Friend");
       } else {
@@ -129,14 +138,29 @@ router.get("/:id", async (req, res, next) => {
       friendPercentage = friendsByID[i].Person2Percentage;
     }
 
+    const friendOnlineStatus = await friends.getUserOnlineStatus(friendID);
+
     parsedFriendsJson.push({
       friendID: friendID,
       friendUsername: friendUsername,
       friendStatus: friendStatus,
       friendPercentage: friendPercentage,
+      friendOnlineStatus: friendOnlineStatus[0].OnlineStatus === true ? "Online" : "Offline",
     });
   }
+
   res.send(parsedFriendsJson);
+});
+
+// change online status of user to online or offline
+router.get("/updateStatus/:id/:status", async (req, res) => {
+  console.log(req.params.id, req.params.status);
+  if (req.params.status === "Online") {
+    await friends.updateOnlineStatus(req.params.id, true);
+  } else {
+    await friends.updateOnlineStatus(req.params.id, false);
+  }
+  res.send("success");
 });
 
 module.exports = router;

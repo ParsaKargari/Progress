@@ -61,10 +61,10 @@ export function FriendsBar() {
                     console.log(item);
                     var newKey = '' + item.friendUsername
                     console.log(newKey)
-                    test[newKey] = { friendID: item.friendID, status: item.friendStatus, percentage: item.friendPercentage }
+                    test[newKey] = { friendID: item.friendID, status: item.friendStatus, percentage: item.friendPercentage, friendOnlineStatus: item.friendOnlineStatus}
 
                 })
-                console.log(test)
+                console.log("This is the friend: ",test)
                 setFriendList(test)
             })
         axios.get(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`)
@@ -203,6 +203,7 @@ export function FriendsBar() {
                             status={friendList[friendKey].status}
                             uuid={friendList[friendKey].uuid}
                             percentage={friendList[friendKey].percentage}
+                            onlineStatus={friendList[friendKey].friendOnlineStatus}
                         />
                     ))
                 }

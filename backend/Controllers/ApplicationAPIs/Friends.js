@@ -37,6 +37,14 @@ class Friends {
 
     }
 
+    async updateOnlineStatus(id, new_status) {
+        const { data, error } = await this.client
+            .from('Users')
+            .update({ OnlineStatus: new_status })
+            .eq('UserID', id)
+            .select()
+    }
+
     async getFriendsByID(person_id) {
         let { data, error } = await this.client
             .rpc('bothuserfriends', {
@@ -55,6 +63,14 @@ class Friends {
         return data;
         // if (error) console.error(error)
         // else console.log(data)
+    }
+
+    async getUserOnlineStatus(user_id) {
+        const { data, error } = await this.client
+            .from('Users')
+            .select('OnlineStatus')
+            .eq('UserID', user_id);
+        return data
     }
 
     async sendFriendRequest(from_id, to_id) {
