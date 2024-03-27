@@ -65,7 +65,9 @@ function TasksBar() {
   const handleAddTask = async () => {
     
     const taskDescr = document.getElementById('taskInput').value;
-    const addedDate = new Date().toISOString().split('T')[0]; // Get today's date
+    const now = new Date();
+    const addedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    console.log('Adding task:', taskDescr, addedDate);
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/Tasks/createTask/${user.id}/${addedDate}/${taskDescr}`, {

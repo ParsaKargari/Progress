@@ -17,12 +17,14 @@ async function testFriends() {
         const fromName3 = "davidsmurfing"
         const fromID4 = "369d491d-e85a-4719-8e22-0d488c4c0b00";
         const fromName4 = "joao"
-
+        idlist = ["0a377c79-4e19-40dc-9cab-228a81891969",
+            "60f71a71-d6ed-4e14-ace5-1a13542c8817",
+            "bc56dab0-40f4-4237-8b87-85f4dd3cd789"];
         const percentage = await friends.getPercentage("2de6e655-4a5d-46ed-8fa5-331faf789295");
-        console.log(percentage)
+        const alldata = await friends.getFriendsWithPersonAllData("369d491d-e85a-4719-8e22-0d488c4c0b00")
+        console.log(alldata)
 
-        //const addfriend = await friends.addFriend(fromID, toID, fromName, toName)
-        if (1) {
+        if (0) {
 
             const friendRequest = await friends.sendAndReceiveFriendRequest(fromID, toID)
             const friendRequest2 = await friends.sendAndReceiveFriendRequest(fromID2, toID)
@@ -30,7 +32,7 @@ async function testFriends() {
             const friendRequest4 = await friends.sendAndReceiveFriendRequest(fromID4, toID)
         }
 
-        if (1) {
+        if (0) {
             const acceptFriendRequest = await friends.acceptFriendRequest(fromID, toID);
             const acceptFriendRequest2 = await friends.acceptFriendRequest(fromID2, toID);
             const acceptFriendRequest3 = await friends.acceptFriendRequest(fromID3, toID);
@@ -50,7 +52,7 @@ async function testFriends() {
         }
 
         //const friendsByID = await friends.getFriendsByID(toID)
-
+        // const bruh = await friends.getUserNamesFromIDList(idlist)
         // console.log("friends by id:", friendsByID)
         console.log("finished testing")
     } catch (error) {
