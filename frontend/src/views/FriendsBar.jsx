@@ -244,7 +244,7 @@ export function FriendsBar () {
 
                         <div className='flex justify-center content-center pl-5 items-center' >
                             <button className="flex items-center border border-[#E2E8F0] rounded-xl bg-white focus:shadow-outline focus:outline-none font-standard w-[fit-content] px-6 py-2" type="button" onClick={() => { searchFriend(textInput); getRequests() }}>
-                                <p className='text-[#559EB5] font-bold'>Send</p>
+                                <p className='text-[#00789E] font-bold'>Send</p>
                             </button>
                         </div>
                     </div>
