@@ -79,6 +79,8 @@ export default function FriendProfile() {
         // Assuming you     have access to the user ID
         // Redirect to the backend route /Spotify/login along with the user ID
         // so that users can login from spotify and validate
+        // console.log("Spotify Login")
+        // console.log(`${process.env.REACT_APP_API_URL}/spotify/login?user_id=${user.id}`);
         window.location.href = `${process.env.REACT_APP_API_URL}/spotify/login?user_id=${user.id}`;
         // window.location.href = `http://localhost:9000/spotify/currently_playing?user_id=${user.id}`
         // upon completion or not, it will 
@@ -107,10 +109,12 @@ export default function FriendProfile() {
 
     // Function to fetch currently playing song from Spotify
     async function updateSongPlaying() {
+        // console.log(`${process.env.REACT_APP_API_URL}/spotify/currently_playing?user_id=${user.id}`);
         fetch(`${process.env.REACT_APP_API_URL}/spotify/currently_playing?user_id=${user.id}`)
             .catch(error => {
                 console.error('There was a problem updating the currently playing song:', error);
             });
+            
     }
 
 
