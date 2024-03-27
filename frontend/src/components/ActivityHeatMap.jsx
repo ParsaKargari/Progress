@@ -33,7 +33,9 @@ export default function ActivityHeatMap() {
     
                 setData(processedData);
                 // Calculate todays count
-                const today = new Date().toISOString().slice(0, 10).replaceAll('-', '/');
+                const now = new Date();
+                const today = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+                console.log('Today Date:', today);
                 const todayData = processedData.find(d => d.date === today) || { date: today, count: 0 };
                 console.log('Today:', todayData);
                 setTodaysCount(todayData.count);
