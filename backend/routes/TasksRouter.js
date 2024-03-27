@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Tasks = require('../Controllers/ApplicationAPIs/Tasks');
+const Friends = require('../Controllers/ApplicationAPIs/Friends');
 
+const friends = new Friends();
 const tasks = new Tasks();
 
 router.post('/createTask/:userId/:addedDate/:taskDescr', async(req, res) => {
@@ -115,11 +117,27 @@ router.post('/addDueDate/:taskId/:dueDate', async(req, res) => {
 });
 
 router.post('/updateCompletionStatus/:taskId/:completionStatus', async(req, res) => {
-    const { taskId, completionStatus } = req.params;
+    const { taskId, completionStatus} = req.params;
 
     try {
         const result = await tasks.updateCompletionStatus(taskId, completionStatus === 'true');
+
         res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.post('/updatePercentage/:userId', async(req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const newPercentage = await friends.getPercentage(userId);
+        console.log("NEWPERCENTAGE", newPercentage)
+        friends.updateFriendStatus(userId, 'Person1Percentage', newPercentage, 'Person1');
+        friends.updateFriendStatus(userId, 'Person2Percentage', newPercentage, 'Person2');
+        res.json(newPercentage);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
