@@ -68,6 +68,7 @@ export function ActivityBar() {
 
     useEffect(() => {
         const fetchData = async () => {
+            //Obtain List Of All Tasks
             try {
                 console.log("User ID: ", user_id);
                 const response = await fetch(`http://localhost:9000/activity/getFriendsActivity?user_id=${user_id}`);
@@ -76,7 +77,8 @@ export function ActivityBar() {
                     throw new Error('Network response was not ok');
                 }
                 const jsonData = await response.json();
-                console.log("INSIDE FETCHING DATA FOR ACTIVITIES:");
+                
+                console.log("All Tasks");
                 console.log(jsonData);
 
 
@@ -86,13 +88,51 @@ export function ActivityBar() {
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
+            // Obtain List of All Comments
+            try{
+                const response = await fetch(`http://localhost:9000/activity/getAllComments?user_id=${user_id}`);
+                console.log("Response: ", response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const AllComments = await response.json();
+                
+                console.log("All Comments:");
+                console.log(AllComments);
+                
+
+
+            }
+            catch (error) {
+                console.error('Error fetching data:', error);
+            }
+
+            // Obtain List of All Reactions
+            try{
+                const response = await fetch(`http://localhost:9000/activity/getAllReactions?user_id=${user_id}`);
+                console.log("Response: ", response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const AllReactions = await response.json();
+                
+                console.log("All Reactions:");
+                console.log(AllReactions);
+                
+            }
+            catch (error) {
+                console.error('Error fetching data:', error);
+            }
+
+
         };
 
         fetchData();
         console.log("Activities After Fetch Data: ", activities)
 
     }, []);
-    console.log("Activities: ", activities)
+
+   
 
     const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
 
