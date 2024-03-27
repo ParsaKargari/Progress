@@ -1,8 +1,4 @@
-const SupabaseConnector = require('../APIGateway/Supabase.js');
-const toID = "bc56dab0-40f4-4237-8b87-85f4dd3cd789";
-const fromID = "60f71a71-d6ed-4e14-ace5-1a13542c8817";
-const toName = "sad"
-const fromName = "parsak"
+const SupabaseConnector = require('../../SupabaseConnector.js');
 class Friends {
     constructor() {
         this.supabase = new SupabaseConnector();
@@ -186,6 +182,7 @@ class Friends {
         try {
             const resultSend = await this.sendFriendRequest(fromID, toID);
             const resultReceive = await this.receiveFriendRequest(fromID, toID);
+            
         }
         catch (error) {
             console.log(error)

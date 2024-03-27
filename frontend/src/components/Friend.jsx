@@ -18,7 +18,7 @@ export default function FriendProfile(props) {
                 <div className='flex flex-row'>
                     <div className='flex'>
                         <p className='font-bold text-DarkGrey font-standard text-[16px] ml-3 mr-1'>{name}</p>
-                        <p className='font-bold text-friendsBracketAccent font-standard text-[16px]'>(6)</p>
+                        <p className='font-bold text-friendsBracketAccent font-standard text-[16px]'></p>
                         <img className='ml-1.5' src='/images/OnlineDot.svg'></img>
                     </div>
                 </div>

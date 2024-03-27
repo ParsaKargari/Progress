@@ -1,13 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const Friends = require('../../Controllers/ApplicationAPIs/Friends');
+const Friends = require('../Controllers/ApplicationAPIs/Friends');
 const friends = new Friends();
 
+var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
+
 router.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
+  var origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+  next();
 });
 
 
@@ -36,11 +42,15 @@ router.get('/getFriends', async (req, res) => {
 router.get('/search/:input/:id', async (req, res) => {
     try {
         const newid = await friends.getFriendID(req.params.input);
-        try {
-            const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id)
+        try  {
+            const friendsByID = await friends.getFriendsWithPersonAllData(req.params.id);
+            
             const requestsReceived = await friends.getRequestsReceived(req.params.id);
+            
+            
+            
             console.log("FRIENDS BY ID", friendsByID);
-            var friendsIDS = []
+            var friendsIDS = [];
             for (let i = 0; i < friendsByID.length; i++) {
                 let friendID = friendsByID[i].Person1;
 
@@ -50,30 +60,35 @@ router.get('/search/:input/:id', async (req, res) => {
                 }
                 friendsIDS.push(friendID);
             }
-            console.log("AHHHHHHHHHHHHHHHHHHHHHHH", friendsIDS)
-
-            if (requestsReceived[0].RequestsReceived.includes(newid[0].UserID)) {
-                res.send('This user has already sent you a friend request! Accept it to add them as a friend.');
+            if (!requestsReceived == null) {
+                if (requestsReceived[0].RequestsReceived.includes(newid[0].UserID)) {
+                    res.send('This user has already sent you a friend request! Accept it to add them as a friend.');
+                }
             }
+            
 
             else if (friendsIDS.includes(newid[0].UserID)) {
                 res.send('User Already Added As Friend');
             }
             else {
                 const test = await friends.sendAndReceiveFriendRequest(req.params.id, newid[0].UserID);
-                res.send('success');
+                res.send('Friend Request Successfully Sent.');
             }
         }
         catch (error) {
-            res.send("User Not Found.");
+            res.send(error);
         }
 
 
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.send("Please Enter A Username")
     }
+});
+
+router.get('/search//:id', async (req, res) => {
+    res.send("Please Enter A Username.");
 });
 
 router.get('/getRequests/:id', async (req, res) => {

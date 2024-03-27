@@ -10,64 +10,27 @@ import RequestSent from '../components/RequestSent';
 import IncomingRequest from '../components/IncomingRequest';
 import axios from "axios";
 
-export function FriendsBar() {
-    // const supabase = createClient(
-    //     process.env.REACT_APP_SUPABASE_URL,
-    //     process.env.REACT_APP_SUPABASE_ANON_KEY
-    //   );
-
+export function FriendsBar () {
+      
     const test = {}
     const [friendList, setFriendList] = useState([test]);
     const received = {}
-    const [sentList, setSentList] = useState([received]);
     const sent = {}
-    const [receivedList, setReceivedList] = useState([sent]);
     const { user } = useAuth();
     var friendSearchInput = '';
-    const [requestsSent, setRequestsSent] = useState(['apldplas']);
-    const [requestsReceived, setRequestsReceived] = useState(['sdkalsdka']);
-
-    //     const channel = supabase
-    //     .channel('schema-db-changes')
-    //     .on(
-    //     'postgres_changes',
-    //     {
-    //       event: 'INSERT',
-    //       schema: 'Friends',
-    //     },
-    //     (payload) => console.log(payload)
-    //     // getFriends()
-    //   )
-    //   .subscribe()
-
-
+    const [requestsSent, setRequestsSent] = useState([sent]);
+    const [requestsReceived, setRequestsReceived] = useState([received]);
+    const [requestsSentComponents, setRequestsSentComponents] = useState([]);
 
 
     useEffect(() => {
 
         getFriends()
         getRequests()
+        
     }, []);
 
 
-
-    function friends() {
-        // var userName = document.getElementById("inline-first-name").value;
-        // var status = document.getElementById("inline-status").value;
-        // if (userName === "" || status === "") {
-        //     alert("Please fill out all fields!");
-        //     return;
-        // }
-        // else {
-        //     navigation(`/home`, {replace : true})
-        // }
-        var user_id = localStorage.getItem("User_ID");
-        // var user_email = localStorage.getItem("User_Email");
-        fetch(`http://localhost:9000/friends/${user_id}`)
-        // addUsername(userName, user_id);
-        // addStatus(status, user_id);
-        // addEmail(user_email, user_id);
-    }
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -111,10 +74,7 @@ export function FriendsBar() {
             .then(
                 response => {
                     alert(response.data);
-                    console.log(response)
 
-                    // console.log(requestsReceived);
-                    // console.log(response.data[0][0].RequestsReceived)
 
                 });
 
@@ -130,25 +90,35 @@ export function FriendsBar() {
                     console.log("GET REQUESTS RESPONSE", response)
 
 
-                    response.data[1].forEach(item => {
-                        console.log(item.username);
-                        // var newKey = '' + item.friendUsername
-                        // console.log(newKey)
-                        var username = item.username
-                        received[item.id] = { name: username };
-                    })
-                    response.data[0].forEach(item => {
-                        console.log(item.username);
-                        // var newKey = '' + item.friendUsername
-                        // console.log(newKey)
-                        var username = item.username
-                        sent[item.id] = { name: username };
-                    })
-                    setRequestsReceived(received)
-                    setRequestsSent(sent)
+                response.data[1].forEach(item => {
+                    
+                    var username = item.username
+                    received[item.id] = {name : username};
+                })
+                response.data[0].forEach(item => {
+                    
+                    var username = item.username
+                    sent[item.id] = {name : username};
+                })
+                setRequestsReceived(received)
+                setRequestsSent(sent)
 
                 });
     }
+
+    useEffect(() => {
+        // After requests sent are fetched, update the state
+        // This will trigger a re-render of the component with updated data
+        const requestSentComponents = Object.keys(requestsSent).map(friendKey => (
+            <RequestSent
+                id={friendKey}
+                name={requestsSent[friendKey].name}
+            />
+        ));
+        
+        // Now update your component state
+        setRequestsSentComponents(requestSentComponents);
+    }, [requestsSent]);
 
 
     const [textInput, setTextInput] = useState('');
@@ -244,26 +214,17 @@ export function FriendsBar() {
                         </div>
                     </div>
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
-                    {
-                        Object.keys(requestsSent).map(friendKey => (
-                            <RequestSent
-                                id={friendKey}
-                                name={requestsSent[friendKey].name}
-                            />
-                        ))
-                    }  <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
-                    {
-                        Object.keys(requestsReceived).map(friendKey => (
-                            <IncomingRequest
-                                id={friendKey}
-                                name={requestsReceived[friendKey].name}
-                            />
-                        ))
-                    }
-                    {/* <RequestSent data={requestsSent}/> */}
+                    {requestsSentComponents}  
+            <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
+                                {
+                Object.keys(requestsReceived).map(friendKey => (
+                    <IncomingRequest
+                    id = {friendKey}
+                    name = {requestsReceived[friendKey].name}
+                    />
+                ))
+            }
 
-
-                    {/* <IncomingRequest data={requestsReceived}/> */}
                 </div>
             </Dialog>
         </div>
