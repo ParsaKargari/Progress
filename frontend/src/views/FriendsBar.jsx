@@ -69,9 +69,7 @@ export function FriendsBar () {
     }
     // Sample array of suggestions
     const suggestions = [
-        { label: 'Friend 1' },
-        { label: 'Friend 2' },
-        { label: 'Friend 3' },
+        { label: 'testUser' },
     ];
 
     const handleSnackbarClose = (event, reason) => {
@@ -86,6 +84,9 @@ export function FriendsBar () {
         console.log(input)
         axios.get(`${process.env.REACT_APP_API_URL}/friends/search/${input}/${user.id}`)
             .then(response => {
+                // get requests, dont move forward until requests are fetched
+                getRequests()
+
                 // Update to use Snackbar for feedback
                 if (response.data === 'This user has already sent you a friend request! Accept it to add them as a friend.') {
                     setSnackbarMessage(response.data);
@@ -99,12 +100,14 @@ export function FriendsBar () {
                     setSnackbarMessage(response.data);
                     setSnackbarSeverity('success');
                     setSnackbarOpen(true);
+                    // close the dialog
+                    // setOpen(false);
                 } else {
                     setSnackbarMessage('An error occurred. Please try again.');
                     setSnackbarSeverity('error');
                     setSnackbarOpen(true);
                 }
-                getRequests();
+                
             })
             .catch(error => {
                 // Handle error scenario
@@ -115,28 +118,28 @@ export function FriendsBar () {
     }
     
     async function getRequests() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/getRequests/${user.id}`)
-            .then(
-                response => {
-
-                    console.log("GET REQUESTS RESPONSE", response)
-
-
-                response.data[1].forEach(item => {
-                    
-                    var username = item.username
-                    received[item.id] = {name : username};
-                })
-                response.data[0].forEach(item => {
-                    
-                    var username = item.username
-                    sent[item.id] = {name : username};
-                })
-                setRequestsReceived(received)
-                setRequestsSent(sent)
-
-                });
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/friends/getRequests/${user.id}`);
+            console.log("GET REQUESTS RESPONSE", response);
+    
+            const updatedReceived = {}; 
+            const updatedSent = {}; 
+    
+            response.data[1].forEach(item => {
+                updatedReceived[item.id] = { name: item.username };
+            });
+            response.data[0].forEach(item => {
+                updatedSent[item.id] = { name: item.username };
+            });
+    
+            setRequestsReceived(updatedReceived);
+            setRequestsSent(updatedSent);
+        } catch (error) {
+            console.error("Failed to fetch requests:", error);
+            // Handle error
+        }
     }
+    
 
     useEffect(() => {
         // After requests sent are fetched, update the state
