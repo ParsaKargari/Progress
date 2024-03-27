@@ -27,7 +27,6 @@ export function ActivityBar() {
     const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
 
     const { user } = useAuth();
-    console.log("User: ", user);
     const user_id = user.id;
 
     const fetchActivities = async (userId) => {
@@ -75,16 +74,13 @@ export function ActivityBar() {
             setActivities(activities.filter(activity => activity.CompletionStatus === true && activity.PublicVisibility === true));
       
             const comments = await fetchAllComments(userId);
-            console.log("All Comments", comments);
             // Assume setAllComments is a state setter function you have defined
             setAllComments(comments);
       
             const reactions = await fetchAllReactions(userId);
-            console.log("All Reactions", reactions);
             setAllReactions(reactions);
       
             const settings = await fetchSettings(userId);
-            console.log("Settings", settings);
             // Assuming setUsername is a state setter function for updating username
             setUsername(settings[0]?.Username || "UsernameNotFound");
       
@@ -221,13 +217,14 @@ export function ActivityBar() {
       }
 
     return (
-        <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-y-auto overflow-x-hidden h-screen max-h-screen" >
+        <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-x-hidden h-screen max-h-screen" >
             <p className="text-27 font-bold py-7 px-6 text-DarkGrey font-standard">Activity</p>
             <div className="ml-6">
                 <ActivityHeatMap />
             </div>
-            <div className="px-1">
+            <div className="px-1 h-[calc(100vh-355px)] overflow-y-auto">
                 {activities.map((activity) => (
+                    <>
                     <div key={activity.id} onMouseEnter={() => setHoveredActivityId(activity.id)}
                          onMouseLeave={() => setHoveredActivityId(null)}
                          className="flex flex-col p-1 ml-4 mr-4 rounded-lg hover:bg-gray-100">
@@ -346,6 +343,7 @@ export function ActivityBar() {
 
                         </div>
                     </div>
+                    </>
                 ))}
             </div>
         </div>
