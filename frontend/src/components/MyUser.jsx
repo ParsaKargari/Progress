@@ -153,7 +153,7 @@ useEffect(() => {
                 className='cursor-pointer'
                 style={{ color: 'yellow' }}
                 determinate
-                size="md"
+                 size="md"
                 value={20}
                 variant="solid"
                 onClick={handleClickOpen}
