@@ -110,7 +110,7 @@ function TasksBar() {
                 className="btn btn-circle bg-AddTaskBg w-12 h-12 rounded-full flex justify-center items-center"
                 onClick={handleAddTask}
               >
-                <img src="/images/+.svg" alt="add task sign" />
+                <img src="/images/+.svg" alt="add task sign"/>
               </button>
             </div>
           </div>
