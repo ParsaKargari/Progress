@@ -23,6 +23,7 @@ const mockFriendsDataOutput = [
     friendUsername: "user123Name",
     friendStatus: "online",
     friendPercentage: 75,
+    friendOnlineStatus: "Online",
   },
 ];
 
@@ -62,10 +63,18 @@ describe("Friends", () => {
         "getFriendsWithPersonAllData"
       );
       createFriendMock.mockReturnValue(mockFriendsDataInput);
+      const getUserOnlineStatusMock = jest.spyOn(
+        Friends.prototype,
+        "getUserOnlineStatus"
+      );
+      getUserOnlineStatusMock.mockReturnValue([{ OnlineStatus: true }]);
       const friendID = 1;
 
       const res = await request(app).get(`/friends/${friendID}`);
       expect(res.statusCode).toEqual(200);
+      
+      // expected friendOnlineStatus is "Online" because OnlineStatus is true
+      //  append the expected friendOnlineStatus to the mockFriendsDataOutput
 
       expect(res.body).toEqual(mockFriendsDataOutput);
     });
