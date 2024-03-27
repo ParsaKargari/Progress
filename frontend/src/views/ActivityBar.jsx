@@ -145,6 +145,30 @@ export function ActivityBar() {
         setCommentInputActivityId(prevId => prevId === activityId ? null : activityId); // Toggle the input for the specific activity
     };
 
+    const timeAgo = (dateString) => {
+        if (!dateString) {
+          return "Error"; // or "Time unknown", etc.
+        }
+      
+        const date = new Date(dateString);
+        const now = new Date();
+        const secondsAgo = Math.floor((now - date) / 1000);
+      
+        if (secondsAgo < 0) {
+          return "In the future"; // If the date is somehow ahead of the current time
+        }
+      
+        const minutesAgo = Math.floor(secondsAgo / 60);
+        const hoursAgo = Math.floor(minutesAgo / 60);
+        const daysAgo = Math.floor(hoursAgo / 24);
+      
+        if (daysAgo > 0) return `${daysAgo}d ago`;
+        if (hoursAgo > 0) return `${hoursAgo}h ago`;
+        if (minutesAgo > 0) return `${minutesAgo}m ago`;
+        return `${secondsAgo}s ago`;
+      };
+      
+
     const handleClick = (event, activityId) => {
         setAnchorEl(event.currentTarget);
         setCurrentActivityIdForReaction(activityId); // Set the activity ID when the emoji button is clicked
@@ -232,7 +256,7 @@ export function ActivityBar() {
                             <div className="flex justify-between items-center mb-2">
                                 <div className="text-16 font-bold text-text2 font-standard">
                                     {activity.user} <span className="font-medium">checked off {activity.activity}</span>
-                                    <span className="ml-3 text-text3 font-medium">({activity.time})</span> 
+                                    <span className="ml-3 text-text4 font-medium">({timeAgo(activity.CompletionTime)})</span> 
                                 </div>
                                 <div style={{ display: 'flex', gap: '10px', height: '34px' }}>
                                     {hoveredActivityId === activity.id && (
