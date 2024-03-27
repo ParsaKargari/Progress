@@ -7,6 +7,7 @@ import '../css/MusicAnimation.css';
 import { BlockPicker } from 'react-color';
 import Dialog from '@mui/material/Dialog';
 import { useAuth } from '../context/AuthContext';
+import axios from "axios";
 
 
 
@@ -148,17 +149,16 @@ export default function FriendProfile() {
     useEffect(() => {
         async function LoadPersonalRing() {
             try {
-                const percentage = await fetch(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`);
-                console.log("SWAG PERCENTAGE", percentage)
-                setRingPercentage(percentage);
+                const percentage = await axios.get(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`);
+                console.log("SWAG PERCENTAGE", percentage.data)
+                setRingPercentage(percentage.data);
             } catch (error) {
                 console.log(error)
             }
-
-
         }
         LoadPersonalRing();
     }, [])
+
 
     return (
         <div className='flex flex-row justify-start items-center py-1.5 pb-3 border-t-2 border-betterWithFriends'>
@@ -167,7 +167,7 @@ export default function FriendProfile() {
                 style={{ color: 'yellow' }}
                 determinate
                 size="md"
-                value={0}
+                value={ringPercentage}
                 variant="solid"
                 onClick={handleClickOpen}
             />
