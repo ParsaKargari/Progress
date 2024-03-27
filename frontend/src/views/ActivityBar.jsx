@@ -14,127 +14,91 @@ import { useEffect } from 'react';
 
 
 export function ActivityBar() {
-    // Initial activities
-    const initialActivities = [
-        {
-            id: 1,
-            user: 'Random User',
-            activity: 'Walk Dog',
-            time: '18m ago',
-            reactions: [{
-                emoji: '👍',
-                by: 'Parsa'
-            }, {
-                emoji: '🐶',
-                by: 'Shivam'
-            }, {
-                emoji: '🐕',
-                by: 'Thomas'
-            }, {
-                emoji: '👍',
-                by: 'Tony'
-            }],
-            comments: [['TBhav', 'That looks sick! That looks sick! hat looks sick!  hat looks sick!  '], ['SDawg', 'Sick sick sick']]
-        },
-        {
-            id: 2,
-            user: 'Thomas Bhavnani',
-            activity: 'ENSF401 Work',
-            time: '1h ago',
-            reactions: [{
-                emoji: '🦥',
-                by: 'Parsa'
-            }],
-            comments: []
-        },
-        {
-            id: 3,
-            user: 'David Rodriguez',
-            activity: 'Focus',
-            time: '4h ago',
-            reactions: [],
-            comments: []
-        },
-    ];
-
     const [hoveredActivityId, setHoveredActivityId] = useState(null);
-    const [activities, setActivities] = useState(initialActivities);
+    const [activities, setActivities] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentActivityIdForReaction, setCurrentActivityIdForReaction] = useState(null);
     const [commentInputActivityId, setCommentInputActivityId] = useState(null);
+    const [AllComments, setAllComments] = useState([]);
+    const [AllReactions, setAllReactions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [username, setUsername] = useState(''); 
+    const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
 
     const { user } = useAuth();
+    console.log("User: ", user);
     const user_id = user.id;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            //Obtain List Of All Tasks
-            try {
-                console.log("User ID: ", user_id);
-                const response = await fetch(`http://localhost:9000/activity/getFriendsActivity?user_id=${user_id}`);
-                console.log("Response: ", response);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const jsonData = await response.json();
-                
-                console.log("All Tasks");
-                console.log(jsonData);
+    const fetchActivities = async (userId) => {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/getFriendsActivity?user_id=${userId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      };
+      
+      const fetchAllComments = async (userId) => {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/getAllComments?user_id=${userId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      };
+      
+      const fetchAllReactions = async (userId) => {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/getAllReactions?user_id=${userId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      };
+      
+      const fetchSettings = async (userId) => {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/settings/getSettings?user_id=${userId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      };
 
+      useEffect(() => {
+        const userId = user.id;
+        setIsLoading(true);
+      
+        (async () => {
+          try {
+            const activities = await fetchActivities(userId);
+            console.log("All Tasks", activities);
+            // only set the activities with completionstatus = true, and PublicVisibility = true
 
-                // CHANGE THIS
-                // setActivities(jsonData);
-                
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            // Obtain List of All Comments
-            try{
-                const response = await fetch(`http://localhost:9000/activity/getAllComments?user_id=${user_id}`);
-                console.log("Response: ", response);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const AllComments = await response.json();
-                
-                console.log("All Comments:");
-                console.log(AllComments);
-                
+            setActivities(activities.filter(activity => activity.CompletionStatus === true && activity.PublicVisibility === true));
+      
+            const comments = await fetchAllComments(userId);
+            console.log("All Comments", comments);
+            // Assume setAllComments is a state setter function you have defined
+            setAllComments(comments);
+      
+            const reactions = await fetchAllReactions(userId);
+            console.log("All Reactions", reactions);
+            setAllReactions(reactions);
+      
+            const settings = await fetchSettings(userId);
+            console.log("Settings", settings);
+            // Assuming setUsername is a state setter function for updating username
+            setUsername(settings[0]?.Username || "UsernameNotFound");
+      
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          } finally {
+            setIsLoading(false);
+          }
+        })();
+      
+      }, []);
+      
+      
 
-
-            }
-            catch (error) {
-                console.error('Error fetching data:', error);
-            }
-
-            // Obtain List of All Reactions
-            try{
-                const response = await fetch(`http://localhost:9000/activity/getAllReactions?user_id=${user_id}`);
-                console.log("Response: ", response);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const AllReactions = await response.json();
-                
-                console.log("All Reactions:");
-                console.log(AllReactions);
-                
-            }
-            catch (error) {
-                console.error('Error fetching data:', error);
-            }
-
-
-        };
-
-        fetchData();
-        console.log("Activities After Fetch Data: ", activities)
-
-    }, []);
-
-   
-
-    const availableEmojis = ['👍', '❤️', '😂', '🎉', '😢', '🔥'];
 
     const [newComments, setNewComments] = useState(activities.reduce((acc, activity) => {
         acc[activity.id] = '';
@@ -148,13 +112,37 @@ export function ActivityBar() {
         });
     };
 
-    const handleCommentSubmit = (activityId) => {
-        const comment = newComments[activityId];
-        console.log(`Comment on activity ${activityId}:`, comment);
-        setNewComments({
-          ...newComments,
-          [activityId]: '',
-        });
+    const handleCommentSubmit = async (activityId) => {
+        const commentText = newComments[activityId].trim();
+        if (commentText) {
+            console.log(`Comment on activity ${activityId}:`, commentText);
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/postComment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: user_id,
+                        task_id: activityId,
+                        comment: commentText,
+                    }),
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                setNewComments({
+                    ...newComments,
+                    [activityId]: '',
+                });
+                // fetch the comments again to update the UI
+                const comments = await fetchAllComments(user_id);
+                setAllComments(comments);
+            } catch (error) {
+                console.error('Error posting comment:', error);
+            }
+        }
       };
 
     const handleCommentClick = (activityId) => {
@@ -178,27 +166,60 @@ export function ActivityBar() {
     };  
 
     // Function to add or remove reaction
-    const handleReactionClick = (activityId, emoji) => {
-        const updatedActivities = activities.map(activity => {
-            if (activity.id === activityId && activity.reactions) {
-                const existingReactionIndex = activity.reactions.findIndex(reaction => reaction.emoji === emoji && reaction.by === 'Current User');
-                if (existingReactionIndex > -1) {
-                    // Remove the reaction if it exists
-                    activity.reactions.splice(existingReactionIndex, 1);
-                } else {
-                    // Add the reaction if it does not exist
-                    activity.reactions.push({ emoji, by: 'Current User' });
+    const handleReactionClick = async (activityId, emoji) => {
+        try {
+            // convert emoji to string
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/postReaction`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any authentication headers if needed
+                },
+                body: JSON.stringify({
+                    task_id: activityId,
+                    user_id: user_id,
+                    reaction: emoji,
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            // Update the local state to reflect the new reaction
+            // This is a simplified way; you might need to adjust based on your state structure
+            const updatedActivities = activities.map(activity => {
+                if (activity.id === activityId) {
+                    // Simplified reaction update logic
+                    const newReaction = { emoji, by: user.username }; // Adjust as needed
+                    activity.reactions = [...(activity.reactions || []), newReaction];
                 }
-            }
-            else if (activity.id === activityId) {
-                // Add the reaction if it does not exist
-                activity.reactions = [{ emoji, by: 'Current User' }];
-            }
-            return activity;
-        });
-        setActivities(updatedActivities);
+                return activity;
+            });
+            setActivities(updatedActivities);
+
+            // fetch the reactions again to update the UI
+            const reactions = await fetchAllReactions(user_id);
+            setAllReactions(reactions);
+    
+            console.log("Reaction posted successfully");
+        } catch (error) {
+            console.error('Error posting reaction:', error);
+        }
     };
     
+    if (isLoading) {
+        return (
+          <div className="flex justify-center items-center h-screen">
+            <img
+              src="/images/o.svg"
+              alt="Loading..."
+              className="logo-spin-twice" // This class applies the animation
+            />
+          </div>
+        );
+      }
+
     return (
         <div className="col-span-10 md:col-span-8 xl:col-span-4 bg-primary overflow-y-auto overflow-x-hidden h-screen max-h-screen" >
             <p className="text-27 font-bold py-7 px-6 text-DarkGrey font-standard">Activity</p>
@@ -214,7 +235,7 @@ export function ActivityBar() {
                             <div className="flex justify-between items-center mb-2">
                                 <div className="text-16 font-bold text-text2 font-standard">
                                     {activity.user} <span className="font-medium">checked off {activity.activity}</span>
-                                    <span className="ml-3 text-text3 font-medium">({activity.time})</span>
+                                    <span className="ml-3 text-text3 font-medium">({activity.time})</span> 
                                 </div>
                                 <div style={{ display: 'flex', gap: '10px', height: '34px' }}>
                                     {hoveredActivityId === activity.id && (
@@ -250,30 +271,43 @@ export function ActivityBar() {
                                 </div>
                             </div>
                             <div className='ml-2 mb-2'>
-                            {Object.entries((activity.reactions || []).reduce((acc, { emoji, by }) => {
-                                if (!acc[emoji]) acc[emoji] = [];
-                                acc[emoji].push(by);
-                                return acc;
-                            }, {})).map(([emoji, byArray]) => (
-                                <Tooltip key={emoji} title={byArray.join(', ')}>
+                            {AllReactions && Object.entries(AllReactions.filter(reaction => reaction.task_id === activity.id)
+                                .reduce((acc, { reaction_content, username_reacted }) => {
+                                    if (!acc[reaction_content]) acc[reaction_content] = [];
+                                    acc[reaction_content].push(username_reacted);
+                                    return acc;
+                                }, {}))
+                                .map(([emoji, byArray]) => (
+                                    <Tooltip key={emoji} title={byArray.join(', ')}>
                                     <Chip
                                         style={{
-                                            marginRight: '5px',
-                                            backgroundColor: byArray.includes('Current User') ? '#ADD8E6' : undefined, // Light blue color for current user's reactions
+                                        marginRight: '5px',
+                                        backgroundColor: byArray.includes(username) ? '#ADD8E6' : undefined, // Corrected to user.username
                                         }}
                                         icon={<span>{emoji}</span>}
                                         onClick={() => handleReactionClick(activity.id, emoji)}
                                         label={byArray.length}
                                     />
-                                </Tooltip>
-                            ))}
+                                    </Tooltip>
+                                ))}
 
                             </div>
-                            {activity && activity.comments && activity.comments.map((comment, index) => (
+                            {/* {activity && activity.comments && activity.comments.map((comment, index) => (
                                 <div key={index} className="flex items-center mb-2 ml-6 pr-16">
-                                    <div className="ml-2 text-text2 font-regular"><span className='font-semibold'>{comment[0]}</span> {comment[1]}</div>
+                                    <div className="ml-2 text-text2 font-regular">
+                                        <span className='font-semibold'>{comment[0]}</span> {comment[1]}</div>
+                                </div>
+                            ))} */}
+                            {AllComments && AllComments
+                            .filter(comment => comment.TaskID === activity.id)
+                            .map((comment, index) => (
+                                <div key={index} className="flex items-center mb-2 ml-6 pr-16">
+                                    <div className="ml-2 text-text2 font-regular">
+                                        <span className='font-semibold'>{comment.Username}</span> {comment.CommentText}
+                                    </div>
                                 </div>
                             ))}
+                            
                             {commentInputActivityId === activity.id && (
                             <div className="ml-6" in={commentInputActivityId === activity.id}>
                                 <TextField
