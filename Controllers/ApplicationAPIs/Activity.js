@@ -64,6 +64,32 @@ class Activity {
 
         }
 
+
+        async PostReaction(task_id_input, made_by_user_id_input,reaction_input){
+            try{
+                const result = await this.client.rpc('insert_or_delete_post_reaction', {task_id_input, made_by_user_id_input,reaction_input});
+                return result;
+            }
+            catch(error){
+                console.error(error);
+                return error;
+            }
+        }
+
+        async GetAllReactionsGivenTaskIDList(task_ids_param){
+            try{
+                const result = await this.client.rpc('get_reactions_with_task_ids_list', {task_ids_param});
+                return result;
+            }
+            catch(error){
+                console.error(error);
+                return error;
+            }
+
+
+
+        }
+
         async HelperFunctionForGetListOfUserIDAndUserName(user_ids) {
             console.log(user_ids);
             let { data, error } = await this.client.rpc('get_usernames_as_json', {

@@ -78,6 +78,52 @@ router.get('/getAllComments', async (req, res) => {
 });
 
 
+// REACTIONS TIME BABYYY
+
+router.get('/getAllReactions', async (req, res) => {
+    user_id= req.query.user_id;
+    ids = await activity.getListOfFriendsFromMyID(user_id);
+    console.log("ids are:")
+    console.log(ids);
+    const data = await activity.getListOfTasksFromIDList(ids);
+    console.log("task ids are:")
+    console.log(data);
+    // get tasks which you are able to view from the lists of tasks made public by your friends
+    searchableTaskIDs= [];
+    for(task in data){
+        searchableTaskIDs.push(data[task].id);
+    };
+    console.log(searchableTaskIDs);
+    const AllReactions = await activity.GetAllReactionsGivenTaskIDList(searchableTaskIDs);
+
+    console.log("All reactions are:");
+    console.log(AllReactions.data);
+
+    res.json(AllReactions.data);
+
+
+});
+
+router.get('/postReaction', async (req, res) => {
+    try{
+    const {task_id, user_id, reaction} = req.body;
+    console.log("Inside addReaction");
+    console.log(req.body);
+    console.log(task_id, user_id, reaction);
+    
+    const result = await activity.PostReaction(task_id, user_id, reaction);
+    console.log(result);
+    res.send(result);
+}
+    catch(error){
+        res.status(500).json({ error: error});
+    }
+
+
+
+
+});
+
 
 
 
