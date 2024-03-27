@@ -9,6 +9,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import RequestSent from '../components/RequestSent';
 import IncomingRequest from '../components/IncomingRequest';
 import axios from "axios";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import { Alert } from '@mui/material';
 
 export function FriendsBar () {
       
@@ -21,6 +24,10 @@ export function FriendsBar () {
     const [requestsSent, setRequestsSent] = useState([sent]);
     const [requestsReceived, setRequestsReceived] = useState([received]);
     const [requestsSentComponents, setRequestsSentComponents] = useState([]);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+
 
 
     useEffect(() => {
@@ -62,49 +69,77 @@ export function FriendsBar () {
     }
     // Sample array of suggestions
     const suggestions = [
-        { label: 'Friend 1' },
-        { label: 'Friend 2' },
-        { label: 'Friend 3' },
+        { label: 'testUser' },
     ];
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };    
 
 
     function searchFriend(input) {
         console.log(input)
         axios.get(`${process.env.REACT_APP_API_URL}/friends/search/${input}/${user.id}`)
-            .then(
-                response => {
-                    alert(response.data);
+            .then(response => {
+                // get requests, dont move forward until requests are fetched
+                getRequests()
 
-
-                });
-
-
-
-
+                // Update to use Snackbar for feedback
+                if (response.data === 'This user has already sent you a friend request! Accept it to add them as a friend.') {
+                    setSnackbarMessage(response.data);
+                    setSnackbarSeverity('info');
+                    setSnackbarOpen(true);
+                } else if (response.data === 'User Already Added As Friend') {
+                    setSnackbarMessage(response.data);
+                    setSnackbarSeverity('info');
+                    setSnackbarOpen(true);
+                } else if (response.data === 'Friend Request Successfully Sent.') {
+                    setSnackbarMessage(response.data);
+                    setSnackbarSeverity('success');
+                    setSnackbarOpen(true);
+                    // close the dialog
+                    // setOpen(false);
+                } else {
+                    setSnackbarMessage('An error occurred. Please try again.');
+                    setSnackbarSeverity('error');
+                    setSnackbarOpen(true);
+                }
+                
+            })
+            .catch(error => {
+                // Handle error scenario
+                setSnackbarMessage('An error occurred.');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+            });
     }
+    
     async function getRequests() {
-        axios.get(`${process.env.REACT_APP_API_URL}/friends/getRequests/${user.id}`)
-            .then(
-                response => {
-
-                    console.log("GET REQUESTS RESPONSE", response)
-
-
-                response.data[1].forEach(item => {
-                    
-                    var username = item.username
-                    received[item.id] = {name : username};
-                })
-                response.data[0].forEach(item => {
-                    
-                    var username = item.username
-                    sent[item.id] = {name : username};
-                })
-                setRequestsReceived(received)
-                setRequestsSent(sent)
-
-                });
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/friends/getRequests/${user.id}`);
+            console.log("GET REQUESTS RESPONSE", response);
+    
+            const updatedReceived = {}; 
+            const updatedSent = {}; 
+    
+            response.data[1].forEach(item => {
+                updatedReceived[item.id] = { name: item.username };
+            });
+            response.data[0].forEach(item => {
+                updatedSent[item.id] = { name: item.username };
+            });
+    
+            setRequestsReceived(updatedReceived);
+            setRequestsSent(updatedSent);
+        } catch (error) {
+            console.error("Failed to fetch requests:", error);
+            // Handle error
+        }
     }
+    
 
     useEffect(() => {
         // After requests sent are fetched, update the state
@@ -215,8 +250,8 @@ export function FriendsBar () {
                     </div>
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
                     {requestsSentComponents}  
-            <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
-                                {
+                    <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
+                    {
                 Object.keys(requestsReceived).map(friendKey => (
                     <IncomingRequest
                     id = {friendKey}
@@ -227,6 +262,14 @@ export function FriendsBar () {
 
                 </div>
             </Dialog>
+            {/* bottom left */}
+            <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
+
+
         </div>
     )
 }
