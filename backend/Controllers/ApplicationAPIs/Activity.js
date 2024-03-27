@@ -16,6 +16,8 @@ class Activity {
             })
             if (error) console.error(error)
             
+            data.push(person_value);
+            
             return data;
         }
             catch(error){
