@@ -42,16 +42,20 @@ export function MediumSize() {
                 
                 <TasksBar />
 
-                <div className="col-span-1 bg-green-900 flex flex-1 justify-end align-middle" id='activityTrigger'>
+                <div className="col-span-1 bg-primary flex flex-cols flex-1 justify-end items-center align-middle" id='activityTrigger'>
 
                     {['right'].map((anchor) => (
                         <Fragment key={anchor}>
 
-                            <Button onClick={toggleDrawer(anchor, true)} className="m-3 btn btn-circle bg-InputBox w-12 h-12 rounded-full">
+                            <div onClick={toggleDrawer(anchor, true)} className="flex flex-cols m-3 mr-5 btn btn-circle bg-InputBox w-12 h-12 rounded-full" id="drawers">
                                 
-                                <p>Activity</p>
-                                                            
-                            </Button>
+                                <button
+                                    className="btn btn-circle bg-AddTaskBg min-w-12 min-h-12 rounded-full flex justify-center items-center"
+                                >
+                                    <img src="/images/MenuSwipe.svg" alt="add task sign" className="rotate-180"/>
+                                </button>
+                                                          
+                            </div>
                             
                         </Fragment>
                     ))}

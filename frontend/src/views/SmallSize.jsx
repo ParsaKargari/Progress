@@ -61,15 +61,20 @@ export function SmallSize() {
     return (
         <>
             <div className="grid grid-cols-12 flex-cols h-screen bg-primary max-h-screen overflow-clip">
-                <div className="col-span-1 bg-green-900 flex" id='taskButton'>
+                <div className="col-span-1 bg-primary flex items-center" id='taskButton'>
                 {['left'].map((anchor) => (
                         <Fragment key={anchor}>
 
-                            <Button onClick={toggleFriDrawer(anchor, true)} className="m-3 btn btn-circle bg-InputBox w-12 h-12 rounded-full">
+                            <div onClick={toggleFriDrawer(anchor, true)} className="m-1 btn btn-circle bg-InputBox w-12 h-12 rounded-full">
                                 
-                                <p>Friends</p>
+                                {/* <p>Friends</p> */}
+                                <button
+                                    className="btn btn-circle bg-AddTaskBg w-8 h-8 rounded-full flex justify-center items-center"
+                                >
+                                    <img src="/images/MenuSwipe.svg" alt="add task sign" className="scale-75"/>
+                                </button>
                                                             
-                            </Button>
+                            </div>
                             
                         </Fragment>
                     ))}
@@ -91,15 +96,21 @@ export function SmallSize() {
 
                 <TasksBar />
 
-                <div className="col-span-1 bg-green-900 flex" id='activityButton'>
+                <div className="col-span-1 bg-primary flex items-center" id='activityButton'>
                     {['right'].map((anchor) => (
                             <Fragment key={anchor}>
 
-                                <Button onClick={toggleActDrawer(anchor, true)} className="m-3 btn btn-circle bg-InputBox w-12 h-12 rounded-full">
+                                <div onClick={toggleActDrawer(anchor, true)} className="m-1 btn btn-circle bg-InputBox w-12 h-12 rounded-full">
                                     
-                                    <p>Activity</p>
+                                    {/* <p>Activity</p> */}
+                                <button
+                                    className="btn btn-circle bg-AddTaskBg w-8 h-8 rounded-full flex justify-center items-center"
+                                >
+                                    <img src="/images/MenuSwipe.svg" alt="add task sign" className="rotate-180 scale-75"/>
+                                </button>
+
                                                                 
-                                </Button>
+                                </div>
                                 
                             </Fragment>
                         ))}

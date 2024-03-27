@@ -8,6 +8,7 @@ import { BlockPicker } from 'react-color';
 import Dialog from '@mui/material/Dialog';
 import { useAuth } from '../context/AuthContext';
 import axios from "axios";
+import { useTasks } from '../context/TasksContext';
 
 
 
@@ -20,6 +21,7 @@ export default function FriendProfile() {
     const [ringPercentage, setRingPercentage] = useState(0);
     const { signOut } = useAuth();
     const { user } = useAuth();
+    const {refreshHeatmapCounter} = useTasks(); 
 
 
     const handleClickOpen = () => {
@@ -141,7 +143,7 @@ export default function FriendProfile() {
             } catch (error) {
                 console.error('Error loading personal settings:', error.message);
             }
-        }
+        } 
 
         LoadPersonalSettings(); // Load personal settings when component mounts
     }, [user.id]); // Load personal settings whenever user ID changes
@@ -157,7 +159,7 @@ export default function FriendProfile() {
             }
         }
         LoadPersonalRing();
-    }, [])
+    }, [refreshHeatmapCounter])
 
 
     return (

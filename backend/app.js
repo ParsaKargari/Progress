@@ -77,7 +77,6 @@ app.use('/tasks', tasksRouter);
 app.use('/spotify', SpotifyLoginRouter)
 app.use('/Spotify', SpotifyLoginRouter)
 app.use('/signUp', signUpRouter)
-app.use('/tasks', tasksRouter)
 // app.use('/Spotify', SpotifyLoginRouter)
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
