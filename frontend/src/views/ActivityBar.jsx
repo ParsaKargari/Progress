@@ -30,12 +30,25 @@ export function ActivityBar() {
     const user_id = user.id;
 
     const fetchActivities = async (userId) => {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/getFriendsActivity?user_id=${userId}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        try {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/getFriendsActivity?user_id=${userId}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const activities = await response.json();
+      
+          // Sort activities by CompletionTime in descending order
+          const sortedActivities = activities.sort((a, b) => {
+            return new Date(b.CompletionTime) - new Date(a.CompletionTime);
+          });
+      
+          return sortedActivities;
+        } catch (error) {
+          console.error('Error fetching activities:', error);
+          throw error;
         }
-        return response.json();
       };
+      
       
       const fetchAllComments = async (userId) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/activity/getAllComments?user_id=${userId}`);
@@ -69,29 +82,27 @@ export function ActivityBar() {
           try {
             const activities = await fetchActivities(userId);
             console.log("All Tasks", activities);
-            // only set the activities with completionstatus = true, and PublicVisibility = true
-
+      
+            // Filter and set the sorted activities
+            // Activities are already sorted by CompletionTime in descending order
             setActivities(activities.filter(activity => activity.CompletionStatus === true && activity.PublicVisibility === true));
       
             const comments = await fetchAllComments(userId);
-            // Assume setAllComments is a state setter function you have defined
             setAllComments(comments);
       
             const reactions = await fetchAllReactions(userId);
             setAllReactions(reactions);
       
             const settings = await fetchSettings(userId);
-            // Assuming setUsername is a state setter function for updating username
             setUsername(settings[0]?.Username || "UsernameNotFound");
-      
           } catch (error) {
             console.error('Error fetching data:', error);
           } finally {
             setIsLoading(false);
           }
         })();
+      }, [user.id]);
       
-      }, []);
       
       
 
