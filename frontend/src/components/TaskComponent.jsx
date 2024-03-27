@@ -33,6 +33,13 @@ export function TaskComponent(props) {
             if (!response.ok) {
                 throw new Error('Failed to update completion status');
             }
+            const response2 = await fetch(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
             fetchTasks(user.id); // Fetch tasks again to update the UI only if you need to synchronize other parts of the task not related to the checkbox
             triggerHeatmapRefresh(); // Trigger a refresh of the heatmap
         } catch (error) {
