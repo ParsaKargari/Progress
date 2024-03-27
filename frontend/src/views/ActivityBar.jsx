@@ -80,8 +80,8 @@ export function ActivityBar() {
                 console.log(jsonData);
 
 
-
-                setActivities(jsonData);
+                // CHANGE THIS
+                // setActivities(jsonData);
                 
             } catch (error) {
                 console.error('Error fetching data:', error);
