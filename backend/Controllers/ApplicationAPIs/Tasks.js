@@ -92,7 +92,7 @@ class Tasks {
                 .eq('UserID', userID)
                 .gte('DueDate', startDate)
                 .lte('DueDate', endDate);
-    
+
             let map = {};
             tasks.data.forEach(task => {
                 const key = task.AddedDate;
@@ -107,9 +107,8 @@ class Tasks {
                     map[key].completed++;
                 }
             });
-    
+
             // The map will have the format: {'YYYY-MM-DD': { count: x, completed: y }, ...}
-            // Convert it to an array of objects with the desired format
             let result = Object.keys(map).map(key => {
                 return {
                     date: key.replaceAll("-", "/"),
@@ -117,16 +116,16 @@ class Tasks {
                     completed: map[key].completed
                 };
             });
-    
+
             console.log(result);
             return result;
-    
+
         } catch (error) {
             console.error(error);
             throw error;
         }
     }
-    
+
     async getVisibilityByTaskId(taskId) {
         try {
             const result = await this.client
@@ -171,9 +170,16 @@ class Tasks {
 
     async updateCompletionStatus(taskId, completionStatus) {
         try {
+            let completionTime = null;
+            if (completionStatus) {
+                completionTime = new Date().toLocaleString();
+            }
             const result = await this.client
                 .from('Tasks')
-                .update({ CompletionStatus: completionStatus })
+                .update({
+                    CompletionStatus: completionStatus,
+                    CompletionTime: completionTime
+                })
                 .eq('TaskID', taskId)
                 .select();
             return result;
@@ -182,8 +188,6 @@ class Tasks {
             throw error;
         }
     }
-
-
 
 
 }
