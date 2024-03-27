@@ -135,9 +135,9 @@ router.get('/updatePercentage/:userId', async (req, res) => {
     try {
         const newPercentage = await friends.getPercentage(userId);
         console.log("NEWPERCENTAGE", newPercentage)
-        friends.updateFriendStatus(userId, 'Person1Percentage', newPercentage, 'Person1');
-        friends.updateFriendStatus(userId, 'Person2Percentage', newPercentage, 'Person2');
-        res.send(newPercentage);
+        await friends.updateFriendStatus(userId, 'Person1Percentage', newPercentage, 'Person1');
+        await friends.updateFriendStatus(userId, 'Person2Percentage', newPercentage, 'Person2');
+        res.json(newPercentage);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });

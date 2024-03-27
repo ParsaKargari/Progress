@@ -13,8 +13,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Alert } from '@mui/material';
 
-export function FriendsBar () {
-      
+export function FriendsBar() {
+
     const test = {}
     const [friendList, setFriendList] = useState([test]);
     const received = {}
@@ -31,10 +31,9 @@ export function FriendsBar () {
 
 
     useEffect(() => {
-
         getFriends()
         getRequests()
-        
+
     }, []);
 
 
@@ -66,6 +65,7 @@ export function FriendsBar () {
                 console.log(test)
                 setFriendList(test)
             })
+        axios.get(`${process.env.REACT_APP_API_URL}/tasks/updatePercentage/${user.id}`)
     }
     // Sample array of suggestions
     const suggestions = [
@@ -150,7 +150,7 @@ export function FriendsBar () {
                 name={requestsSent[friendKey].name}
             />
         ));
-        
+
         // Now update your component state
         setRequestsSentComponents(requestSentComponents);
     }, [requestsSent]);
