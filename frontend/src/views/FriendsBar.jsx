@@ -34,6 +34,8 @@ export function FriendsBar () {
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
+        getFriends();
+        getRequests();
     };
 
     const handleClose = () => {
