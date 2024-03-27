@@ -179,15 +179,15 @@ export function TaskComponent(props) {
                             </h5>
                         )}
                         {editing ? (
-                            <h5 className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate" onClick={handleEditClick}>
+                            <h5 className=" ml-2 text-textcolour cursor-pointer font-standard text-base decoration-2 truncate" onClick={handleEditClick}>
                                 Save
                             </h5>
                         ) : (
-                            <h5 className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate" onClick={handleEditClick}>
+                            <h5 className=" ml-2 text-textcolour cursor-pointer font-standard text-base decoration-2 truncate" onClick={handleEditClick}>
                                 Edit
                             </h5>
                         )}
-                        <h5 className=" ml-2 text-textcolour font-standard text-base decoration-2 truncate" onClick={handleDelete}>
+                        <h5 className=" ml-2 text-textcolour cursor-pointer font-standard text-base decoration-2 truncate" onClick={handleDelete}>
                             Delete
                         </h5>
                     </div>
