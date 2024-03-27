@@ -4,3 +4,5 @@
 **/build
 **/package-lock.json
 **/.env
+**/.env.local
+**/.env.production
