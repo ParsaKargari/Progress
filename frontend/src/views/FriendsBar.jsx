@@ -9,6 +9,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import RequestSent from '../components/RequestSent';
 import IncomingRequest from '../components/IncomingRequest';
 import axios from "axios";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import { Alert } from '@mui/material';
 
 export function FriendsBar () {
       
@@ -21,6 +24,10 @@ export function FriendsBar () {
     const [requestsSent, setRequestsSent] = useState([sent]);
     const [requestsReceived, setRequestsReceived] = useState([received]);
     const [requestsSentComponents, setRequestsSentComponents] = useState([]);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+
 
 
     useEffect(() => {
@@ -67,21 +74,46 @@ export function FriendsBar () {
         { label: 'Friend 3' },
     ];
 
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };    
+
 
     function searchFriend(input) {
         console.log(input)
         axios.get(`${process.env.REACT_APP_API_URL}/friends/search/${input}/${user.id}`)
-            .then(
-                response => {
-                    alert(response.data);
-
-
-                });
-
-
-
-
+            .then(response => {
+                // Update to use Snackbar for feedback
+                if (response.data === 'This user has already sent you a friend request! Accept it to add them as a friend.') {
+                    setSnackbarMessage(response.data);
+                    setSnackbarSeverity('info');
+                    setSnackbarOpen(true);
+                } else if (response.data === 'User Already Added As Friend') {
+                    setSnackbarMessage(response.data);
+                    setSnackbarSeverity('info');
+                    setSnackbarOpen(true);
+                } else if (response.data === 'Friend Request Successfully Sent.') {
+                    setSnackbarMessage(response.data);
+                    setSnackbarSeverity('success');
+                    setSnackbarOpen(true);
+                } else {
+                    setSnackbarMessage('An error occurred. Please try again.');
+                    setSnackbarSeverity('error');
+                    setSnackbarOpen(true);
+                }
+                getRequests();
+            })
+            .catch(error => {
+                // Handle error scenario
+                setSnackbarMessage('An error occurred.');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+            });
     }
+    
     async function getRequests() {
         axios.get(`${process.env.REACT_APP_API_URL}/friends/getRequests/${user.id}`)
             .then(
@@ -215,8 +247,8 @@ export function FriendsBar () {
                     </div>
                     <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Sent</p>
                     {requestsSentComponents}  
-            <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
-                                {
+                    <p className='font-bold text-DarkGrey font-standard text-[16px] py-1.5 mr-1'>Requests Received</p>
+                    {
                 Object.keys(requestsReceived).map(friendKey => (
                     <IncomingRequest
                     id = {friendKey}
@@ -227,6 +259,14 @@ export function FriendsBar () {
 
                 </div>
             </Dialog>
+            {/* bottom left */}
+            <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
+
+
         </div>
     )
 }
