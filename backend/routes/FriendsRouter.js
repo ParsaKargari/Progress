@@ -1,13 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const Friends = require('../../Controllers/ApplicationAPIs/Friends');
+const Friends = require('../Controllers/ApplicationAPIs/Friends');
 const friends = new Friends();
 
+var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
+
 router.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
+  var origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+  next();
 });
 
 

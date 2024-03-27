@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
-const Friends = require('../../Controllers/ApplicationAPIs/Friends');
+const Friends = require('../Controllers/ApplicationAPIs/Friends');
 const friends = new Friends();
 
 
