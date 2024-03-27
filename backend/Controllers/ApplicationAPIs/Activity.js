@@ -5,8 +5,6 @@ class Activity {
         this.client = this.supabase.getClient();}
 
 
-
-
         //David Made This ONE
         async getListOfFriendsFromMyID(person_value) {
             try{
@@ -17,6 +15,7 @@ class Activity {
             if (error) console.error(error)
             
             data.push(person_value);
+            console.log("Push Data: ", data);
             
             return data;
         }
