@@ -48,6 +48,15 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
+function a11yProps(index) {
+
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+
+}
+
 function TasksBar() {
   const theme = useTheme();
   const { user } = useAuth();
@@ -144,7 +153,7 @@ function TasksBar() {
                       fontSize: '18px',
                       fontWeight: 'bold',
                     }}
-                    label="My Tasks"
+                    label="My Tasks" {...a11yProps(0)}
                   />
                   <Tab
                     sx={{
@@ -153,8 +162,7 @@ function TasksBar() {
                       fontSize: '18px',
                       fontWeight: 'bold',
                     }}
-                    label="Group Tasks"
-                    disabled
+                    label="Group Tasks" {...a11yProps(1)}
                   />
                 </Tabs>
               </Box>
