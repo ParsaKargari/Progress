@@ -148,11 +148,7 @@ The Progress frontend is built using React and utilizes several additional libra
 
 ### 🧪 Testing
 
-The frontend of the Progress app is tested using the Jest and React Testing Library. To run the tests, use the following command:
-
-```bash
-npm test
-```
+The frontend of the Progress app is tested using Selenium UI Testing.
 
 ### 🚀 Building & Deployment
 
