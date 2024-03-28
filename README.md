@@ -102,7 +102,7 @@ Testing is implemented with Jest. Run the following command to execute the tests
 npm test
 ```
 
-Make sure to have testing environment variables set or a testing configuration that the tests can utilize without interfering with the production or development databases.
+Make sure to have testing environment variables set or a testing configuration that the tests can utilize without interfering with the production or development databases. Make sure to have the backend server running for the URLs to be tested.
 
 ### 🧰 Backend Dependencies
 
