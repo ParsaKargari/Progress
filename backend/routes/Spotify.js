@@ -21,7 +21,7 @@ router.use((req, res, next) => {
 
 var client_id = `${process.env.SPOTIFY_CLIENT_ID}`;
 var client_secret = `${process.env.SPOTIFY_CLIENT_SECRET}`;
-var redirect_uri = `${process.env.API_URL}/Spotify/callback`
+var redirect_uri = `${process.env.SPOTIFY_REDIRECT_URI}`;
 
 
 
@@ -47,17 +47,19 @@ var user_id = null;
 
 
 router.get("/login", function(req, res) {
-    var state = generateRandomString(16);
-    var userId = req.query.user_id; // Assuming you have the user ID in the request object
-    console.log(client_id, client_secret, redirect_uri);
-    user_id = userId;
-    if (!userId) {
-        return res.status(400).send("User ID is missing in the URL query parameters.");
-    }
-    res.cookie(stateKey, state);
+  var state = generateRandomString(16);
+  var userId = req.query.user_id; // Assuming you have the user ID in the request object
+  // console.log("spotifylogin");
+  // console.log(client_id, client_secret, redirect_uri);
+  user_id = userId;
+  if(!userId) {
+    return res.status(400).send("User ID is missing in the URL query parameters.");
+  }
+  res.cookie(stateKey, state);
 
-    var scope = 'user-read-private user-read-email user-read-currently-playing';
-    res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${state}&user_id=${userId}`);
+  var scope = 'user-read-private user-read-email user-read-currently-playing';
+  // console.log(`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${state}&user_id=${userId}`)
+  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${state}&user_id=${userId}`);
 });
 
 // Callback Router:
@@ -118,15 +120,18 @@ router.get("/callback", function(req, res) {
 
                 await addSpotifyLoginInformation(user_id, access_token, refresh_token);
 
-                res.redirect(`${process.env.SPOTIFY_REDIRECT_URL}/home`);
-            } else {
-                res.redirect('/#' +
-                    querystring.stringify({
-                        error: 'invalid_token'
-                    }));
-            }
-        });
-    }
+        //http://localhost:3000/home
+        // console.log("Here")
+        // console.log(`${process.env.SPOTIFY_REDIRECT_URL}/home`);
+        res.redirect(`${process.env.SPOTIFY_REDIRECT_URL}/home`);
+      } else {
+        res.redirect('/#' +
+          querystring.stringify({
+            error: 'invalid_token'
+          }));
+      }
+    });
+  }
 });
 
 
@@ -141,15 +146,14 @@ router.get('/currently_playing', async function(req, res) {
         // console.log("refreshaccesstoken function called");
         var spotifyInformation = await getSpotifyInformation(user_id);
 
-        // console.log("user id is", user_id, "SpotifyAUthriization token is", spotifyInformation[0].Spotify_Authorization_Token, "SpotifyRefreshToken is", spotifyInformation[0].Spotify_Refresh_Token);
-        // await callCurrentlyPlayingEndpoint(user_id, spotifyInformation[0].Spotify_Authorization_Token, spotifyInformation[0].Spotify_Refresh_Token);
-        console.log("callcurrentlyplayingfunction called");
-        res.redirect(`${process.env.SPOTIFY_REDIRECT_URL}/home`);
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).send("Internal Server Error");
-    }
-});
+    // console.log("user id is", user_id, "SpotifyAUthriization token is", spotifyInformation[0].Spotify_Authorization_Token, "SpotifyRefreshToken is", spotifyInformation[0].Spotify_Refresh_Token);
+    // await callCurrentlyPlayingEndpoint(user_id, spotifyInformation[0].Spotify_Authorization_Token, spotifyInformation[0].Spotify_Refresh_Token);
+    // console.log("callcurrentlyplayingfunction called");
+    res.redirect(`${process.env.SPOTIFY_REDIRECT_URL}/home`);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }});
 
 async function refreshAccessToken(user_id_token, refresh_token) {
     var authOptions = {
@@ -165,39 +169,40 @@ async function refreshAccessToken(user_id_token, refresh_token) {
         json: true
     };
     request.post(authOptions, async function(error, response, body) {
-        if (!error && response.statusCode === 200) {
-            var access_token_api = body.access_token;
-
-            // console.log("body in refreshAcessToken Post)",body);
-            // console.log("access token is 1", access_token_api);
-            // console.log("access token 2 is ", body.access_token);
-            // console.log("refresh token is", refresh_token);
-            await callCurrentlyPlayingEndpoint(user_id_token, access_token_api, refresh_token);
-        } else {
-            // console.log("error is in refreshAcessToken function", error);
-            // console.log("status code is", response.statusCode);
-            // console.log(client_id + ':' + client_secret)
-            console.log('Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')));
-        }
+      if (!error && response.statusCode === 200) {
+        var access_token_api = body.access_token;
+        
+        // console.log("body in refreshAcessToken Post)",body);
+        // console.log("access token is 1", access_token_api);
+        // console.log("access token 2 is ", body.access_token);
+        // console.log("refresh token is", refresh_token);
+        // console.log("in spotify post")
+        await callCurrentlyPlayingEndpoint(user_id_token, access_token_api, refresh_token);
+      } else {
+        // console.log("error is in refreshAcessToken function", error);
+        // console.log("status code is", response.statusCode);
+        // console.log(client_id + ':' + client_secret)
+        console.log('Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')));
+      }
     });
 }
 
 
 
-async function callCurrentlyPlayingEndpoint(user_id, access_token, refresh_token_api) {
-    var options = {
-        url: 'https://api.spotify.com/v1/me/player/currently-playing',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-    };
-    // console.log("INSIDE CALLCURRENTLYPLAYING....");
-    // console.log("user id is", user_id, "access token is", access_token, "refresh token is", refresh_token_api);
-    request.get(options, async function(error, response, body) {
-        if (!error && response.statusCode === 200) {
-            // console.log("body is", body);
-            // console.log("user id is", user_id);
-            // console.log("access token is", access_token);
-            // console.log("refresh token is", refresh_token_api);
+    async function callCurrentlyPlayingEndpoint(user_id, access_token, refresh_token_api) {
+      var options = {
+          url: 'https://api.spotify.com/v1/me/player/currently-playing',
+          headers: { 'Authorization': 'Bearer ' + access_token },
+          json: true
+      };
+      // console.log("INSIDE CALLCURRENTLYPLAYING....");s
+      // console.log("user id is", user_id, "access token is", access_token, "refresh token is", refresh_token_api);
+      request.get(options, async function(error, response, body) {
+          if (!error && response.statusCode === 200) {
+              // console.log("body is", body);
+              // console.log("user id is", user_id);
+              // console.log("access token is", access_token);
+              // console.log("refresh token is", refresh_token_api);
 
             await sendSpotifyInformationAndSongs(user_id, access_token, refresh_token_api, body);
             // Move the redirect inside the callback

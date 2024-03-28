@@ -14,6 +14,7 @@ import { ActivityBar } from './ActivityBar';
 import { FriendsBar } from './FriendsBar';
 import { MyTasks } from '../components/MyTasks';
 import { useTasks } from '../context/TasksContext';
+import { ComingSoon } from '../components/ComingSoon';
 
 function CustomTabPanel(props) {
 
@@ -46,6 +47,15 @@ CustomTabPanel.propTypes = {
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
+
+function a11yProps(index) {
+
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+
+}
 
 function TasksBar() {
   const theme = useTheme();
@@ -143,7 +153,7 @@ function TasksBar() {
                       fontSize: '18px',
                       fontWeight: 'bold',
                     }}
-                    label="My Tasks"
+                    label="My Tasks" {...a11yProps(0)}
                   />
                   <Tab
                     sx={{
@@ -152,8 +162,7 @@ function TasksBar() {
                       fontSize: '18px',
                       fontWeight: 'bold',
                     }}
-                    label="Group Tasks"
-                    disabled
+                    label="Group Tasks" {...a11yProps(1)}
                   />
                 </Tabs>
               </Box>
@@ -167,7 +176,7 @@ function TasksBar() {
                   <MyTasks />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                  {/* Content for Group Tasks tab */}
+                  <ComingSoon />
                 </CustomTabPanel>
               </SwipeableViews>
             </Box>
