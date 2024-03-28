@@ -14,6 +14,7 @@ import { ActivityBar } from './ActivityBar';
 import { FriendsBar } from './FriendsBar';
 import { MyTasks } from '../components/MyTasks';
 import { useTasks } from '../context/TasksContext';
+import { ComingSoon } from '../components/ComingSoon';
 
 function CustomTabPanel(props) {
 
@@ -167,7 +168,7 @@ function TasksBar() {
                   <MyTasks />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                  {/* Content for Group Tasks tab */}
+                  <ComingSoon />
                 </CustomTabPanel>
               </SwipeableViews>
             </Box>
