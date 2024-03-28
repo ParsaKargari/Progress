@@ -6,26 +6,26 @@ var cookieParser = require('cookie-parser');
 const Friends = require('../Controllers/ApplicationAPIs/Friends');
 const friends = new Friends();
 
-
 var allowedOrigins = ['http://localhost:3000', 'https://progresslive.vercel.app'];
 
+// Middleware to set CORS headers
 router.use((req, res, next) => {
-  var origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials
-  next();
+    var origin = req.headers.origin;
+    if (allowedOrigins.indexOf(origin) > -1) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+    next();
 });
 
-
-router.get('/getSettings', async (req, res) => {
+// Route to get user settings
+router.get('/getSettings', async(req, res) => {
     var supabase = new SupabaseConnector();
     var client = supabase.getClient();
     var user_id = req.query.user_id;
-    console.log("user_id is, ", user_id );
+    console.log("user_id is, ", user_id);
     const { data, error } = await client
         .from('Users')
         .select('Username, color, Status')
@@ -40,7 +40,8 @@ router.get('/getSettings', async (req, res) => {
     }
 });
 
-router.post('/updateSettings', async (req, res) => {
+// Route to update user settings
+router.post('/updateSettings', async(req, res) => {
     var user_id = req.query.user_id;
     var supabase = new SupabaseConnector();
     var client = supabase.getClient();
@@ -56,23 +57,20 @@ router.post('/updateSettings', async (req, res) => {
         friends.updateFriendStatus(user_id, 'Person1Username', username, 'Person1');
         friends.updateFriendStatus(user_id, 'Person2Username', username, 'Person2');
 
-
-        
-
         const result = await client
             .from('Users')
-            .update([{ Username:username, color: color, Status: status }])
+            .update([{ Username: username, color: color, Status: status }])
             .eq('UserID', user_id);
-            console.log("result is, ", result);
-    
+        console.log("result is, ", result);
+
         res.json(result);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: error});
+        res.status(500).json({ error: error });
     }
 });
 
-
+// Function to get selected settings for a user
 async function getSelectedSettings(user_id) {
     const { data, error } = await client
         .from('Users')

@@ -3,6 +3,10 @@ import { TaskComponent } from './TaskComponent';
 import { useAuth } from '../context/AuthContext';
 import { useTasks } from '../context/TasksContext';
 
+/**
+ * Component for displaying tasks associated with the logged-in user.
+ * @returns {JSX.Element} MyTasks component.
+ */
 export function MyTasks() {
     const { tasks } = useTasks();
     const { user } = useAuth();

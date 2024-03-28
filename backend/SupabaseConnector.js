@@ -1,29 +1,30 @@
+// IMPLEMENTATION of Singleton Pattern for database connection
 
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
 class SupabaseConnector {
-  constructor() {
-    if (!SupabaseConnector.instance) {
-      this.client = createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_ANON_KEY
-      );
-      SupabaseConnector.instance = this;
+    constructor() {
+        if (!SupabaseConnector.instance) {
+            this.client = createClient(
+                process.env.SUPABASE_URL,
+                process.env.SUPABASE_ANON_KEY
+            );
+            SupabaseConnector.instance = this;
+        }
+        return SupabaseConnector.instance;
     }
-    return SupabaseConnector.instance;
-  }
 
-  static getInstance() {
-    if (!SupabaseConnector.instance) {
-      SupabaseConnector.instance = new SupabaseConnector();
+    static getInstance() {
+        if (!SupabaseConnector.instance) {
+            SupabaseConnector.instance = new SupabaseConnector();
+        }
+        return SupabaseConnector.instance;
     }
-    return SupabaseConnector.instance;
-  }
 
-  getClient() {
-    return this.client;
-  }
+    getClient() {
+        return this.client;
+    }
 }
 
 module.exports = SupabaseConnector;
