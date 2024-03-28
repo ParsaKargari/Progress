@@ -3,6 +3,8 @@ const http = require('http');
 
 let taskId = ""
 describe('Tasks Router Unit Tests', () => {
+
+    // Test for creating a task
     it('POST /tasks/createTask/:userId/:addedDate/:taskDescr - should create a task', (done) => {
         const sampleTask = {
             userId: 'some-user-id',
@@ -33,6 +35,7 @@ describe('Tasks Router Unit Tests', () => {
         req.end();
     });
 
+    // Test for getting all tasks for a user
     it('GET /tasks/getTasks/:userId - should get all tasks for a user', async() => {
         const userId = 'some-user-id';
         const path = `/tasks/getTasks/${encodeURIComponent(userId)}`;
@@ -70,7 +73,7 @@ describe('Tasks Router Unit Tests', () => {
     });
 
 
-
+    // Test for getting a task by its ID
     it('GET /tasks/getHeatMapData/:userID/:startDate/:endDate - should get heatmap data', (done) => {
         const userID = 'some-user-id';
         const startDate = '2022-01-01';
@@ -98,7 +101,7 @@ describe('Tasks Router Unit Tests', () => {
         req.end();
     });
 
-
+    // Test for getting a task by its ID
     it('POST /tasks/updateCompletionStatus/:taskId/:completionStatus - should update completion status', (done) => {
         const completionStatus = 'false';
         const path = `/tasks/updateCompletionStatus/${encodeURIComponent(taskId)}/${encodeURIComponent(completionStatus)}`;
@@ -124,6 +127,7 @@ describe('Tasks Router Unit Tests', () => {
         req.end();
     });
 
+    // Test for getting  task visibility by its TaskID
     it('GET /getVisibilityByTaskId/:taskId - should get visibility by task id', (done) => {
         const path = `/tasks/getVisibilityByTaskId/${encodeURIComponent(taskId)}`;
 
@@ -148,6 +152,7 @@ describe('Tasks Router Unit Tests', () => {
         req.end();
     });
 
+    // Test for updating visibiliy
     it('POST /updateVisibility/:taskId/:visibility - should update visibility', (done) => {
         const path = `/tasks/updateVisibility/${encodeURIComponent(taskId)}/${encodeURIComponent('true')}`;
 
@@ -176,6 +181,8 @@ describe('Tasks Router Unit Tests', () => {
 
 
 });
+
+// Delete
 async function deleteTask(taskId) {
     if (taskId) {
         const path = `/tasks/deleteTask/${encodeURIComponent(taskId)}`;

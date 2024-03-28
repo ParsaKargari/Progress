@@ -1,13 +1,12 @@
 const SupabaseConnector = require('../../SupabaseConnector.js');
 
-// const { v1: uuidv1 } = require('uuid');
-
 class Tasks {
     constructor() {
         this.supabase = new SupabaseConnector();
         this.client = this.supabase.getClient();
     }
 
+    // Creates a new task with provided details
     async createTask(userId, taskDescription, addedDate, dueDate, publicVisibility) {
         try {
             const result = await this.client
@@ -21,7 +20,7 @@ class Tasks {
         }
     }
 
-
+    // Retrieves tasks of a user by their ID
     async getTasks(userId) {
         try {
             const result = await this.client
@@ -35,7 +34,7 @@ class Tasks {
         }
     }
 
-
+    // Retrieves a task by its ID
     async getTaskById(taskId) {
         try {
             const result = await this.client
@@ -50,6 +49,7 @@ class Tasks {
         }
     }
 
+    // Updates task visibility by its ID
     async updateTaskVisibility(taskId, newVisibility) {
         try {
             const result = await this.client
@@ -64,19 +64,13 @@ class Tasks {
         }
     }
 
-
-
+    // Adds a comment to a task
     async addComment(task_id, username, new_comment) {
-
         try {
             let { data, error } = await this.client
-                .rpc('append_to_comments', {
-                    new_comment,
-                    task_id,
-                    username
-                })
-            if (error) console.error(error)
-            else console.log(data)
+                .rpc('append_to_comments', { new_comment, task_id, username });
+            if (error) console.error(error);
+            else console.log(data);
             return data;
         } catch (error) {
             console.error(error);
@@ -84,6 +78,7 @@ class Tasks {
         }
     }
 
+    // Retrieves heat map data for a user within a specified date range
     async getHeatMapData(userID, startDate, endDate) {
         try {
             const tasks = await this.client
@@ -93,22 +88,19 @@ class Tasks {
                 .gte('DueDate', startDate)
                 .lte('DueDate', endDate);
 
+            // Process task data to generate heat map
             let map = {};
             tasks.data.forEach(task => {
                 const key = task.AddedDate;
-                // Initialize the key in the map if it doesn't exist
                 if (!map[key]) {
                     map[key] = { count: 0, completed: 0 };
                 }
-                // Increment the count for each task
                 map[key].count++;
-                // If the task is completed, also increment the completed count
                 if (task.CompletionStatus) {
                     map[key].completed++;
                 }
             });
 
-            // The map will have the format: {'YYYY-MM-DD': { count: x, completed: y }, ...}
             let result = Object.keys(map).map(key => {
                 return {
                     date: key.replaceAll("-", "/"),
@@ -126,6 +118,7 @@ class Tasks {
         }
     }
 
+    // Retrieves task visibility by its ID
     async getVisibilityByTaskId(taskId) {
         try {
             const result = await this.client
@@ -140,7 +133,7 @@ class Tasks {
         }
     }
 
-
+    // Deletes a task by its ID
     async deleteTaskById(taskId) {
         try {
             const result = await this.client
@@ -154,6 +147,7 @@ class Tasks {
         }
     }
 
+    // Adds due date to a task
     async addDueDate(taskId, dueDate) {
         try {
             const result = await this.client
@@ -168,17 +162,18 @@ class Tasks {
         }
     }
 
+    // Updates completion status of a task
     async updateCompletionStatus(taskId, completionStatus) {
         try {
             let completionTime = null;
             if (completionStatus) {
-                completionTime = new Date().toISOString(); // UTC time
+                completionTime = new Date().toISOString();
             }
             const result = await this.client
                 .from('Tasks')
                 .update({
                     CompletionStatus: completionStatus,
-                    CompletionTime: completionTime // Now in UTC
+                    CompletionTime: completionTime
                 })
                 .eq('TaskID', taskId)
                 .select();
@@ -188,8 +183,6 @@ class Tasks {
             throw error;
         }
     }
-    
-
-
 }
+
 module.exports = Tasks;
